@@ -12,7 +12,7 @@ import StyledCardHeader from './StyledCardHeader'
 import CardActions from './CardActions'
 
 const CollectiblesFarmCard: React.FC<{ collectiblesFarm: CollectiblesFarm; account: string }> = ({ collectiblesFarm, account }) => {
-  const { label, labelSvg, collectiblesFarmingPoolContract, stakingRewardToken, collectiblesFarmMasterGardenerAllocPt, isFinished, userData } = collectiblesFarm
+  const { label, description, labelSvg, collectiblesFarmingPoolContract, stakingRewardToken, collectiblesFarmMasterGardenerAllocPt, isFinished, userData } = collectiblesFarm
   const { t } = useTranslation()
   const stakedBalance = userData?.collectiblesBalance ? new BigNumber(userData.collectiblesBalance) : BIG_ZERO
   const accountHasStakedBalance = stakedBalance.gt(0)
@@ -25,6 +25,7 @@ const CollectiblesFarmCard: React.FC<{ collectiblesFarm: CollectiblesFarm; accou
       <StyledCardInner>
         <StyledCardHeader
           label={label}
+          description={description}
           labelSvg={labelSvg}
           isStaking={accountHasStakedBalance}
           stakingRewardToken={stakingRewardToken}

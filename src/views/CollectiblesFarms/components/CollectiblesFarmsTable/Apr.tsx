@@ -1,67 +1,57 @@
 import React from 'react'
 import BigNumber from 'bignumber.js'
-import { Flex, useModal, CalculateIcon, Skeleton, FlexProps, Button } from '@plantswap/uikit'
-import ApyCalculatorModal from 'components/ApyCalculatorModal'
+import { Flex, HelpIcon, Skeleton, FlexProps, useTooltip } from '@plantswap/uikit'
 import Balance from 'components/Balance'
 import { CollectiblesFarm } from 'state/types'
 import { useTranslation } from 'contexts/Localization'
-import { getAddress } from 'utils/addressHelpers'
 
 interface AprProps extends FlexProps {
   collectiblesFarm: CollectiblesFarm
   showIcon?: boolean
 }
 
-const Apr: React.FC<AprProps> = ({ collectiblesFarm, showIcon , ...props }) => {
+const Apr: React.FC<AprProps> = ({ collectiblesFarm, ...props }) => {
   const { 
-    collectiblesFarmingPoolContract, 
-    stakingRewardToken, 
+    collectiblesFarmMasterGardenerAllocPt,
+    lastNftStakedCount,
     isFinished, 
-    stakingExtraRewardTokenPrice,
    } = collectiblesFarm
   const { t } = useTranslation()
-  const roundingDecimals = 2
-  const performanceFee = 0
-  const compoundFrequency = 0
 
-  const rewardTokenApy = new BigNumber(0)
-  const apyModalLink = collectiblesFarmingPoolContract ? `/swap?outputCurrency=${getAddress(collectiblesFarmingPoolContract)}` : '/swap'
-
-  const [onPresentApyModal] = useModal(
-    <ApyCalculatorModal
-      tokenPrice={stakingExtraRewardTokenPrice}
-      apr={rewardTokenApy.toNumber()}
-      linkLabel={t('Get %symbol%', { symbol: "Nft" })}
-      linkHref={apyModalLink}
-      earningTokenSymbol={stakingRewardToken.symbol}
-      roundingDecimals={roundingDecimals}
-      compoundFrequency={compoundFrequency}
-      performanceFee={performanceFee}
-    />,
-  )
-
-  const openRoiModal = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation()
-    onPresentApyModal()
+  let rewardTokenApy = new BigNumber(collectiblesFarmMasterGardenerAllocPt).dividedBy(new BigNumber(2000)).multipliedBy(new BigNumber(10512000)).dividedBy(1).dividedBy(new BigNumber(100))
+  if (lastNftStakedCount && lastNftStakedCount.toNumber() > 1) {
+    rewardTokenApy = new BigNumber(collectiblesFarmMasterGardenerAllocPt).dividedBy(new BigNumber(2000)).multipliedBy(new BigNumber(10512000)).dividedBy(lastNftStakedCount).dividedBy(new BigNumber(100))
   }
+
+  const {
+    targetRef: aprTargetRef,
+    tooltip: aprTooltip,
+    tooltipVisible: aprTooltipVisible,
+  } = useTooltip(<div>{t('The PLANT reward APR is calculated this way')}
+  <br />
+  <br />{t('(poolAllocationPoints)')}
+  <br />&nbsp;&nbsp;&nbsp;{t('.dividedBy(totalAllocationPoints)')}
+  <br />&nbsp;&nbsp;&nbsp;{t('.dividedBy(totalNFTinPool)')}
+  <br />&nbsp;&nbsp;&nbsp;{t('.multipliedBy(1 year)')}
+</div>, {
+    placement: 'bottom',
+  })
 
   return (
     <Flex alignItems="center" justifyContent="space-between" {...props}>
       {rewardTokenApy.toNumber() || isFinished ? (
         <>
           <Balance
-            onClick={openRoiModal}
             fontSize="16px"
             isDisabled={isFinished}
             value={isFinished ? 0 : rewardTokenApy.toNumber()}
             decimals={2}
             unit="%"
           />
-          {!isFinished && showIcon && (
-            <Button onClick={openRoiModal} variant="text" width="20px" height="20px" padding="0px" marginLeft="4px">
-              <CalculateIcon color="textSubtle" width="20px" />
-            </Button>
-          )}
+          <span ref={aprTargetRef}>
+            <HelpIcon color="textSubtle" width="20px" ml="6px" mt="4px" />
+          </span>
+          {aprTooltipVisible && aprTooltip}
         </>
       ) : (
         <Skeleton width="80px" height="16px" />

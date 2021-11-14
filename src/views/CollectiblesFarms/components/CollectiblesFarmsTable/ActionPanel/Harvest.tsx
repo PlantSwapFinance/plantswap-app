@@ -83,26 +83,6 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({
         {t('Earned')}
       </Text>
       <br />
-      <br />
-      {userTokens ? (
-        <>
-          <Text fontSize="12px" bold color="textSubtle" as="span" textTransform="uppercase">
-            {userTokens.length} {t('Owned Tokens')} 
-            {userTokens.map((token) => (
-              <>
-              <Text fontSize="12px" bold color="textSubtle" as="span" textTransform="uppercase">
-                {token}
-              </Text>
-              </>
-            ))}
-          </Text>
-        </>
-      ) : (
-        <Text fontSize="12px" bold color="textSubtle" as="span" textTransform="uppercase">
-          {t('No Owned Tokens')}
-          <br />
-        </Text>
-      )}
     <hr />
       {1 > 0 && (
         <>

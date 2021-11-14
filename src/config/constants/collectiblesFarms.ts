@@ -12,7 +12,7 @@ const collectiblesFarms: CollectiblesFarmConfig[] = [
     },
     stakingRewardToken: tokens.plant,
     collectiblesFarmMasterGardenerPId: 18,
-    collectiblesFarmMasterGardenerAllocPt: 60,
+    collectiblesFarmMasterGardenerAllocPt: 30,
     collectiblesFarmCategory: CollectiblesFarmCategory.CORE,
     harvest: true,
     sortOrder: 1,
@@ -26,8 +26,8 @@ const collectiblesFarms: CollectiblesFarmConfig[] = [
     labelSvg: 'collectiblesFarmCasualGardeners.svg',
     description: 'This collectibles farm accept only one of the first 5 Gardeners: Casual Farmer, Casual Gardener, Pickup, Tractor and Scarecrow.',
     collectiblesFarmingPoolContract: {
-      56: '0x4a8Ac393d9b4339BfC37FE96B7A3059918baAaeB',
-      97: '0x119D8957933Ddb0a17B0Bdb937AabAF49dBaC345',
+      56: '0x9a288af108b40cE75A18fa7D45B1deF4e0bdD80e',
+      97: '',
     },
     stakingRewardToken: tokens.plant,
     collectiblesFarmMasterGardenerPId: 19,
@@ -37,8 +37,8 @@ const collectiblesFarms: CollectiblesFarmConfig[] = [
     sortOrder: 1,
     isFinished: false,
     displayOnHomePage: true,
-  },
-  {
+  }, */
+  /* {
     cfId: 2,
     label: 'All Gardeners',
     collectiblesFarmingPoolContract: {

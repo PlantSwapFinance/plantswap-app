@@ -45,9 +45,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
   isRemovingStake = false,
   onDismiss,
 }) => {
-  const { cfId, variantIdStart, variantIdEnd, stakingRewardToken, collectiblesFarmingPoolContract
-    // , userData
- } = collectiblesFarm
+  const { cfId, variantIdStart, variantIdEnd, stakingRewardToken, collectiblesFarmingPoolContract } = collectiblesFarm
   const { t } = useTranslation()
   const [isApproved, setIsApproved] = useState(false)
   const [isApproving, setIsApproving] = useState(false)
@@ -66,15 +64,8 @@ const StakeModal: React.FC<StakeModalProps> = ({
   const [stakedToken, setStakedToken] = useState<NftStaked[]>([])
   const [stakedTokenLoaded, setStakedTokenLoaded] = useState(false)
   const [stakedTokenCreated, setStakedTokenCreated] = useState(false)
-  
-  // const logUserCollectibles = new BigNumber(userData.collectiblesUse) || new BigNumber(0)
-  // const logUserCollectiblesNum = logUserCollectibles.toNumber()
-
-  // const tokenInfo = async (id) => getNftByTokenId('0xA7C25c199BC8Dd06c4Edd2Ea8aEbCeC40A404c03', id)
-  // const identifiers = Object.values(userData.userTokens.nft)
 
   const handleApprove = async () => {
-
 
     collectiblesFarmsBagsApi.createCollectiblesFarmsBags({
       cfId: collectiblesFarm.cfId.toString(),
@@ -146,7 +137,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
         
         toastSuccess(
           `${t('Staked')}!`,
-          t('Your %symbol% funds have been staked in the vertical Garden!', {
+          t('Your %symbol% have been staked in the collectibles farm!', {
             symbol: "Nft",
           }),
         )
@@ -206,7 +197,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
                 nftsInWallet.map((walletNft) => {
                   const [firstTokenId] = tokenIds[walletNft.identifier]
 
-                  if(!variantIdEnd || variantIdEnd < 1 || (walletNft.variationId > variantIdStart && walletNft.variationId <= variantIdEnd)) {
+                  if(!variantIdEnd || variantIdEnd < 1 || (walletNft.variationId >= variantIdStart && walletNft.variationId <= variantIdEnd)) {
                       return (
                         <SelectionCard
                           name="collectiblesFarmStaking"

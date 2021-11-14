@@ -12,6 +12,7 @@ const Wrapper = styled(CardHeader)<{ isFinished?: boolean; background?: string }
 
 const StyledCardHeader: React.FC<{
   label: string
+  description: string
   labelSvg: string
   stakingRewardToken: Token
   collectiblesFarmingPoolContract: Address
@@ -19,7 +20,7 @@ const StyledCardHeader: React.FC<{
   collectiblesFarmMasterGardenerAllocPt: number
   isFinished?: boolean
   isStaking?: boolean
-}> = ({ label, labelSvg, stakingRewardToken, collectiblesFarmMasterGardenerAllocPt, isFinished = false, isStaking = false }) => {
+}> = ({ label, description, labelSvg, stakingRewardToken, collectiblesFarmMasterGardenerAllocPt, isFinished = false, isStaking = false }) => {
   const { t } = useTranslation()
   const background = isStaking ? 'newTrees' : 'bubblegum'
   const subText = isStaking ? 'contrast' : 'textSubtle'
@@ -57,6 +58,7 @@ const StyledCardHeader: React.FC<{
             </>
           )}
       </Flex>
+      <Text fontSize="10px" color="textSubtle">{description}</Text>
     </Wrapper>
   )
 }

@@ -61,6 +61,7 @@ const Project = lazy(() => import('./views/Project'))
 const Roadmap = lazy(() => import('./views/Roadmap'))
 const Tree = lazy(() => import('./views/Tree'))
 const Vote = lazy(() => import('./views/Vote'))
+const ContactUs = lazy(() => import('./views/ContactUs'))
 const Documentation = lazy(() => import('./views/Documentation'))
 const PlantArt = lazy(() => import('./views/PlantArt'))
 
@@ -237,6 +238,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/vote">
                 <Vote />
+              </Route>
+              <Route path="/contact-us">
+                <ContactUs />
               </Route>
               <Route path="/documentation">
                 <Documentation />

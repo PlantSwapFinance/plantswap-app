@@ -1,0 +1,16 @@
+{
+	"name": "Active Hyacinth",
+	"description": "Active Hyacinth, for the active you.",
+	"image": "https://gateway.pinata.cloud/ipfs/QmV6o4joGcKAcv88atEsm1EPEny5cVcFFJT4VkRAKTyU47/pointsRewardSchool/active-hyacinth.png",
+	"attributes": {
+		"gardenerId": 94,
+		"charisma": 4,
+		"fatigue": 4,
+		"health": 5,
+		"intelligence": 3,
+		"luck": 3,
+		"strength": 3,
+		"willpower": 3,
+		"wisdom": 3
+	}
+}

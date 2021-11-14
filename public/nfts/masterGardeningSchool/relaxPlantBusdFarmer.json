@@ -1,0 +1,16 @@
+{
+	"name": "Relax PLANT BUSD Farmer",
+	"description": "I love farming Plant, I support Plantswap by providing BUSD and Plant to the market and I harvest plant in reward!",
+	"image": "https://gateway.pinata.cloud/ipfs/QmZcArhHrvwURcb8nuGSRXh8t648grjTL9CdSCNhhzpeL1",
+	"attributes": {
+		"gardenerId": 102,
+		"charisma": 4,
+		"fatigue": 6,
+		"health": 8,
+		"intelligence": 6,
+		"luck": 3,
+		"strength": 6,
+		"willpower": 3,
+		"wisdom": 4
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "Active Dianella",
+	"description": "Active Dianella, for actives gardeners, by actives gardeners.",
+	"image": "https://gateway.pinata.cloud/ipfs/QmV6o4joGcKAcv88atEsm1EPEny5cVcFFJT4VkRAKTyU47/pointsRewardSchool/active-dianella.png",
+	"attributes": {
+		"gardenerId": 97,
+		"charisma": 5,
+		"fatigue": 4,
+		"health": 6,
+		"intelligence": 6,
+		"luck": 3,
+		"strength": 4,
+		"willpower": 5,
+		"wisdom": 6
+	}
+}

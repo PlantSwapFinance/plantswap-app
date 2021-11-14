@@ -1,0 +1,16 @@
+{
+	"name": "Active Poppy",
+	"description": "Plants are your friends, Active Poppy thanks your for this.",
+	"image": "https://gateway.pinata.cloud/ipfs/QmV6o4joGcKAcv88atEsm1EPEny5cVcFFJT4VkRAKTyU47/pointsRewardSchool/active-poppy.png",
+	"attributes": {
+		"gardenerId": 93,
+		"charisma": 4,
+		"fatigue": 4,
+		"health": 4,
+		"intelligence": 3,
+		"luck": 3,
+		"strength": 3,
+		"willpower": 3,
+		"wisdom": 2
+	}
+}

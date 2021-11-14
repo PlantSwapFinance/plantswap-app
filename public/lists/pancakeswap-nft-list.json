@@ -1,0 +1,42 @@
+[
+    {
+      "name": "Baby Doge Coin",
+      "symbol": "BABYDOGE",
+      "address": "0xc748673057861a797275CD8A068AbB95A902e8de",
+      "chainId": 56,
+      "decimals": 9,
+      "logoURI": "https://assets.trustwalletapp.com/blockchains/smartchain/assets/0xc748673057861a797275CD8A068AbB95A902e8de/logo.png"
+    },
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+      "chainId": 56,
+      "decimals": 18,
+      "logoURI": "https://assets.trustwalletapp.com/blockchains/smartchain/assets/0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d/logo.png"
+    },
+    {
+      "name": "Bunny Token",
+      "symbol": "BUNNY",
+      "address": "0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51",
+      "chainId": 56,
+      "decimals": 18,
+      "logoURI": "https://assets.trustwalletapp.com/blockchains/smartchain/assets/0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51/logo.png"
+    },
+    {
+      "name": "MiniDOGE",
+      "symbol": "MINIDOGE",
+      "address": "0xBa07EED3d09055d60CAEf2bDfCa1c05792f2dFad",
+      "chainId": 56,
+      "decimals": 9,
+      "logoURI": "https://assets.trustwalletapp.com/blockchains/smartchain/assets/0xBa07EED3d09055d60CAEf2bDfCa1c05792f2dFad/logo.png"
+    },
+    {
+      "name": "AlpacaToken",
+      "symbol": "ALPACA",
+      "address": "0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F",
+      "chainId": 56,
+      "decimals": 18,
+      "logoURI": "https://assets.trustwalletapp.com/blockchains/smartchain/assets/0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F/logo.png"
+    }
+  ]

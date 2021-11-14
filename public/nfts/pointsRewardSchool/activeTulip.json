@@ -1,0 +1,16 @@
+{
+	"name": "Active Tulip",
+	"description": "Farming, Gardening, Collecting, may earn you Active Tulip.",
+	"image": "https://gateway.pinata.cloud/ipfs/QmV6o4joGcKAcv88atEsm1EPEny5cVcFFJT4VkRAKTyU47/pointsRewardSchool/active-tulip.png",
+	"attributes": {
+		"gardenerId": 96,
+		"charisma": 4,
+		"fatigue": 4,
+		"health": 6,
+		"intelligence": 5,
+		"luck": 3,
+		"strength": 3,
+		"willpower": 4,
+		"wisdom": 5
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "Active Anemone",
+	"description": "Active Anemone, reward your Plantswap health.",
+	"image": "https://gateway.pinata.cloud/ipfs/QmV6o4joGcKAcv88atEsm1EPEny5cVcFFJT4VkRAKTyU47/pointsRewardSchool/active-anemone.png",
+	"attributes": {
+		"gardenerId": 95,
+		"charisma": 4,
+		"fatigue": 4,
+		"health": 5,
+		"intelligence": 4,
+		"luck": 3,
+		"strength": 3,
+		"willpower": 3,
+		"wisdom": 4
+	}
+}

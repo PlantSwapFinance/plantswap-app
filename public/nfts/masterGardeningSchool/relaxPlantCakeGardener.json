@@ -1,0 +1,16 @@
+{
+	"name": "Relax PLANT CAKE Gardener",
+	"description": "I love farming Plant, I support Plantswap by providing CAKE and Plant to the market and I harvest plant in reward!",
+	"image": "https://gateway.pinata.cloud/ipfs/QmXQZseRYqHMsgqGxe1SLrNNe5tC1BoHNaagMFYS3bxqzV",
+	"attributes": {
+		"gardenerId": 104,
+		"charisma": 8,
+		"fatigue": 5,
+		"health": 5,
+		"intelligence": 5,
+		"luck": 5,
+		"strength": 3,
+		"willpower": 6,
+		"wisdom": 3
+	}
+}

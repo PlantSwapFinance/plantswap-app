@@ -1,0 +1,16 @@
+{
+	"name": "Active Gladiolus",
+	"description": "Grow your Plants, get Active Gladiolus.",
+	"image": "https://gateway.pinata.cloud/ipfs/QmV6o4joGcKAcv88atEsm1EPEny5cVcFFJT4VkRAKTyU47/pointsRewardSchool/active-gladiolus.png",
+	"attributes": {
+		"gardenerId": 92,
+		"charisma": 4,
+		"fatigue": 4,
+		"health": 4,
+		"intelligence": 3,
+		"luck": 3,
+		"strength": 2,
+		"willpower": 3,
+		"wisdom": 2
+	}
+}

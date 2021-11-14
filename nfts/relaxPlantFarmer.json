@@ -1,0 +1,16 @@
+{
+	"name": "Relax PLANT Farmer",
+	"description": "I love farming Plant, so much that I stake them to harvest even more!",
+	"image": "https://gateway.pinata.cloud/ipfs/QmXQZseRYqHMsgqGxe1SLrNNe5tC1BoHNaagMFYS3bxqzV",
+	"attributes": {
+		"gardenerId": 100,
+		"charisma": 6,
+		"fatigue": 6,
+		"health": 5,
+		"intelligence": 7,
+		"luck": 7,
+		"strength": 4,
+		"willpower": 4,
+		"wisdom": 4
+	}
+}

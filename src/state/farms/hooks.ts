@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state'
 import { useWeb3React } from '@web3-react/core'
@@ -7,8 +7,22 @@ import { BIG_ZERO } from 'utils/bigNumber'
 import { getBalanceAmount } from 'utils/formatBalance'
 import { farmsConfig } from 'config/constants'
 import useRefresh from 'hooks/useRefresh'
+import { nanoid } from 'nanoid'
+import unchainedDatas from 'utils/calls/unchainedDatas'
 import { fetchFarmsPublicDataAsync, fetchFarmUserDataAsync, nonArchivedFarms } from '.'
 import { State, Farm, FarmsState } from '../types'
+
+interface UnchainedData {
+  dataType: string
+  value: string
+  dateAdded: Date
+  dateUpdated: Date
+}
+
+interface UnchainedLogData extends UnchainedData {
+  dataId: string
+  userId: string
+}
 
 export const usePollFarmsData = (includeArchive = false) => {
   const dispatch = useAppDispatch()
@@ -99,8 +113,48 @@ export const usePriceBnbBusd = (): BigNumber => {
 }
 
 export const usePricePlantBusd = (): BigNumber => {
+  const [dataCheck, setDataCheck] = useState(false)
+  const [dataMissingCheck, setDataMissingCheck] = useState(false)
   const plantBnbFarm = useFarmFromPid(4)
-  return new BigNumber(plantBnbFarm.token.busdPrice)
+  const plantBnbBusdPrice = plantBnbFarm.token.busdPrice
+  const [unchainedPrice, setUnchainedPrice] = useState<string>(plantBnbBusdPrice)
+
+  if (plantBnbBusdPrice !== undefined) {
+    const priceData: UnchainedData = {
+      dataType: 'plantPrice',
+      value: plantBnbBusdPrice,
+      dateAdded: new Date(),
+      dateUpdated: new Date()
+    }
+    const priceLogData: UnchainedLogData = {
+      ...priceData,
+      dataId: nanoid(),
+      userId: 'test'
+    }
+    if (!dataCheck) {
+      setDataCheck(true)
+      unchainedDatas.readUnchainedDatasByDataType('plantPrice').then((foundUnchainedData) => {
+        if (foundUnchainedData[0].data) {
+          unchainedDatas.updateUnchainedDatas(foundUnchainedData[0].ref["@ref"].id, priceData);
+        }
+      }).catch(() => {
+        unchainedDatas.createUnchainedDatas(priceData)
+      })
+      unchainedDatas.createUnchainedLogDatas(priceLogData)
+    }
+  }
+  else {
+    // eslint-disable-next-line
+    if (!dataMissingCheck) {
+      setDataMissingCheck(true)
+      unchainedDatas.readUnchainedDatasByDataType('plantPrice').then((foundUnchainedData) => {
+        if (foundUnchainedData[0].data) {
+          setUnchainedPrice(foundUnchainedData[0].data.value)
+        }
+      })
+    }
+  }
+  return new BigNumber(unchainedPrice)
 }
 
 export const usePriceCakeBusd = (): BigNumber => {

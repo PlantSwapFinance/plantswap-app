@@ -18,12 +18,12 @@ const verticalGardens: VerticalGardenConfig[] = [
     verticalGardenCategory: VerticalGardenCategory.PANCAKE,
     harvest: true,
     sortOrder: 1,
-    isFinished: true,
+    isFinished: false,
     depositFee: 100, // 1%
     rewardCut: 1500, // 15%
     rewardCutSplitDevelopmentFund: 50, // 50% of 15%
     rewardCutSplitBuyPlantAndBurn: 50, // 50% of 15%
-    displayOnHomePage: false,
+    displayOnHomePage: true,
   },
   {
     vgId: 1,

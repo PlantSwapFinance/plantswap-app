@@ -134,7 +134,7 @@ export const usePricePlantBusd = (): BigNumber => {
     if (!dataCheck) {
       setDataCheck(true)
       unchainedDatas.readUnchainedDatasByDataType('plantPrice').then((foundUnchainedData) => {
-        if (foundUnchainedData[0].data) {
+        if (foundUnchainedData[0] !== undefined && foundUnchainedData[0].data !== undefined) {
           unchainedDatas.updateUnchainedDatas(foundUnchainedData[0].ref["@ref"].id, priceData);
         }
       }).catch(() => {
@@ -148,7 +148,7 @@ export const usePricePlantBusd = (): BigNumber => {
     if (!dataMissingCheck) {
       setDataMissingCheck(true)
       unchainedDatas.readUnchainedDatasByDataType('plantPrice').then((foundUnchainedData) => {
-        if (foundUnchainedData[0].data) {
+        if (foundUnchainedData[0] !== undefined && foundUnchainedData[0].data !== undefined) {
           setUnchainedPrice(foundUnchainedData[0].data.value)
         }
       })

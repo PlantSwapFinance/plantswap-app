@@ -40,12 +40,12 @@ const verticalGardens: VerticalGardenConfig[] = [
     verticalGardenCategory: VerticalGardenCategory.PANCAKE,
     harvest: true,
     sortOrder: 1,
-    isFinished: false,
+    isFinished: true,
     depositFee: 100, // 1%
     rewardCut: 1500, // 15%
     rewardCutSplitDevelopmentFund: 50, // 50% of 15%
     rewardCutSplitBuyPlantAndBurn: 50, // 50% of 15%
-    displayOnHomePage: true,
+    displayOnHomePage: false,
   },
   {
     vgId: 2,
@@ -62,11 +62,12 @@ const verticalGardens: VerticalGardenConfig[] = [
     verticalGardenCategory: VerticalGardenCategory.CAFE,
     harvest: true,
     sortOrder: 6,
-    isFinished: false,
+    isFinished: true,
     depositFee: 100, // 1%
     rewardCut: 1500, // 15%
     rewardCutSplitDevelopmentFund: 50, // 50% of 15%
     rewardCutSplitBuyPlantAndBurn: 50, // 50% of 15%
+    displayOnHomePage: false,
   },
   {
     vgId: 3,
@@ -83,11 +84,12 @@ const verticalGardens: VerticalGardenConfig[] = [
     verticalGardenCategory: VerticalGardenCategory.COMMUNITY,
     harvest: true,
     sortOrder: 4,
-    isFinished: false,
+    isFinished: true,
     depositFee: 100, // 1%
     rewardCut: 1500, // 15%
     rewardCutSplitDevelopmentFund: 50, // 50% of 15%
     rewardCutSplitBuyPlantAndBurn: 50, // 50% of 15%
+    displayOnHomePage: false,
   },
   {
     vgId: 4,
@@ -104,12 +106,12 @@ const verticalGardens: VerticalGardenConfig[] = [
     verticalGardenCategory: VerticalGardenCategory.PANCAKE,
     harvest: true,
     sortOrder: 5,
-    isFinished: false,
+    isFinished: true,
     depositFee: 100, // 1%
     rewardCut: 1500, // 15%
     rewardCutSplitDevelopmentFund: 50, // 50% of 15%
     rewardCutSplitBuyPlantAndBurn: 50, // 50% of 15%
-    displayOnHomePage: true,
+    displayOnHomePage: false,
   },
   {
     vgId: 5,
@@ -126,12 +128,12 @@ const verticalGardens: VerticalGardenConfig[] = [
     verticalGardenCategory: VerticalGardenCategory.COMMUNITY,
     harvest: true,
     sortOrder: 3,
-    isFinished: false,
+    isFinished: true,
     depositFee: 100, // 1%
     rewardCut: 1500, // 15%
     rewardCutSplitDevelopmentFund: 50, // 50% of 15%
     rewardCutSplitBuyPlantAndBurn: 50, // 50% of 15%
-    displayOnHomePage: true,
+    displayOnHomePage: false,
   },
    
 ]

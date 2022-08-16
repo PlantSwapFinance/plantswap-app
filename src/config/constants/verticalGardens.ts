@@ -84,7 +84,7 @@ const verticalGardens: VerticalGardenConfig[] = [
     verticalGardenCategory: VerticalGardenCategory.COMMUNITY,
     harvest: true,
     sortOrder: 4,
-    isFinished: true,
+    isFinished: false,
     depositFee: 100, // 1%
     rewardCut: 1500, // 15%
     rewardCutSplitDevelopmentFund: 50, // 50% of 15%

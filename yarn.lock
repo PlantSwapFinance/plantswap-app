@@ -4189,10 +4189,10 @@
     utility-types "^3.10.0"
     zustand "^3.5.1"
 
-"@react-three/flex@^0.6.0":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@react-three/flex/-/flex-0.6.1.tgz#18bd61f1476fbfef9b8e8a38fbe15a5118461484"
-  integrity sha512-WjF+FBXT7uWFQc9qp2BqoLeZcskcMpr0rtXPh8XmFKubP2pW3mPtr1jZPc3NAKjkeEuMho1Yvpi4fJIHFcjRhA==
+"@react-three/flex@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@react-three/flex/-/flex-0.7.0.tgz#552f74a6765aa1d2d2e64cddf30bb2d22c2298ef"
+  integrity sha512-Cim/9u6BYuieyZ2NXbE4nbNOqWIyOlT62qlFEQsh6SoMJFde0pBICZupgRlI5VkWX6c2aMXoFkLTxlX6AEmsjQ==
   dependencies:
     yoga-layout-prebuilt "^1.9.6"
 
@@ -8587,11 +8587,6 @@ caniuse-lite@^1.0.30001274:
   version "1.0.30001279"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001279.tgz#eb06818da481ef5096a3b3760f43e5382ed6b0ce"
   integrity sha512-VfEHpzHEXj6/CxggTwSFoZBBYGQfQv9Cf42KPlO79sWXCD1QNKWKsKzFeWL7QpZHJQYAvocqV6Rty1yJMkqWLQ==
-
-caniuse-lite@^1.0.30001376:
-  version "1.0.30001376"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001376.tgz#af2450833e5a06873fbb030a9556ca9461a2736d"
-  integrity sha512-I27WhtOQ3X3v3it9gNs/oTpoE5KpwmqKR5oKPA8M0G7uMXh9Ty81Q904HpKUrM30ei7zfcL5jE7AXefgbOfMig==
 
 cannon-es-debugger@^0.1.4:
   version "0.1.4"

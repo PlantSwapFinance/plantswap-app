@@ -4189,10 +4189,10 @@
     utility-types "^3.10.0"
     zustand "^3.5.1"
 
-"@react-three/flex@^0.6.0":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@react-three/flex/-/flex-0.6.1.tgz#18bd61f1476fbfef9b8e8a38fbe15a5118461484"
-  integrity sha512-WjF+FBXT7uWFQc9qp2BqoLeZcskcMpr0rtXPh8XmFKubP2pW3mPtr1jZPc3NAKjkeEuMho1Yvpi4fJIHFcjRhA==
+"@react-three/flex@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@react-three/flex/-/flex-0.7.0.tgz#552f74a6765aa1d2d2e64cddf30bb2d22c2298ef"
+  integrity sha512-Cim/9u6BYuieyZ2NXbE4nbNOqWIyOlT62qlFEQsh6SoMJFde0pBICZupgRlI5VkWX6c2aMXoFkLTxlX6AEmsjQ==
   dependencies:
     yoga-layout-prebuilt "^1.9.6"
 

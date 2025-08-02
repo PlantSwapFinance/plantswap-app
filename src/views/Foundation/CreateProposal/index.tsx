@@ -15,7 +15,7 @@ import {
   Input,
   Text,
 } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import times from 'lodash/times'
 import isEmpty from 'lodash/isEmpty'
 import { useTranslation } from 'contexts/Localization'
@@ -73,7 +73,7 @@ const CreateProposal = () => {
   
   const { t } = useTranslation()
   const { toastSuccess, toastError } = useToast()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   
   const { name, body, donationAddress, logoUrl, teamId, organisationTeam, websiteAndSocialList } = state
   const formErrors = getFormErrors(state, t)

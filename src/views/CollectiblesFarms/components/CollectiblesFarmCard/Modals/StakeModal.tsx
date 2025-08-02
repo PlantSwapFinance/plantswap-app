@@ -12,7 +12,7 @@ import { useGetCollectibles } from 'state/hooks'
 import { CollectiblesFarm } from 'state/types'
 // import { fetchUserTokens } from 'state/collectiblesFarms/fetchCollectiblesFarmsUser'
 // import { getNftByTokenId } from 'utils/collectibles'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { getAddress } from 'utils/addressHelpers'
 import { usePlantswapGardeners } from 'hooks/useContract'
 import SelectionCard from './SelectionCard'
@@ -53,7 +53,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
   const [variationId, setvariationId] = useState<number>()
   const { isLoading, nftsInWallet, tokenIds } = useGetCollectibles()
   const { theme } = useTheme()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { onStake } = useStakeCollectiblesFarm(cfId)
   const { onUnstake } = useUnstakeCollectiblesFarm(cfId)
   const plantswapGardenersContract = usePlantswapGardeners()

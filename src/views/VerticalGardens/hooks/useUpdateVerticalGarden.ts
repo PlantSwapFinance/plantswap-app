@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useAppDispatch } from 'state'
 import { updateUserBalance, updateUserPendingReward } from 'state/actions'
 import { useVerticalGarden } from 'hooks/useContract'
@@ -17,7 +17,7 @@ const updateVerticalGarden = async (verticalGardenContract) => {
 
 const useUpdateVerticalGarden = (vgId) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const verticalGardenContract = useVerticalGarden(vgId)
 
   const handleUpdate = useCallback(async () => {

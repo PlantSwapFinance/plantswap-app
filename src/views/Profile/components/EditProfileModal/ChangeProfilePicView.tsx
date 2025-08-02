@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, InjectedModalProps, Skeleton, Text } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useAppDispatch } from 'state'
 import { useGetCollectibles } from 'state/hooks'
 import { useProfile } from 'state/profile/hooks'
@@ -27,7 +27,7 @@ const ChangeProfilePicPage: React.FC<ChangeProfilePicPageProps> = ({ onDismiss }
   const { profile } = useProfile()
   const profileContract = useProfileContract()
   const plantswapGardenersContract = usePlantswapGardeners()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { toastSuccess } = useToast()
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({

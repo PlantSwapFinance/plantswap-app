@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { Card, CardBody, Grid, Box, Modal, Text, Image, InjectedModalProps, Button, AutoRenewIcon } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useTranslation } from 'contexts/Localization'
 import nfts from 'config/constants/nfts'
 import useToast from 'hooks/useToast'
@@ -16,7 +16,7 @@ interface ClaimGiftProps extends InjectedModalProps {
 export const useCanClaim = () => {
   const [canClaim, setCanClaim] = useState(false)
   const [refresh, setRefresh] = useState(1)
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const pointsRewardSchoolNftContract = usePointsRewardSchoolNftContract()
 
   const checkClaimStatus = useCallback(() => {
@@ -44,7 +44,7 @@ const ClaimGift: React.FC<ClaimGiftProps> = ({ onSuccess, onDismiss }) => {
   const { canClaim } = useCanClaim()
   const plantTokenContract = usePlant()
   const pointsRewardSchoolNftContract = usePointsRewardSchoolNftContract()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const pointsRewardSchoolNftAddress = getPointsRewardSchoolNftAddress()
   const maxNftCost = new BigNumber(1250000000000000000)
   const [nextPointsMinimum, setNextPointsMinimum] = useState(25)

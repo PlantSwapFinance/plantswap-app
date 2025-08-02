@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useModal } from '@plantswap/uikit'
 import { useProfile } from 'state/profile/hooks'
 import { useMasterGardeningSchoolNftContract } from 'hooks/useContract'
@@ -22,7 +22,7 @@ const GlobalCheckClaimStatus: React.FC<GlobalCheckClaimStatusProps> = ({ exclude
   const [onPresentGiftModal] = useModal(<NftGiveawayModal />)
   const easterNftContract = useMasterGardeningSchoolNftContract()
   const { profile } = useProfile()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { pathname } = useLocation()
 
   // Check claim status

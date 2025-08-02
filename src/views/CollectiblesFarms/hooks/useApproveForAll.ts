@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { ethers, Contract } from 'ethers'
 import { useAppDispatch } from 'state'
 import { updateUserAllowance } from 'state/actions'
@@ -11,7 +11,7 @@ export const useApproveCollectiblesFarmForAll = (collectiblesFarmingPoolContract
   const { toastSuccess, toastError } = useToast()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   const handleApprove = useCallback(async () => {
     try {

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { Button, useModal, IconButton, AddIcon, MinusIcon, Skeleton, Flex, Text } from '@plantswap/uikit'
 import ConnectWalletButton from 'components/ConnectWalletButton'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { CollectiblesFarm } from 'state/types'
 import Balance from 'components/Balance'
 import { useTranslation } from 'contexts/Localization'
@@ -29,7 +29,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ collectiblesFarm,
     stakingTokenPrice
   } = collectiblesFarm
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   const stakedBalance = userData?.collectiblesBalance ? new BigNumber(userData.collectiblesBalance) : BIG_ZERO
   const isNotVaultAndHasStake = stakedBalance.gt(0)

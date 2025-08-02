@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { ethers, Contract } from 'ethers'
 import { useAppDispatch } from 'state'
 import { updateUserAllowance } from 'state/actions'
@@ -12,7 +12,7 @@ export const useApprovePool = (lpContract: Contract, sousId, earningTokenSymbol)
   const { toastSuccess, toastError } = useToast()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const sousChefContract = useSousChef(sousId)
 
   const handleApprove = useCallback(async () => {

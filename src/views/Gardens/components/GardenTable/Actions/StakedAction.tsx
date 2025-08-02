@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom'
 import { BigNumber } from 'bignumber.js'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import Balance from 'components/Balance'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useFarmUser, useLpTokenPrice } from 'state/farms/hooks'
 import { fetchFarmUserDataAsync } from 'state/farms'
 import { GardenWithStakedValue } from 'views/Gardens/components/GardenCard/GardenCard'
@@ -42,7 +42,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   userDataReady,
 }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const [requestedApproval, setRequestedApproval] = useState(false)
   const { allowance, tokenBalance, stakedBalance } = useFarmUser(pid)
   const { onStake } = useStakeGardens(pid)

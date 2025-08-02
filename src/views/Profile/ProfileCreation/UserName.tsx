@@ -17,7 +17,7 @@ import {
   Checkbox,
 } from '@plantswap/uikit'
 import { parseISO, formatDistance } from 'date-fns'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import useToast from 'hooks/useToast'
 import { signMessage } from 'utils/web3React'
 import useWeb3Provider from 'hooks/useActiveWeb3React'
@@ -62,7 +62,7 @@ const UserName: React.FC = () => {
   const [isAcknowledged, setIsAcknowledged] = useState(false)
   const { teamId, selectedNft, userName, actions, minimumPlantRequired, allowance } = useProfileCreation()
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { toastError } = useToast()
   const { library } = useWeb3Provider()
   const [existingUserState, setExistingUserState] = useState<ExistingUserState>(ExistingUserState.IDLE)

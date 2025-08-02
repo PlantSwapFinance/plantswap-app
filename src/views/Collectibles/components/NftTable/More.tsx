@@ -6,7 +6,7 @@ import { useGetCollectibles } from 'state/hooks'
 import { useProfile } from 'state/profile/hooks'
 // To filter dev features
 import { MASTERGARDENERDEVADDRESS } from 'config'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 // 
 
 export interface MoreProps {
@@ -27,7 +27,7 @@ const More: React.FunctionComponent<MoreProps> = ({ identifier }) => {
   const { t } = useTranslation()
   const { tokenIds } = useGetCollectibles()
   const { profile } = useProfile()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   
   return (
     <Amount earned={0}>

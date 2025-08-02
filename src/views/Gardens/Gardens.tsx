@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import { Route, useRouteMatch, useLocation, NavLink } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { Heading, RowType, Toggle, Text, Button, ArrowForwardIcon, Flex, EndPage } from '@plantswap/uikit'
 import { ChainId } from '@pancakeswap/sdk'
 import styled from 'styled-components'
@@ -119,7 +119,7 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
   const priceCake = usePriceCakeBusd()
   const [query, setQuery] = useState('')
   const [viewMode, setViewMode] = usePersistState(ViewMode.TABLE, { localStorageKey: 'plant_garden_view' })
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const [sortOption, setSortOption] = useState('hot')
   const chosenGardensLength = useRef(0)
   const {tokenMode} = gardensProps;

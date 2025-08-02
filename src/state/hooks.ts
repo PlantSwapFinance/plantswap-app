@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state'
 import Nfts from 'config/constants/nfts'
@@ -11,7 +11,7 @@ import { fetchWalletNfts } from './collectibles'
 
 // Collectibles
 export const useGetCollectibles = () => {
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const dispatch = useAppDispatch()
   const { isInitialized, isLoading, data } = useSelector((state: State) => state.collectibles)
   const identifiers = Object.keys(data)

@@ -25,7 +25,7 @@ import { useTranslation } from 'contexts/Localization'
 import { Nft } from 'config/constants/types'
 // To filter dev features
 import { MASTERGARDENERDEVADDRESS } from 'config'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 // 
 import InfoRow from '../InfoRow'
 import TransferNftModal from '../TransferNftModal'
@@ -65,7 +65,7 @@ const NftCard: React.FC<NftCardProps> = ({ nft, canClaim = false, tokenIds = [],
   const [isOpen, setIsOpen] = useState(false)
   const { t } = useTranslation()
   const { profile } = useProfile()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { identifier, variationId, name, description, requirement } = nft
   const walletOwnsNft = tokenIds.length > 0
   const Icon = isOpen ? ChevronUpIcon : ChevronDownIcon

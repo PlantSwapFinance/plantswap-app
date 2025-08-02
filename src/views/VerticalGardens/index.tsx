@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { Heading, Flex, Text, EndPage } from '@plantswap/uikit'
 import orderBy from 'lodash/orderBy'
 import partition from 'lodash/partition'
@@ -75,7 +75,7 @@ const NUMBER_OF_POOLS_VISIBLE = 12
 const Pools: React.FC = () => {
   const location = useLocation()
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { verticalGardens, userDataLoaded } = useVerticalGardens(account)
   const [stakedOnly, setStakedOnly] = usePersistState(false, { localStorageKey: 'plant_pool_staked' })
   const [numberOfPoolsVisible, setNumberOfPoolsVisible] = useState(NUMBER_OF_POOLS_VISIBLE)

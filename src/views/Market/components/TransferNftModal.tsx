@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { Button, Input, Modal, Text } from '@plantswap/uikit'
 import { getAddressByType } from 'utils/collectibles'
 import { Nft } from 'config/constants/types'
@@ -43,7 +43,7 @@ const TransferNftModal: React.FC<TransferNftModalProps> = ({ nft, tokenIds, onSu
   const [value, setValue] = useState('')
   const [error, setError] = useState(null)
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const contract = useERC721(getAddressByType(nft.type))
   const { toastSuccess } = useToast()
 

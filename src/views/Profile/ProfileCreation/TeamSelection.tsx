@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { Card, CardBody, CommunityIcon, Flex, Heading, Text, Button, useModal } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import shuffle from 'lodash/shuffle'
 import { useTeams } from 'state/teams/hooks'
 import { useTranslation } from 'contexts/Localization'
@@ -12,7 +12,7 @@ import useProfileCreation from './contexts/hook'
 const Team: React.FC = () => {
   const { teamId: currentTeamId, userName, selectedNft, minimumPlantRequired, allowance, actions } = useProfileCreation()
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { teams } = useTeams()
   const handleTeamSelection = (value: string) => actions.setTeamId(parseInt(value, 10))
   const teamValues = useMemo(() => shuffle(Object.values(teams)), [teams])

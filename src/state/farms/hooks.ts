@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import BigNumber from 'bignumber.js'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { getBalanceAmount } from 'utils/formatBalance'
@@ -27,7 +27,7 @@ interface UnchainedLogData extends UnchainedData {
 export const usePollFarmsData = (includeArchive = false) => {
   const dispatch = useAppDispatch()
   const { slowRefresh } = useRefresh()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   useEffect(() => {
     const farmsToFetch = includeArchive ? farmsConfig : nonArchivedFarms

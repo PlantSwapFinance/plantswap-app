@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
 import { updateUserStakedBalance, updateUserBalance, updateUserPendingReward } from 'state/actions'
@@ -14,7 +14,7 @@ const verticalUnstake = async (verticalGardenContract, amount, decimals) => {
 
 const useUnstakeVerticalGarden = (vgId) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const verticalGardenContract = useVerticalGarden(vgId)
 
   const handleUnstake = useCallback(

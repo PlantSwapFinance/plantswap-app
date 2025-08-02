@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import { Route, useRouteMatch, useLocation } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { MASTERGARDENERDEVADDRESS } from 'config'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { Heading, RowType, Toggle, Text, Flex, EndPage, IconButton, AddIcon, useModal } from '@plantswap/uikit'
 import { ChainId } from '@pancakeswap/sdk'
 import styled from 'styled-components'
@@ -127,7 +127,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
   const priceCake = usePriceCakeBusd()
   const [query, setQuery] = useState('')
   const [viewMode, setViewMode] = usePersistState(ViewMode.TABLE, { localStorageKey: 'plant_farm_view' })
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const [sortOption, setSortOption] = useState('hot')
   const chosenFarmsLength = useRef(0)
   const {tokenMode} = farmsProps;

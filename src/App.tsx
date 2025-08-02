@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js'
 import Cookies from 'universal-cookie'
 import useEagerConnect from 'hooks/useEagerConnect'
 import visitorsApi from 'utils/calls/visitors'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { usePollBlockNumber } from 'state/block/hooks'
 import { usePollCoreFarmData } from 'state/farms/hooks'
 import { useFetchProfile } from 'state/profile/hooks'
@@ -84,7 +84,7 @@ const App: React.FC = () => {
   const [userIdLoaded, setUserIdLoaded] = useState(false)
   const [userIdCreated, setUserIdCreated] = useState(false)
   const cookies = new Cookies()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const [visitorSearched, setVisitorSearched] = useState(false)
   const [visitorExist, setVisitorExist] = useState(false)
 

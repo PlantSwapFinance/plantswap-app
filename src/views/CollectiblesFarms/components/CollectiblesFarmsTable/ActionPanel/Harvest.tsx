@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Text, useModal, Flex, Skeleton, Heading } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { CollectiblesFarmCategory } from 'config/constants/types'
 import { formatNumber, getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalance'
 import { useTranslation } from 'contexts/Localization'
@@ -43,7 +43,7 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({
   stakingExtraRewardTokenPrice,
 }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   // const { collectiblesList } = useCollectiblesFarmsTokenList(account, cfId, getAddress(collectiblesFarmingPoolContract), totalStaked)
 
 

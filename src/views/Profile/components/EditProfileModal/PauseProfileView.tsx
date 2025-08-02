@@ -8,7 +8,7 @@ import { fetchProfile } from 'state/profile'
 import useToast from 'hooks/useToast'
 import { getBalanceNumber } from 'utils/formatBalance'
 import { useProfile as useProfileContract } from 'hooks/useContract'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 
 type PauseProfilePageProps = InjectedModalProps
 
@@ -19,7 +19,7 @@ const PauseProfilePage: React.FC<PauseProfilePageProps> = ({ onDismiss }) => {
   const { numberPlantToReactivate } = useGetProfileCosts()
   const { t } = useTranslation()
   const plantswapProfileContract = useProfileContract()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { toastSuccess, toastError } = useToast()
   const dispatch = useAppDispatch()
 

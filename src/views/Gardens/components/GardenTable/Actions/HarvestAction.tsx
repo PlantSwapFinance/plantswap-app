@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Heading, Skeleton, Text } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { GardenWithStakedValue } from 'views/Gardens/components/GardenCard/GardenCard'
 import Balance from 'components/Balance'
 import { BIG_ZERO } from 'utils/bigNumber'
@@ -38,7 +38,7 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({ pid, userD
   const { onReward } = useHarvestGarden(pid)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   return (
     <ActionContainer>

@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useAppDispatch } from 'state'
 import { updateUserStakedBalance, updateUserBalance } from 'state/actions'
 import collectiblesFarmsLogsApi from 'utils/calls/collectiblesFarmsLogs'
@@ -17,7 +17,7 @@ const nftDeposit = async (collectiblesFarmContract, tokenId) => {
 
 const useCollectiblesFarmStake = (cfId) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const collectiblesFarmContract = useCollectiblesFarmingPool(cfId)
 
   const handleStake = useCallback(

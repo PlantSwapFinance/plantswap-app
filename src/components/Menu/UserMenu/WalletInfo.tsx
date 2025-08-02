@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Button, Flex, InjectedModalProps, LinkExternal, Message, Text } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import useTokenBalance, { useGetBnbBalance } from 'hooks/useTokenBalance'
 import { getPlantAddress } from 'utils/addressHelpers'
 import useAuth from 'hooks/useAuth'
@@ -16,7 +16,7 @@ interface WalletInfoProps {
 
 const WalletInfo: React.FC<WalletInfoProps> = ({ hasLowBnbBalance, onDismiss }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { balance } = useGetBnbBalance()
   const { balance: plantBalance } = useTokenBalance(getPlantAddress())
   const { logout } = useAuth()

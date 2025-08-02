@@ -12,7 +12,7 @@ import {
   Tag,
   CheckmarkCircleIcon,
 } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import times from 'lodash/times'
 import { Vote, VotingStateLoadingStatus } from 'state/types'
 import { useGetVotingStateLoadingStatus } from 'state/voting/hooks'
@@ -29,7 +29,7 @@ const Results: React.FC<ResultsProps> = ({ choices, votes }) => {
   const { t } = useTranslation()
   const results = calculateVoteResults(votes)
   const votingStatus = useGetVotingStateLoadingStatus()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const totalVotes = getTotalFromVotes(votes)
 
   return (

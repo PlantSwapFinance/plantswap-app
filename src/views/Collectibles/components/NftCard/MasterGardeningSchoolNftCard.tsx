@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { ethers } from 'ethers'
 import { useProfile } from 'state/profile/hooks'
 import { useMasterGardeningSchoolNftContract } from 'hooks/useContract'
@@ -17,7 +17,7 @@ export const teamNftMap = {
 
 const MasterGardeningSchoolNftCard: React.FC<NftCardProps> = ({ nft, ...props }) => {
   const [isClaimable, setIsClaimable] = useState(false)
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { profile } = useProfile()
   const { identifier, variationId } = nft
   const { team } = profile ?? {}

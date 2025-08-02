@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useMemo, useReducer } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 
 export type Actions =
   { type: 'set_selected_nft'; nftAddress: string; tokenId: number }
@@ -52,7 +52,7 @@ export const NftSelectionContext = createContext<ContextType>(null)
 
 const NftSelectionProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   // Initial checks
   useEffect(() => {

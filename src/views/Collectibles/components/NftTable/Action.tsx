@@ -16,7 +16,7 @@ import {
 } from '@plantswap/uikit'
 // To filter dev features
 import { MASTERGARDENERDEVADDRESS } from 'config'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 // 
 import { useTranslation } from 'contexts/Localization'
 import TransferNftModal from '../TransferNftModal'
@@ -53,7 +53,7 @@ const ButtonRow = styled.tr`
 `
 const Action: React.FunctionComponent<ActionProps> = ({ nft, canClaim = false, tokenIds = [], onClaim, refresh }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   const { isXl } = useMatchBreakpoints()
   const isMobile = !isXl

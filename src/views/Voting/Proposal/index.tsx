@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { ArrowBackIcon, Box, Button, Flex, Heading } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { Link, useParams } from 'react-router-dom'
 import { useAppDispatch } from 'state'
 import { ProposalState, VotingStateLoadingStatus } from 'state/types'
@@ -27,7 +27,7 @@ const Proposal = () => {
   const { id }: { id: string } = useParams()
   const proposal = useGetProposal(id)
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const dispatch = useAppDispatch()
   const votes = useGetVotes(id)
   const voteLoadingStatus = useGetVotingStateLoadingStatus()

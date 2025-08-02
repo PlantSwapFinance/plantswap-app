@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Text } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useTranslation } from 'contexts/Localization'
 import { useAppDispatch } from 'state'
 import { useGetCollectibles } from 'state/hooks'
@@ -64,7 +64,7 @@ const ActionCell = styled.tr`
 
 const Extra: React.FunctionComponent<ExtraProps> = (props) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const dispatch = useAppDispatch()
   const { tokenIds } = useGetCollectibles()
   const { name, description } = props

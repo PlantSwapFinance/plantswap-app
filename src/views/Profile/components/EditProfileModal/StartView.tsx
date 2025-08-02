@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { Button, Flex, Text, InjectedModalProps } from '@plantswap/uikit'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import { getPlantProfileAddress } from 'utils/addressHelpers'
@@ -47,7 +47,7 @@ const StartPage: React.FC<StartPageProps> = ({ goToApprove, goToChange, goToRemo
   const minimumPlantRequired = profile.isActive ? numberPlantToUpdate : numberPlantToReactivate
   const hasMinimumPlantRequired = useHasPlantBalance(minimumPlantRequired)
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const plantContract = usePlant()
   const cost = profile.isActive ? numberPlantToUpdate : numberPlantToReactivate
 

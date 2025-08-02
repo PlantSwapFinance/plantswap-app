@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import { Modal, ModalBody, Text, Image, Button, BalanceInput, Flex } from '@plantswap/uikit'
@@ -46,7 +46,7 @@ const ContributeModal: React.FC<Props> = ({
   const { amountTokenCommittedInLP } = userPoolCharacteristics
   const { contract } = walletIfoData
   const [value, setValue] = useState('')
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const raisingTokenContract = useERC20(getAddress(currency.address))
   const { t } = useTranslation()
   const valueWithTokenDecimals = new BigNumber(value).times(DEFAULT_TOKEN_DECIMAL)

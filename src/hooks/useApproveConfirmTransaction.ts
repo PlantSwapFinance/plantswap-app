@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react'
 import { noop } from 'lodash'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { ethers } from 'ethers'
 import useToast from 'hooks/useToast'
 import { useTranslation } from 'contexts/Localization'
@@ -84,7 +84,7 @@ const useApproveConfirmTransaction = ({
   onApproveSuccess = noop,
 }: ApproveConfirmTransaction) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const [state, dispatch] = useReducer(reducer, initialState)
   const handlePreApprove = useRef(onRequiresApproval)
   const { toastError } = useToast()

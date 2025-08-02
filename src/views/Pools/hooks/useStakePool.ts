@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useAppDispatch } from 'state'
 import { updateUserStakedBalance, updateUserBalance } from 'state/actions'
 import { stakeFarm } from 'utils/calls'
@@ -26,7 +26,7 @@ const sousStakeBnb = async (sousChefContract, amount) => {
 
 const useStakePool = (sousId: number, isUsingBnb = false) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const masterGardenerContract = useMasterchef()
   const sousChefContract = useSousChef(sousId)
 

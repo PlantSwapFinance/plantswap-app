@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { Button, useModal, IconButton, AddIcon, MinusIcon, Skeleton, Flex, Text } from '@plantswap/uikit'
 import ConnectWalletButton from 'components/ConnectWalletButton'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { VerticalGarden } from 'state/types'
 import Balance from 'components/Balance'
 import { useTranslation } from 'contexts/Localization'
@@ -37,7 +37,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ verticalGarden, u
     isAutoVault,
   } = verticalGarden
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   const stakingTokenContract = useERC20(stakingToken.address ? getAddress(stakingToken.address) : '')
   const { handleApprove: handleVerticalGardenApprove, requestedApproval: requestedVerticalGardenApproval } = useApproveVerticalGarden(

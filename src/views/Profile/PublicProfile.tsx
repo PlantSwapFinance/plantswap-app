@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import {
   Card,
   CardBody,
@@ -82,7 +82,7 @@ const Section = styled.div`
 `
 
 const PublicProfile = () => {
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { profile } = useProfile()
   const [usernameVisibilityToggled, setUsernameVisibility] = usePersistState(false, {
     localStorageKey: 'username_visibility_toggled',

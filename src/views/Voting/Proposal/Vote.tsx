@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button, Card, CardBody, CardHeader, CardProps, Heading, Radio, Text, useModal } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useAppDispatch } from 'state'
 import { Proposal } from 'state/types'
 import { fetchVotes } from 'state/voting'
@@ -43,7 +43,7 @@ const Vote: React.FC<VoteProps> = ({ proposal, ...props }) => {
   const { t } = useTranslation()
   const { toastSuccess } = useToast()
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   const handleSuccess = async () => {
     toastSuccess(t('Vote cast!'))

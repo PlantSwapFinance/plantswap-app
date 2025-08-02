@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Text, useModal, Flex, Skeleton, Heading } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { VerticalGardenCategory } from 'config/constants/types'
 import { formatNumber, getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalance'
 import { usePricePlantBusd } from 'state/farms/hooks'
@@ -28,7 +28,7 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({
   stakingRewardTokenPrice,
 }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   const earnings = userData?.estimateReward ? new BigNumber(userData.estimateReward) : BIG_ZERO
   const earningsPlant = userData?.estimatePlantReward ? new BigNumber(userData.estimatePlantReward) : BIG_ZERO

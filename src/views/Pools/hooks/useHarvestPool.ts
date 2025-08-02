@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useAppDispatch } from 'state'
 import { updateUserBalance, updateUserPendingReward } from 'state/actions'
 import { harvestFarm } from 'utils/calls'
@@ -25,7 +25,7 @@ const harvestPoolBnb = async (sousChefContract) => {
 
 const useHarvestPool = (sousId, isUsingBnb = false) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const sousChefContract = useSousChef(sousId)
   const masterGardenerContract = useMasterchef()
 

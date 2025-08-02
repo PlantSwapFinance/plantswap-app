@@ -2,7 +2,7 @@ import React from 'react'
 import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
 import { Button, InjectedModalProps, Modal, Text, Flex } from '@plantswap/uikit'
 import { Nft } from 'config/constants/types'
@@ -32,7 +32,7 @@ const Actions = styled.div`
 const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss }) => {
        // const [isConfirming, setIsConfirming] = useState(false)
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const plantContract = usePlant()
   const masterGardeningSchoolNftContract = useMasterGardeningSchoolNftContract()
   const masterGardeningSchoolNftContractAddress = getMasterGardeningSchoolNftAddress()

@@ -4,7 +4,7 @@ import { Flex, Heading, Text, Link } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import Container from 'components/Layout/Container'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import SunburstSvg from './SunburstSvg'
 import CompositeImage from './CompositeImage'
 
@@ -83,7 +83,7 @@ const bottomRightImage = {
 
 const Footer = () => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   return (
     <>

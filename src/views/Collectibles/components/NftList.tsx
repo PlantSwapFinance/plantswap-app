@@ -3,7 +3,7 @@ import { Route, useLocation, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import orderBy from 'lodash/orderBy'
 import { Text, Toggle, Flex, RowType } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import nfts from 'config/constants/nfts'
 import usePersistState from 'hooks/usePersistState'
 import SearchInput from 'components/SearchInput'
@@ -115,7 +115,7 @@ const NftList = () => {
   const { t } = useTranslation()
   const { tokenIds } = useGetCollectibles()
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { profile } = useProfile()
   // const { team } = profile ?? {}
   // const masterGardeningSchoolNftContract = useMasterGardeningSchoolNftContract()

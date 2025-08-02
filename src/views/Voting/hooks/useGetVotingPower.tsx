@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { getActivePools } from 'utils/calls'
 import { getAddress } from 'utils/addressHelpers'
@@ -28,7 +28,7 @@ const initialState: State = {
 }
 
 const useGetVotingPower = (block?: number, isActive = true): State & { isLoading: boolean } => {
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const [votingPower, setVotingPower] = useState(initialState)
   const [isLoading, setIsLoading] = useState(!!account)
 

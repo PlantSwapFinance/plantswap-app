@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { EndPage } from '@plantswap/uikit'
 import Page from 'components/Layout/Page'
 import PageLoader from 'components/Loader/PageLoader'
@@ -13,7 +13,7 @@ import PublicProfile from './PublicProfile'
 
 const Profile = () => {
   const { isInitialized, isLoading, hasProfile } = useProfile()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
 
   useFetchAchievements()
 

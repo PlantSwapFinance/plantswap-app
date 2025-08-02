@@ -11,7 +11,7 @@ import {
   AutoRenewIcon,
   SproutPlaceholderIcon,
 } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { Ifo, PoolIds, Token } from 'config/constants/types'
 import tokens from 'config/constants/tokens'
 import { PublicIfoData, WalletIfoData } from 'views/Ifos/types'
@@ -86,7 +86,7 @@ const IfoCardTokens: React.FC<IfoCardTokensProps> = ({
   onApprove,
   enableStatus,
 }) => {
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { t } = useTranslation()
   const { targetRef, tooltip, tooltipVisible } = useTooltip(
     t(

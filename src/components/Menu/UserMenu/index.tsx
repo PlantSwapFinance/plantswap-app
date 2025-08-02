@@ -1,5 +1,5 @@
 import React from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import {
   Flex,
   LogoutIcon,
@@ -19,7 +19,7 @@ import WalletUserMenuItem from './WalletUserMenuItem'
 
 const UserMenu = () => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { address: account } = useAccount()
   const { logout } = useAuth()
   const { balance, fetchStatus } = useGetBnbBalance()
   const { isInitialized, isLoading, profile } = useProfile()

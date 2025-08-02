@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
-import { useAccount, useChainId, useConnectorClient } from 'wagmi'
+import { useAccount, useChainId, useWalletClient } from 'wagmi'
 import { Web3Provider } from '@ethersproject/providers'
+import { providers } from 'ethers'
 import { simpleRpcProvider } from 'utils/providers'
 
 /**
@@ -10,24 +11,29 @@ import { simpleRpcProvider } from 'utils/providers'
 const useActiveWeb3React = () => {
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
-  const { data: connectorClient } = useConnectorClient()
-  
-  const refEth = useRef(connectorClient)
-  const [provider, setProvider] = useState(connectorClient || simpleRpcProvider)
+  const { data: walletClient } = useWalletClient()
+
+  // Build an ethers.js Web3Provider whenever wagmi gives us a walletClient
+  const ethersProvider: Web3Provider | providers.JsonRpcProvider = walletClient
+    ? new Web3Provider(walletClient.transport as any, 'any')
+    : simpleRpcProvider
+
+  const refEth = useRef(ethersProvider)
+  const [provider, setProvider] = useState<typeof ethersProvider>(ethersProvider)
 
   useEffect(() => {
-    if (connectorClient !== refEth.current) {
-      setProvider(connectorClient || simpleRpcProvider)
-      refEth.current = connectorClient
+    if (ethersProvider !== refEth.current) {
+      setProvider(ethersProvider)
+      refEth.current = ethersProvider
     }
-  }, [connectorClient])
+  }, [ethersProvider])
 
-  return { 
-    library: provider, 
-    chainId: chainId ?? parseInt(process.env.REACT_APP_CHAIN_ID, 10), 
+  return {
+    library: provider as Web3Provider,
+    chainId: chainId ?? parseInt(process.env.REACT_APP_CHAIN_ID, 10),
     account: address,
     active: isConnected,
-    connector: connectorClient,
+    connector: walletClient,
   }
 }
 

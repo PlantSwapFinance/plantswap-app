@@ -1,6 +1,7 @@
 // Set of helper functions to facilitate wallet setup
 
-import { BASE_BSC_SCAN_URL, BASE_URL } from 'config'
+import { BASE_BSC_SCAN_URL, BASE_BSC_SCAN_URLS, BASE_URL } from 'config'
+import NETWORK_URLS from 'config/constants/networks'
 import { nodes } from './getRpcUrl'
 
 /**
@@ -9,33 +10,58 @@ import { nodes } from './getRpcUrl'
  */
 export const setupNetwork = async () => {
   const provider = window.ethereum
-  if (provider) {
-    const chainId = parseInt(process.env.REACT_APP_CHAIN_ID, 10)
+  if (!provider) {
+    console.error("Can't setup the BSC network on metamask because window.ethereum is undefined")
+    return false
+  }
+
+  const chainId = parseInt(process.env.REACT_APP_CHAIN_ID, 10)
+  const chainIdHex = `0x${chainId.toString(16)}`
+
+  // Ensure RPC URLs are valid, fallback to known public RPC if env is missing
+  const sanitizedRpcUrls = (nodes || []).filter((url): url is string => typeof url === 'string' && url.length > 0)
+  const fallbackRpc = NETWORK_URLS[chainId as keyof typeof NETWORK_URLS] || 'https://bsc-dataseed.binance.org/'
+  const rpcUrls = sanitizedRpcUrls.length > 0 ? sanitizedRpcUrls : [fallbackRpc]
+
+  const explorerUrl = (BASE_BSC_SCAN_URLS as any)[chainId] || BASE_BSC_SCAN_URL
+  const chainName = chainId === 97 ? 'Binance Smart Chain Testnet' : 'Binance Smart Chain Mainnet'
+
+  try {
+    // Try to switch first if the chain is already configured
+    await provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: chainIdHex }],
+    })
+    return true
+  } catch (switchError) {
+    // 4902: Unrecognized chain, need to add
+    if ((switchError as any)?.code !== 4902) {
+      console.error('Failed to switch the network in Metamask:', switchError)
+      return false
+    }
+
     try {
       await provider.request({
         method: 'wallet_addEthereumChain',
         params: [
           {
-            chainId: `0x${chainId.toString(16)}`,
-            chainName: 'Binance Smart Chain Mainnet',
+            chainId: chainIdHex,
+            chainName,
             nativeCurrency: {
               name: 'BNB',
-              symbol: 'bnb',
+              symbol: 'BNB',
               decimals: 18,
             },
-            rpcUrls: nodes,
-            blockExplorerUrls: [`${BASE_BSC_SCAN_URL}/`],
+            rpcUrls,
+            blockExplorerUrls: [`${explorerUrl}/`],
           },
         ],
       })
       return true
-    } catch (error) {
-      console.error('Failed to setup the network in Metamask:', error)
+    } catch (addError) {
+      console.error('Failed to setup the network in Metamask:', addError)
       return false
     }
-  } else {
-    console.error("Can't setup the BSC network on metamask because window.ethereum is undefined")
-    return false
   }
 }
 

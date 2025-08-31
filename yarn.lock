@@ -4146,9 +4146,9 @@
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
 "@react-three/cannon@^2.5.1":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@react-three/cannon/-/cannon-2.6.0.tgz#45198bfd4615ec686783a434e91fa2583304aaf9"
-  integrity sha512-vHB8720NPrfBOsIpXRF3AqcRrG7T0DrUmfujnLwNniudMGpcRHwvvbfZsaouWZN7L5Y6NmHWIHW0ZPZeaQIULg==
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/@react-three/cannon/-/cannon-2.6.1.tgz#60b46810888d4ef936eac54ed30f6c873e5c6d74"
+  integrity sha512-jb+3XaYexYRqYWUjA3UNdQ+HG2tVdtcaQ8y5cptsf1g+wpA11ZDfLNN+Jk6xGemD964fakAueLWj4bWOUvdu1Q==
   dependencies:
     cannon-es "^0.18.0"
     cannon-es-debugger "^0.1.4"

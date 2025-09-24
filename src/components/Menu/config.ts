@@ -83,25 +83,23 @@ const config: (t: ContextApi['t']) => MenuEntry[] = (t) => [
     },
   },
   {
-    label: t('Governance'),
-    icon: 'VoteIcon',
-    href: '/vote',
-  },
-  {
     label: t('More'),
     icon: 'MoreIcon',
     items: [
       {
         label: t('Contact'),
         href: 'https://plantswap.finance/contact-us',
+        target: '_blank',
       },
       {
         label: t('Github'),
         href: 'https://github.com/plantswapfinance',
+        target: '_blank',
       },
       {
         label: t('Blog'),
         href: "https://plantswapfinance.medium.com",
+        target: '_blank',
       },
       {
         label: t('Roadmap'),
@@ -118,10 +116,17 @@ const config: (t: ContextApi['t']) => MenuEntry[] = (t) => [
       {
         label: t('dex.guru'),
         href: "https://dex.guru/token/0x58BA5Bd8872ec18BD360a9592149daed2fC57c69-bsc",
+        target: '_blank',
       },
       {
         label: t('PlantSwap Token'),
         href: "https://bscscan.com/token/0x58BA5Bd8872ec18BD360a9592149daed2fC57c69",
+        target: '_blank',
+      },
+      {
+        label: t('Governance'),
+        href: 'https://snapshot.box/#/s:plantswap.eth',
+        target: '_blank',
       },
     ],
   },

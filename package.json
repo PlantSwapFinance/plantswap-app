@@ -29,7 +29,7 @@
     "@binance-chain/bsc-connector": "^1.0.0",
     "@ethersproject/experimental": "^5.0.1",
     "@pancakeswap/sdk": "^2.3.2",
-    "@plantswap/uikit": "0.1.7",
+    "@plantswap/uikit": "0.1.8",
     "@react-three/cannon": "^2.5.1",
     "@react-three/drei": "^7.3.1",
     "@react-three/fiber": "^7.0.6",

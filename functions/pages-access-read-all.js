@@ -1,35 +1,22 @@
-/* Import faunaDB sdk */
-const faunadb = require('faunadb')
-const q = faunadb.query
+const { getClient, toFaunaFormatArray } = require('./db/neon')
 
-
-exports.handler = (event, context) => {
+exports.handler = async (event, context) => {
   console.log('Function `pages-access-read-all` invoked')
-  /* configure faunaDB Client with our secret */
-  const client = new faunadb.Client({
-    secret: process.env.FAUNADB_SERVER_SECRET
-  }) 
-  return client.query(q.Paginate(q.Match(q.Ref('indexes/all_pages_access'))))
-    .then((response) => {
-      const docRefs = response.data
-      console.log('user refs', docRefs)
-      console.log(`${docRefs.length} pages_access found`)
-      
-      const getAllTodoDataQuery = docRefs.map((ref) => {
-        return q.Get(ref)
-      })
-      
-      return client.query(getAllTodoDataQuery).then((ret) => {
-        return {
-          statusCode: 200,
-          body: JSON.stringify(ret)
-        }
-      })
-    }).catch((error) => {
-      console.log('error', error)
-      return {
-        statusCode: 400,
-        body: JSON.stringify(error)
-      }
-    })
+  const sql = getClient()
+  try {
+    const result = await sql`
+      SELECT id, data FROM pages_access ORDER BY created_at ASC
+    `
+    const response = toFaunaFormatArray(result, 'pages_access')
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response)
+    }
+  } catch (error) {
+    console.log('error', error)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: error.message })
+    }
+  }
 }

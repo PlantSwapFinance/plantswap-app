@@ -1,28 +1,32 @@
-/* Import faunaDB sdk */
-const faunadb = require('faunadb')
 const getId = require('./utils/getId')
-const q = faunadb.query
-
+const { getClient, toFaunaFormat } = require('./db/neon')
 
 exports.handler = async (event, context) => {
-  /* configure faunaDB Client with our secret */
-  const client = new faunadb.Client({
-    secret: process.env.FAUNADB_SERVER_SECRET
-  }) 
+  const sql = getClient()
   const id = getId(event.path)
-  console.log(`Function 'users-access-access-delete' invoked. delete id: ${id}`)
-  return client.query(q.Delete(q.Ref(`classes/users_access/${id}`)))
-    .then((response) => {
-      console.log('success', response)
+  console.log(`Function 'users-access-delete' invoked. delete id: ${id}`)
+  try {
+    const result = await sql`
+      DELETE FROM users_access WHERE id = ${id}
+      RETURNING id, data
+    `
+    const row = result[0]
+    if (!row) {
       return {
-        statusCode: 200,
-        body: JSON.stringify(response)
+        statusCode: 404,
+        body: JSON.stringify({ error: 'User access not found' })
       }
-    }).catch((error) => {
-      console.log('error', error)
-      return {
-        statusCode: 400,
-        body: JSON.stringify(error)
-      }
-    })
+    }
+    const response = toFaunaFormat(row, 'users_access')
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response)
+    }
+  } catch (error) {
+    console.log('error', error)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: error.message })
+    }
+  }
 }

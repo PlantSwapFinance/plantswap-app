@@ -1,35 +1,22 @@
-/* Import faunaDB sdk */
-const faunadb = require('faunadb')
-const q = faunadb.query
+const { getClient, toFaunaFormatArray } = require('./db/neon')
 
-
-exports.handler = (event, context) => {
+exports.handler = async (event, context) => {
   console.log('Function `usernames-read-all` invoked')
-  /* configure faunaDB Client with our secret */
-  const client = new faunadb.Client({
-    secret: process.env.FAUNADB_SERVER_SECRET
-  }) 
-  return client.query(q.Paginate(q.Match(q.Ref('indexes/all_usernames'))))
-    .then((response) => {
-      const docRefs = response.data
-      console.log('username refs', docRefs)
-      console.log(`${docRefs.length} usernames found`)
-      
-      const getAllTodoDataQuery = docRefs.map((ref) => {
-        return q.Get(ref)
-      })
-      
-      return client.query(getAllTodoDataQuery).then((ret) => {
-        return {
-          statusCode: 200,
-          body: JSON.stringify(ret)
-        }
-      })
-    }).catch((error) => {
-      console.log('error', error)
-      return {
-        statusCode: 400,
-        body: JSON.stringify(error)
-      }
-    })
+  const sql = getClient()
+  try {
+    const result = await sql`
+      SELECT id, data FROM usernames ORDER BY created_at ASC
+    `
+    const response = toFaunaFormatArray(result, 'usernames')
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response)
+    }
+  } catch (error) {
+    console.log('error', error)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: error.message })
+    }
+  }
 }

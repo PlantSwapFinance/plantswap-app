@@ -1,28 +1,36 @@
-/* Import faunaDB sdk */
-const faunadb = require('faunadb')
 const getId = require('./utils/getId')
-const q = faunadb.query
-
+const { getClient } = require('./db/neon')
 
 exports.handler = async (event, context) => {
-  /* configure faunaDB Client with our secret */
-  const client = new faunadb.Client({
-    secret: process.env.FAUNADB_SERVER_SECRET
-  }) 
+  const sql = getClient()
   const id = getId(event.path)
   console.log(`Function 'users-delete' invoked. delete id: ${id}`)
-  return client.query(q.Delete(q.Ref(`classes/users/${id}`)))
-    .then((response) => {
-      console.log('success', response)
+  try {
+    const result = await sql`
+      DELETE FROM users WHERE id = ${id}
+      RETURNING id, data
+    `
+    const row = result[0]
+    if (!row) {
       return {
-        statusCode: 200,
-        body: JSON.stringify(response)
+        statusCode: 404,
+        body: JSON.stringify({ error: 'User not found' })
       }
-    }).catch((error) => {
-      console.log('error', error)
-      return {
-        statusCode: 400,
-        body: JSON.stringify(error)
-      }
-    })
+    }
+    const response = {
+      ref: { '@ref': { id: row.id, collection: { '@ref': { id: 'users' } } } },
+      data: typeof row.data === 'string' ? JSON.parse(row.data) : row.data
+    }
+    console.log('success', response)
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response)
+    }
+  } catch (error) {
+    console.log('error', error)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: error.message })
+    }
+  }
 }

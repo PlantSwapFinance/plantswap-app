@@ -1,27 +1,35 @@
-const faunadb = require('faunadb')
 const getId = require('./utils/getId')
-const q = faunadb.query
+const { getClient, toFaunaFormat } = require('./db/neon')
 
-exports.handler = (event, context) => {
-  /* configure faunaDB Client with our secret */
-  const client = new faunadb.Client({
-    secret: process.env.FAUNADB_SERVER_SECRET
-  }) 
-  const data = JSON.parse(event.body)
+exports.handler = async (event, context) => {
+  const sql = getClient()
   const id = getId(event.path)
+  const data = JSON.parse(event.body || '{}')
   console.log(`Function 'users-setting-update' invoked. update id: ${id}`)
-  return client.query(q.Update(q.Ref(`classes/users_setting/${id}`), {data}))
-    .then((response) => {
-      console.log('success', response)
+  try {
+    const result = await sql`
+      UPDATE users_setting
+      SET data = ${JSON.stringify(data)}, updated_at = NOW()
+      WHERE id = ${id}
+      RETURNING id, data
+    `
+    const row = result[0]
+    if (!row) {
       return {
-        statusCode: 200,
-        body: JSON.stringify(response)
+        statusCode: 404,
+        body: JSON.stringify({ error: 'User setting not found' })
       }
-    }).catch((error) => {
-      console.log('error', error)
-      return {
-        statusCode: 400,
-        body: JSON.stringify(error)
-      }
-    })
+    }
+    const response = toFaunaFormat(row, 'users_setting')
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response)
+    }
+  } catch (error) {
+    console.log('error', error)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: error.message })
+    }
+  }
 }

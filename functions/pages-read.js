@@ -1,27 +1,31 @@
-/* Import faunaDB sdk */
-const faunadb = require('faunadb')
 const getId = require('./utils/getId')
-const q = faunadb.query
+const { getClient, toFaunaFormat } = require('./db/neon')
 
-exports.handler = (event, context) => {
-  /* configure faunaDB Client with our secret */
-  const client = new faunadb.Client({
-    secret: process.env.FAUNADB_SERVER_SECRET
-  }) 
+exports.handler = async (event, context) => {
+  const sql = getClient()
   const id = getId(event.path)
   console.log(`Function 'pages-read' invoked. Read id: ${id}`)
-  return client.query(q.Get(q.Ref(`classes/pages/${id}`)))
-    .then((response) => {
-      console.log('success', response)
+  try {
+    const result = await sql`
+      SELECT id, data FROM pages WHERE id = ${id}
+    `
+    const row = result[0]
+    if (!row) {
       return {
-        statusCode: 200,
-        body: JSON.stringify(response)
+        statusCode: 404,
+        body: JSON.stringify({ error: 'Page not found' })
       }
-    }).catch((error) => {
-      console.log('error', error)
-      return {
-        statusCode: 400,
-        body: JSON.stringify(error)
-      }
-    })
+    }
+    const response = toFaunaFormat(row, 'pages')
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response)
+    }
+  } catch (error) {
+    console.log('error', error)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: error.message })
+    }
+  }
 }

@@ -9,7 +9,6 @@ import { getTeam } from 'state/teams/helpers'
 import { transformProfileResponse } from './helpers'
 
 const profileContract = getProfileContract()
-// const profileApi = process.env.REACT_APP_API_PROFILE
 
 export interface GetProfileResponse {
   hasRegistered: boolean

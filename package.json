@@ -28,6 +28,7 @@
   "dependencies": {
     "@binance-chain/bsc-connector": "^1.0.0",
     "@ethersproject/experimental": "^5.0.1",
+    "@neondatabase/serverless": "^1.0.2",
     "@pancakeswap/sdk": "^2.3.2",
     "@plantswap/uikit": "0.1.8",
     "@react-three/cannon": "^2.5.1",
@@ -60,7 +61,6 @@
     "easymde": "^2.15.0",
     "emailjs-com": "^3.2.0",
     "ethers": "^5.1.4",
-    "faunadb": "^4.4.1",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
     "js-cookie": "^2.2.1",

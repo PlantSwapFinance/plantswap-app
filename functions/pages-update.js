@@ -1,17 +1,26 @@
+const getId = require('./utils/getId')
 const { getClient, toFaunaFormat } = require('./db/neon')
 
 exports.handler = async (event, context) => {
   const sql = getClient()
+  const id = getId(event.path)
   const data = JSON.parse(event.body || '{}')
-  console.log('Function `usersTypes-create` invoked', data)
+  console.log(`Function 'pages-update' invoked. update id: ${id}`)
   try {
     const result = await sql`
-      INSERT INTO users_types (data)
-      VALUES (${JSON.stringify(data)})
+      UPDATE pages
+      SET data = ${JSON.stringify(data)}, updated_at = NOW()
+      WHERE id = ${id}
       RETURNING id, data
     `
     const row = result[0]
-    const response = toFaunaFormat(row, 'usersTypes')
+    if (!row) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ error: 'Page not found' })
+      }
+    }
+    const response = toFaunaFormat(row, 'pages')
     return {
       statusCode: 200,
       body: JSON.stringify(response)

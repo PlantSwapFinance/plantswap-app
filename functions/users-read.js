@@ -1,5 +1,5 @@
 const getId = require('./utils/getId')
-const { getClient, toFaunaFormat } = require('./db/neon')
+const { getClient, formatRow } = require('./db/neon')
 
 exports.handler = async (event, context) => {
   const sql = getClient()
@@ -16,7 +16,7 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({ error: 'User not found' })
       }
     }
-    const response = toFaunaFormat(row, 'users')
+    const response = formatRow(row)
     console.log('success', response)
     return {
       statusCode: 200,

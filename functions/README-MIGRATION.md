@@ -41,13 +41,11 @@ If you have existing data in Fauna, you'll need to export it and import into Neo
 
 ## Response format
 
-The functions return responses in Fauna-compatible format for frontend compatibility:
+The functions return responses in a simple format:
 
 ```json
 {
-  "ref": { "@ref": { "id": "uuid", "collection": { "@ref": { "id": "collectionName" } } } },
+  "id": "uuid",
   "data": { ...document data... }
 }
 ```
-
-No frontend changes are required.

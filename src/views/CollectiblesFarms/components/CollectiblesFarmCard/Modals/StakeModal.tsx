@@ -123,7 +123,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
 
         collectiblesFarmsBagsApi.readCollectiblesFarmsBagByTokenId(selectedNftTokenId).then((bags) => {
           if (bags.length > 0) {
-            collectiblesFarmsBagsApi.deleteCollectiblesFarmsBags(bags[0].ref["@ref"].id)
+            collectiblesFarmsBagsApi.deleteCollectiblesFarmsBags(bags[0].id)
           }
         }) 
       } catch (e) {

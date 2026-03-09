@@ -135,7 +135,7 @@ export const usePricePlantBusd = (): BigNumber => {
       setDataCheck(true)
       unchainedDatas.readUnchainedDatasByDataType('plantPrice').then((foundUnchainedData) => {
         if (foundUnchainedData[0] !== undefined && foundUnchainedData[0].data !== undefined) {
-          unchainedDatas.updateUnchainedDatas(foundUnchainedData[0].ref["@ref"].id, priceData);
+          unchainedDatas.updateUnchainedDatas(foundUnchainedData[0].id, priceData);
         }
       }).catch(() => {
         unchainedDatas.createUnchainedDatas(priceData)

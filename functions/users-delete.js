@@ -1,5 +1,5 @@
 const getId = require('./utils/getId')
-const { getClient } = require('./db/neon')
+const { getClient, formatRow } = require('./db/neon')
 
 exports.handler = async (event, context) => {
   const sql = getClient()
@@ -17,10 +17,7 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({ error: 'User not found' })
       }
     }
-    const response = {
-      ref: { '@ref': { id: row.id, collection: { '@ref': { id: 'users' } } } },
-      data: typeof row.data === 'string' ? JSON.parse(row.data) : row.data
-    }
+    const response = formatRow(row)
     console.log('success', response)
     return {
       statusCode: 200,

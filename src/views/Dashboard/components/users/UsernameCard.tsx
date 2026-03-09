@@ -46,7 +46,7 @@ const UsernameCard: React.FC<UsernameCardProps> = ({ user, setUserListLoaded }) 
           <br />
           <br />
           <Button variant="secondary" p={2} m={0} startIcon={<RemoveIcon width="18px" color="failure" mr="4px" />} onClick={() => {
-            handleDelete(user.ref["@ref"].id)
+            handleDelete(user.id)
               onDismiss()
             }}>
             <Text color="failure">{t('Edit')}</Text>

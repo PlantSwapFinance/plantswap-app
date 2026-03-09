@@ -1,6 +1,5 @@
 /**
  * Neon serverless PostgreSQL client
- * Replaces FaunaDB for PlantSwap
  */
 const { neon } = require('@neondatabase/serverless')
 
@@ -12,35 +11,19 @@ function getClient() {
   return neon(connectionString)
 }
 
-/**
- * Normalize a database row to Fauna-compatible format for frontend compatibility
- * Fauna returns: { ref: { "@ref": { id: "...", collection: {...} } }, data: {...} }
- */
-function toFaunaFormat(row, collectionName) {
+function formatRow(row) {
   if (!row) return null
-  const id = row.id
   const data = typeof row.data === 'string' ? JSON.parse(row.data) : row.data
-  return {
-    ref: {
-      '@ref': {
-        id: id,
-        collection: { '@ref': { id: collectionName } }
-      }
-    },
-    data: data
-  }
+  return { id: row.id, data }
 }
 
-/**
- * Normalize multiple rows to Fauna-compatible format
- */
-function toFaunaFormatArray(rows, collectionName) {
+function formatRows(rows) {
   if (!rows || !Array.isArray(rows)) return []
-  return rows.map(row => toFaunaFormat(row, collectionName))
+  return rows.map(formatRow)
 }
 
 module.exports = {
   getClient,
-  toFaunaFormat,
-  toFaunaFormatArray
+  formatRow,
+  formatRows
 }

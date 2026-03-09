@@ -1,5 +1,5 @@
 const getPathParams = require('./utils/getPathParams')
-const { getClient, toFaunaFormatArray } = require('./db/neon')
+const { getClient, formatRows } = require('./db/neon')
 
 exports.handler = async (event, context) => {
   console.log('Function `usernames-read-by-userId` invoked')
@@ -9,7 +9,7 @@ exports.handler = async (event, context) => {
     const result = await sql`
       SELECT id, data FROM usernames WHERE data->>'userId' = ${userId}
     `
-    const response = toFaunaFormatArray(result, 'usernames')
+    const response = formatRows(result)
     return {
       statusCode: 200,
       body: JSON.stringify(response)

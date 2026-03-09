@@ -51,7 +51,7 @@ const PageCard: React.FC<PageCardProps> = ({ page, pageId, setPageListLoaded }) 
       pagesApi.readPageByPageId(pageIdSelected).then((foundPage) => {
         if (foundPage[0].data) {
           setState(foundPage[0].data)
-          setPageRef(foundPage[0].ref["@ref"].id)
+          setPageRef(foundPage[0].id)
         }
         setPageFound(true)
       }).catch((err) => {
@@ -130,7 +130,7 @@ const PageCard: React.FC<PageCardProps> = ({ page, pageId, setPageListLoaded }) 
           <br />
           <br />
           <Button variant="secondary" p={2} m={0} startIcon={<RemoveIcon width="18px" color="failure" mr="4px" />} onClick={() => {
-            handleDelete(page.ref["@ref"].id)
+            handleDelete(page.id)
               onDismiss()
             }}>
             <Text color="failure">{t('Edit')}</Text>

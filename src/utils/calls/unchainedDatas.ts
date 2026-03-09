@@ -16,9 +16,21 @@ const readAllUnchainedDatas = () => {
 }
 
 const readUnchainedDatasByDataType = (dataType) => {
-  return fetch(`/.netlify/functions/unchainedDatas-read-by-dataType/${dataType}`).then((response) => {
-    return response.json()
-  })
+  const fallbackRead = () =>
+    readAllUnchainedDatas().then((all) =>
+      Array.isArray(all) ? all.filter((item) => item?.data?.dataType === dataType) : []
+    )
+
+  return fetch(`/.netlify/functions/unchainedDatas-read-by-dataType/${dataType}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // Fallback: if read-by-dataType returns empty or error, try read-all and filter
+      if (!Array.isArray(data) || data.length === 0) {
+        return fallbackRead()
+      }
+      return data
+    })
+    .catch(() => fallbackRead())
 }
 
 const updateUnchainedDatas = (refId, data) => {

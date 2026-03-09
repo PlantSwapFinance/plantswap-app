@@ -1,4 +1,4 @@
-const { getClient, toFaunaFormatArray } = require('./db/neon')
+const { getClient, formatRows } = require('./db/neon')
 
 exports.handler = async (event, context) => {
   console.log('Function `visitors-read-all` invoked')
@@ -7,7 +7,7 @@ exports.handler = async (event, context) => {
     const result = await sql`
       SELECT id, data FROM visitors ORDER BY created_at ASC
     `
-    const response = toFaunaFormatArray(result, 'visitors')
+    const response = formatRows(result)
     return {
       statusCode: 200,
       body: JSON.stringify(response)

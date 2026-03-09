@@ -53,7 +53,7 @@ const UserAccessCard: React.FC<UserAccessCardProps> = ({ user, userAccessId, set
       usersApi.readUserAccessByUserId(userIdSelected).then((foundUser) => {
         if (foundUser[0].data) {
           setState(foundUser[0].data)
-          setUserRef(foundUser[0].ref["@ref"].id)
+          setUserRef(foundUser[0].id)
         }
         setUserFound(true)
       }).catch((err) => {
@@ -142,7 +142,7 @@ const UserAccessCard: React.FC<UserAccessCardProps> = ({ user, userAccessId, set
           <br />
           <br />
           <Button variant="secondary" p={2} m={0} startIcon={<RemoveIcon width="18px" color="failure" mr="4px" />} onClick={() => {
-            handleDelete(user.ref["@ref"].id)
+            handleDelete(user.id)
               onDismiss()
             }}>
             <Text color="failure">{t('Edit')}</Text>

@@ -1,4 +1,4 @@
-const { getClient, toFaunaFormat } = require('./db/neon')
+const { getClient, formatRow } = require('./db/neon')
 
 exports.handler = async (event, context) => {
   const sql = getClient()
@@ -11,7 +11,7 @@ exports.handler = async (event, context) => {
       RETURNING id, data
     `
     const row = result[0]
-    const response = toFaunaFormat(row, 'collectiblesFarmsLogs')
+    const response = formatRow(row)
     return {
       statusCode: 200,
       body: JSON.stringify(response)

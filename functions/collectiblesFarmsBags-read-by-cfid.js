@@ -1,5 +1,5 @@
 const getPathParams = require('./utils/getPathParams')
-const { getClient, toFaunaFormatArray } = require('./db/neon')
+const { getClient, formatRows } = require('./db/neon')
 
 exports.handler = async (event, context) => {
   console.log('Function `collectiblesFarmsBags-read-by-cfid` invoked')
@@ -9,7 +9,7 @@ exports.handler = async (event, context) => {
     const result = await sql`
       SELECT id, data FROM collectibles_farms_bags WHERE data->>'cfId' = ${cfId}
     `
-    const response = toFaunaFormatArray(result, 'collectiblesFarmsBags')
+    const response = formatRows(result)
     return {
       statusCode: 200,
       body: JSON.stringify(response)

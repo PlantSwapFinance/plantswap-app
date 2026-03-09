@@ -1,15 +1,25 @@
 const getPathParams = require('./utils/getPathParams')
-const { getClient, toFaunaFormatArray } = require('./db/neon')
+const { getClient, formatRows } = require('./db/neon')
 
 exports.handler = async (event, context) => {
-  console.log('Function `unchainedDatas-read-by-dataType` invoked')
+  const path = event.path || event.rawPath || (typeof event.url === 'string' ? new URL(event.url).pathname : '') || ''
+  const dataType = getPathParams(path, 1)
+  console.log('Function `unchainedDatas-read-by-dataType` invoked', { path, dataType })
+
+  if (!dataType) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'dataType path parameter is required' })
+    }
+  }
+
   const sql = getClient()
-  const dataType = getPathParams(event.path, 1)
   try {
     const result = await sql`
       SELECT id, data FROM unchained_datas WHERE data->>'dataType' = ${dataType}
     `
-    const response = toFaunaFormatArray(result, 'unchainedDatas')
+    const response = formatRows(result)
+    console.log(`${response.length} unchained_datas found for dataType=${dataType}`)
     return {
       statusCode: 200,
       body: JSON.stringify(response)

@@ -1,5 +1,5 @@
 const getId = require('./utils/getId')
-const { getClient, toFaunaFormat } = require('./db/neon')
+const { getClient, formatRow } = require('./db/neon')
 
 exports.handler = async (event, context) => {
   const sql = getClient()
@@ -16,7 +16,7 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({ error: 'Page access not found' })
       }
     }
-    const response = toFaunaFormat(row, 'pages_access')
+    const response = formatRow(row)
     return {
       statusCode: 200,
       body: JSON.stringify(response)

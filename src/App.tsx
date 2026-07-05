@@ -46,7 +46,6 @@ const FoundationProposal = lazy(() => import('./views/Foundation/Proposal'))
 const Donate = lazy(() => import('./views/Foundation/Donate'))
 const FoundationCreateProposal = lazy(() => import('./views/Foundation/CreateProposal'))
 const Pools = lazy(() => import('./views/Pools'))
-const Ifos = lazy(() => import('./views/Ifos'))
 const NotFound = lazy(() => import('./views/NotFound'))
 const Collectibles = lazy(() => import('./views/Collectibles'))
 const Teams = lazy(() => import('./views/Teams'))
@@ -207,9 +206,6 @@ const App: React.FC = () => {
               </Route>
               <Route path="/pools">
                 <Pools />
-              </Route>
-              <Route path="/ifo">
-                <Ifos />
               </Route>
               <Route path="/collectibles">
                 <Collectibles />

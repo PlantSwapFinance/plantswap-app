@@ -63,7 +63,6 @@ const Tree = lazy(() => import('./views/Tree'))
 const Vote = lazy(() => import('./views/Vote'))
 const ContactUs = lazy(() => import('./views/ContactUs'))
 const Documentation = lazy(() => import('./views/Documentation'))
-const PlantArt = lazy(() => import('./views/PlantArt'))
 
 const AddLiquidity = lazy(() => import('./views/AddLiquidity'))
 const Liquidity = lazy(() => import('./views/Pool'))
@@ -244,9 +243,6 @@ const App: React.FC = () => {
               </Route>
               <Route path="/documentation">
                 <Documentation />
-              </Route>
-              <Route path="/plantArt">
-                <PlantArt />
               </Route>
 
               <Route exact path="/voting">

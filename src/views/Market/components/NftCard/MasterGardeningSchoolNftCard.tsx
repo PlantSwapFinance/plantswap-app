@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
-import { useProfile } from 'state/profile/hooks'
-import { useMasterGardeningSchoolNftContract } from 'hooks/useContract'
+import React from 'react'
+import useMasterGardeningSchoolClaimStatus from 'hooks/useMasterGardeningSchoolClaimStatus'
 import NftCard, { NftCardProps } from './index'
 
 /**
@@ -16,34 +13,10 @@ export const teamNftMap = {
 }
 
 const MasterGardeningSchoolNftCard: React.FC<NftCardProps> = ({ nft, ...props }) => {
-  const [isClaimable, setIsClaimable] = useState(false)
-  const { account } = useWeb3React()
-  const { profile } = useProfile()
-  const { identifier, variationId } = nft
-  const { team } = profile ?? {}
-  const masterGardeningSchoolNftContract = useMasterGardeningSchoolNftContract()
+  const { variationId } = nft
+  const { isClaimable, handleClaim } = useMasterGardeningSchoolClaimStatus(variationId)
 
-  const handleClaim = async () => {
-    const response: ethers.providers.TransactionResponse = await masterGardeningSchoolNftContract.mintNFT(variationId)
-    await response.wait()
-    return response
-  }
-
-  useEffect(() => {
-    const fetchClaimStatus = async () => {
-      // const canClaim = true
-      const canClaim = await masterGardeningSchoolNftContract.canClaimSingle(account, variationId)
-
-      // Wallet can claim if it is claimable and the nft being displayed is mapped to the wallet's team
-      setIsClaimable(canClaim)
-    }
-
-    if (account && team) {
-      fetchClaimStatus()
-    }
-  }, [account, identifier, variationId, team, masterGardeningSchoolNftContract, setIsClaimable])
- 
   return <NftCard nft={nft} {...props} canClaim={isClaimable} onClaim={handleClaim} />
-} 
+}
 
 export default MasterGardeningSchoolNftCard

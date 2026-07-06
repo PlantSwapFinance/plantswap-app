@@ -20,12 +20,12 @@ import PageHeader from 'components/PageHeader'
 import SearchInput from 'components/SearchInput'
 import Select, { OptionProps } from 'components/Select/Select'
 import Loading from 'components/Loading'
+import ToggleView, { ViewMode } from 'components/ToggleView'
 import GardenCard, { GardenWithStakedValue } from './components/GardenCard/GardenCard'
 import Table from './components/GardenTable/GardenTable'
 import GardenTabButtons from './components/GardenTabButtons'
 import { RowProps } from './components/GardenTable/Row'
-import ToggleView from './components/ToggleView/ToggleView'
-import { DesktopColumnSchema, ViewMode } from './components/types'
+import { DesktopColumnSchema } from './components/types'
 
 export interface GardensProps{
   tokenMode?: boolean
@@ -416,7 +416,7 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
       <Page>
         <ControlContainer>
           <ViewControls>
-            <ToggleView viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />
+            <ToggleView id="clickGarden" viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />
             <ToggleWrapper>
               <Toggle checked={stakedOnly} onChange={() => setStakedOnly(!stakedOnly)} scale="sm" />
               <Text> {t('Staked only')}</Text>

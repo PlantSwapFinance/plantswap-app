@@ -3,7 +3,7 @@ import { useRouteMatch, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ButtonMenu, ButtonMenuItem, Toggle, Text, NotificationDot } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
-import ToggleView, { ViewMode } from './ToggleView/ToggleView'
+import ToggleView, { ViewMode } from 'components/ToggleView'
 
 const ToggleWrapper = styled.div`
   display: flex;
@@ -51,11 +51,22 @@ const Wrapper = styled.div`
   }
 `
 
+// Adds the right-side spacing variant used by Pools/Collectibles on small+ screens.
+const StyledToggleView = styled(ToggleView)`
+  margin-right: 0;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin-right: 16px;
+  }
+`
+
 const PoolTabButtons = ({ stakedOnly, setStakedOnly, hasStakeInFinishedPools, viewMode, setViewMode }) => {
   const { url, isExact } = useRouteMatch()
   const { t } = useTranslation()
 
-  const viewModeToggle = <ToggleView viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />
+  const viewModeToggle = (
+    <StyledToggleView id="clickPool" viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />
+  )
 
   const liveOrFinishedSwitch = (
     <Wrapper>

@@ -1,10 +1,8 @@
 import React from 'react'
-import { Flex, Text, Button, Heading, useModal, Skeleton } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
 import { Token } from 'config/constants/types'
-import { useTranslation } from 'contexts/Localization'
 import { getFullDisplayBalance, getBalanceNumber, formatNumber } from 'utils/formatBalance'
-import Balance from 'components/Balance'
+import HarvestActionsBase from 'components/HarvestActionsBase'
 import CollectModal from '../Modals/CollectModal'
 
 interface HarvestActionsProps {
@@ -24,65 +22,33 @@ const HarvestActions: React.FC<HarvestActionsProps> = ({
   stakingRewardTokenPrice,
   isLoading = false,
 }) => {
-  const { t } = useTranslation()
-  const stakingRewardTokenBalance = getBalanceNumber(earnings, stakingRewardToken.decimals)
-  const formattedBalance = formatNumber(stakingRewardTokenBalance, 3, 3)
-
-  const stakingRewardTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(stakingRewardTokenPrice), stakingRewardToken.decimals)
-
-  const fullBalance = getFullDisplayBalance(earnings, stakingRewardToken.decimals)
-  const hasEarnings = earnings.toNumber() > 0
-  const isCompoundPool = false
-
-  const [onPresentCollect] = useModal(
-    <CollectModal
-      formattedBalance={formattedBalance}
-      fullBalance={fullBalance}
-      stakingRewardToken={stakingRewardToken}
-      earningsDollarValue={stakingRewardTokenDollarBalance}
-      vgId={vgId}
-      isBnbPool={isBnbPool}
-      isCompoundPool={isCompoundPool}
-    />,
+  const rewardTokenBalance = getBalanceNumber(earnings, stakingRewardToken.decimals)
+  const formattedBalance = formatNumber(rewardTokenBalance, 3, 3)
+  const earningsDollarValue = getBalanceNumber(
+    earnings.multipliedBy(stakingRewardTokenPrice),
+    stakingRewardToken.decimals,
   )
+  const fullBalance = getFullDisplayBalance(earnings, stakingRewardToken.decimals)
 
   return (
-    <Flex justifyContent="space-between" alignItems="center" mb="16px">
-      <Flex flexDirection="column">
-        {isLoading ? (
-          <Skeleton width="80px" height="48px" />
-        ) : (
-          <>
-            {hasEarnings ? (
-              <>
-                <Balance bold fontSize="20px" decimals={5} value={stakingRewardTokenBalance} />
-                {stakingRewardTokenPrice > 0 && (
-                  <Balance
-                    display="inline"
-                    fontSize="12px"
-                    color="textSubtle"
-                    decimals={2}
-                    prefix="~"
-                    value={stakingRewardTokenDollarBalance}
-                    unit=" USD"
-                  />
-                )}
-              </>
-            ) : (
-              <>
-                <Heading color="textDisabled">0</Heading>
-                <Text fontSize="12px" color="textDisabled">
-                  0 USD
-                </Text>
-              </>
-            )}
-          </>
-        )}
-      </Flex>
-      <Button disabled={!hasEarnings} onClick={onPresentCollect}>
-        {isCompoundPool ? t('Collect') : t('Harvest')}
-      </Button>
-    </Flex>
+    <HarvestActionsBase
+      earnings={earnings}
+      rewardToken={stakingRewardToken}
+      rewardTokenPrice={stakingRewardTokenPrice}
+      isCompoundPool={false}
+      isLoading={isLoading}
+      collectModalNode={
+        <CollectModal
+          formattedBalance={formattedBalance}
+          fullBalance={fullBalance}
+          stakingRewardToken={stakingRewardToken}
+          earningsDollarValue={earningsDollarValue}
+          vgId={vgId}
+          isBnbPool={isBnbPool}
+          isCompoundPool={false}
+        />
+      }
+    />
   )
 }
 

@@ -1,13 +1,17 @@
+/**
+ * Legacy Redux reducer for the user slice — kept inert so the
+ * `state/index.ts` configureStore registration compiles through Phase 7.
+ * All real mutations now go through the Zustand store in `./store`.
+ */
 import { createReducer } from '@reduxjs/toolkit'
 import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../config/constants'
 import { updateVersion } from '../global/actions'
+import type { SerializedPair, SerializedToken } from './store'
 import {
   addSerializedPair,
   addSerializedToken,
   removeSerializedPair,
   removeSerializedToken,
-  SerializedPair,
-  SerializedToken,
   updateUserExpertMode,
   updateUserSlippageTolerance,
   updateUserDeadline,
@@ -15,38 +19,18 @@ import {
   muteAudio,
   unmuteAudio,
   toggleTheme,
-} from './actions'
+} from './legacyActions'
 
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
-
   userExpertMode: boolean
-
-  // only allow swaps on direct pairs
   userSingleHopOnly: boolean
-
-  // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number
-
-  // deadline set by user in minutes, used in all txns
   userDeadline: number
-
-  tokens: {
-    [chainId: number]: {
-      [address: string]: SerializedToken
-    }
-  }
-
-  pairs: {
-    [chainId: number]: {
-      // keyed by token0Address:token1Address
-      [key: string]: SerializedPair
-    }
-  }
-
+  tokens: { [chainId: number]: { [address: string]: SerializedToken } }
+  pairs: { [chainId: number]: { [key: string]: SerializedPair } }
   timestamp: number
   audioPlay: boolean
   isDark: boolean
@@ -71,18 +55,12 @@ export const initialState: UserState = {
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(updateVersion, (state) => {
-      // slippage isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
       if (typeof state.userSlippageTolerance !== 'number') {
         state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE
       }
-
-      // deadline isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
       if (typeof state.userDeadline !== 'number') {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
-
       state.lastUpdateVersionTimestamp = currentTimestamp()
     })
     .addCase(updateUserExpertMode, (state, action) => {
@@ -101,17 +79,13 @@ export default createReducer(initialState, (builder) =>
       state.userSingleHopOnly = action.payload.userSingleHopOnly
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
-      if (!state.tokens) {
-        state.tokens = {}
-      }
+      if (!state.tokens) state.tokens = {}
       state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
       state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
       state.timestamp = currentTimestamp()
     })
     .addCase(removeSerializedToken, (state, { payload: { address, chainId } }) => {
-      if (!state.tokens) {
-        state.tokens = {}
-      }
+      if (!state.tokens) state.tokens = {}
       state.tokens[chainId] = state.tokens[chainId] || {}
       delete state.tokens[chainId][address]
       state.timestamp = currentTimestamp()
@@ -129,11 +103,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(removeSerializedPair, (state, { payload: { chainId, tokenAAddress, tokenBAddress } }) => {
       if (state.pairs[chainId]) {
-        // just delete both keys if either exists
         delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)]
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
-      state.timestamp = currentTimestamp()
     })
     .addCase(muteAudio, (state) => {
       state.audioPlay = false

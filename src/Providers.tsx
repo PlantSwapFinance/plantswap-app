@@ -10,6 +10,12 @@ import { LanguageProvider } from 'contexts/Localization'
 import { RefreshContextProvider } from 'contexts/RefreshContext'
 import { ToastsProvider } from 'contexts/ToastsContext'
 import store from 'state'
+import { migrateLegacyLocalStorage } from 'state/persistence/migrateLegacyStorage'
+
+// One-shot migration: reads the legacy `redux-localstorage-simple` keys
+// into the new Zustand `persist` shape. Safe to call repeatedly — it
+// no-ops once the migration flag is set.
+migrateLegacyLocalStorage()
 
 const ThemeProviderWrapper = (props) => {
   const [isDark] = useThemeManager()

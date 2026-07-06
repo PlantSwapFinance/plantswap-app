@@ -1,6 +1,6 @@
 import { ChainId } from '@pancakeswap/sdk'
 import { createStore, Store } from 'redux'
-import { addTransaction, checkedTransaction, clearAllTransactions, finalizeTransaction } from './actions'
+import { addTransaction, checkedTransaction, clearAllTransactions, finalizeTransaction } from './legacyActions'
 import reducer, { initialState, TransactionState } from './reducer'
 
 describe('transaction reducer', () => {

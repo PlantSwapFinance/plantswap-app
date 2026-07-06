@@ -1,30 +1,31 @@
-import { createAction } from '@reduxjs/toolkit'
+/**
+ * Re-export of the user slice action surface for backwards compatibility.
+ *
+ * After the Zustand migration the legacy `createAction` creators have
+ * been replaced by direct store mutations in `./store`. This module now
+ * re-exports the canonical action surface so existing imports
+ * (`import { updateUserExpertMode } from 'state/user/actions'`) keep
+ * working — they now resolve to the Zustand action functions.
+ *
+ * NOTE: `updateVersion` is exported from `./store` here, shadowing the
+ * legacy `createAction` from `../global/actions`. View consumers should
+ * import from `state/user/actions` to get the Zustand action. The boot
+ * dispatch in `state/index.ts` still imports the legacy action from
+ * `../global/actions` so it can target the Redux reducer.
+ */
 
-export interface SerializedToken {
-  chainId: number
-  address: string
-  decimals: number
-  symbol?: string
-  name?: string
-}
+export {
+  updateUserExpertMode,
+  updateUserSingleHopOnly,
+  updateUserSlippageTolerance,
+  updateUserDeadline,
+  addSerializedToken,
+  removeSerializedToken,
+  addSerializedPair,
+  removeSerializedPair,
+  muteAudio,
+  unmuteAudio,
+  toggleTheme,
+} from './store'
 
-export interface SerializedPair {
-  token0: SerializedToken
-  token1: SerializedToken
-}
-
-export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
-export const updateUserSingleHopOnly = createAction<{ userSingleHopOnly: boolean }>('user/updateUserSingleHopOnly')
-export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number }>(
-  'user/updateUserSlippageTolerance',
-)
-export const updateUserDeadline = createAction<{ userDeadline: number }>('user/updateUserDeadline')
-export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('user/addSerializedToken')
-export const removeSerializedToken = createAction<{ chainId: number; address: string }>('user/removeSerializedToken')
-export const addSerializedPair = createAction<{ serializedPair: SerializedPair }>('user/addSerializedPair')
-export const removeSerializedPair =
-  createAction<{ chainId: number; tokenAAddress: string; tokenBAddress: string }>('user/removeSerializedPair')
-
-export const muteAudio = createAction<void>('user/muteAudio')
-export const unmuteAudio = createAction<void>('user/unmuteAudio')
-export const toggleTheme = createAction<void>('user/toggleTheme')
+export type { SerializedToken, SerializedPair } from './store'

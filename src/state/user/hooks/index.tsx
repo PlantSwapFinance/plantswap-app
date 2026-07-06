@@ -1,134 +1,103 @@
 import { Pair, Token } from '@pancakeswap/sdk'
 import flatMap from 'lodash/flatMap'
 import { useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'config/constants'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useAllTokens } from 'hooks/Tokens'
-import { AppDispatch, AppState } from '../../index'
 import {
   addSerializedPair,
   addSerializedToken,
+  muteAudio,
   removeSerializedToken,
   SerializedPair,
+  toggleTheme as toggleThemeAction,
+  unmuteAudio,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance,
   updateUserSingleHopOnly,
-  muteAudio,
-  unmuteAudio,
-  toggleTheme as toggleThemeAction,
-} from '../actions'
+  updateUserSlippageTolerance,
+  useUserStore,
+} from '../store'
 import { serializeToken, deserializeToken } from './helpers'
 
 export function useAudioModeManager(): [boolean, () => void] {
-  const dispatch = useDispatch<AppDispatch>()
-  const audioPlay = useSelector<AppState, AppState['user']['audioPlay']>((state) => state.user.audioPlay)
+  const audioPlay = useUserStore((state) => state.audioPlay)
 
   const toggleSetAudioMode = useCallback(() => {
     if (audioPlay) {
-      dispatch(muteAudio())
+      muteAudio()
     } else {
-      dispatch(unmuteAudio())
+      unmuteAudio()
     }
-  }, [audioPlay, dispatch])
+  }, [audioPlay])
 
   return [audioPlay, toggleSetAudioMode]
 }
 
 export function useIsExpertMode(): boolean {
-  return useSelector<AppState, AppState['user']['userExpertMode']>((state) => state.user.userExpertMode)
+  return useUserStore((state) => state.userExpertMode)
 }
 
 export function useExpertModeManager(): [boolean, () => void] {
-  const dispatch = useDispatch<AppDispatch>()
   const expertMode = useIsExpertMode()
 
   const toggleSetExpertMode = useCallback(() => {
-    dispatch(updateUserExpertMode({ userExpertMode: !expertMode }))
-  }, [expertMode, dispatch])
+    updateUserExpertMode({ userExpertMode: !expertMode })
+  }, [expertMode])
 
   return [expertMode, toggleSetExpertMode]
 }
 
 export function useThemeManager(): [boolean, () => void] {
-  const dispatch = useDispatch<AppDispatch>()
-  const isDark = useSelector<AppState, AppState['user']['isDark']>((state) => state.user.isDark)
+  const isDark = useUserStore((state) => state.isDark)
 
   const toggleTheme = useCallback(() => {
-    dispatch(toggleThemeAction())
-  }, [dispatch])
+    toggleThemeAction()
+  }, [])
 
   return [isDark, toggleTheme]
 }
 
 export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) => void] {
-  const dispatch = useDispatch<AppDispatch>()
+  const singleHopOnly = useUserStore((state) => state.userSingleHopOnly)
 
-  const singleHopOnly = useSelector<AppState, AppState['user']['userSingleHopOnly']>(
-    (state) => state.user.userSingleHopOnly,
-  )
-
-  const setSingleHopOnly = useCallback(
-    (newSingleHopOnly: boolean) => {
-      dispatch(updateUserSingleHopOnly({ userSingleHopOnly: newSingleHopOnly }))
-    },
-    [dispatch],
-  )
+  const setSingleHopOnly = useCallback((newSingleHopOnly: boolean) => {
+    updateUserSingleHopOnly({ userSingleHopOnly: newSingleHopOnly })
+  }, [])
 
   return [singleHopOnly, setSingleHopOnly]
 }
 
 export function useUserSlippageTolerance(): [number, (slippage: number) => void] {
-  const dispatch = useDispatch<AppDispatch>()
-  const userSlippageTolerance = useSelector<AppState, AppState['user']['userSlippageTolerance']>((state) => {
-    return state.user.userSlippageTolerance
-  })
+  const userSlippageTolerance = useUserStore((state) => state.userSlippageTolerance)
 
-  const setUserSlippageTolerance = useCallback(
-    (slippage: number) => {
-      dispatch(updateUserSlippageTolerance({ userSlippageTolerance: slippage }))
-    },
-    [dispatch],
-  )
+  const setUserSlippageTolerance = useCallback((slippage: number) => {
+    updateUserSlippageTolerance({ userSlippageTolerance: slippage })
+  }, [])
 
   return [userSlippageTolerance, setUserSlippageTolerance]
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
-  const dispatch = useDispatch<AppDispatch>()
-  const userDeadline = useSelector<AppState, AppState['user']['userDeadline']>((state) => {
-    return state.user.userDeadline
-  })
+  const userDeadline = useUserStore((state) => state.userDeadline)
 
-  const setUserDeadline = useCallback(
-    (deadline: number) => {
-      dispatch(updateUserDeadline({ userDeadline: deadline }))
-    },
-    [dispatch],
-  )
+  const setUserDeadline = useCallback((deadline: number) => {
+    updateUserDeadline({ userDeadline: deadline })
+  }, [])
 
   return [userDeadline, setUserDeadline]
 }
 
 export function useAddUserToken(): (token: Token) => void {
-  const dispatch = useDispatch<AppDispatch>()
-  return useCallback(
-    (token: Token) => {
-      dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
-    },
-    [dispatch],
-  )
+  return useCallback((token: Token) => {
+    addSerializedToken({ serializedToken: serializeToken(token) })
+  }, [])
 }
 
 export function useRemoveUserAddedToken(): (chainId: number, address: string) => void {
-  const dispatch = useDispatch<AppDispatch>()
-  return useCallback(
-    (chainId: number, address: string) => {
-      dispatch(removeSerializedToken({ chainId, address }))
-    },
-    [dispatch],
-  )
+  return useCallback((chainId: number, address: string) => {
+    removeSerializedToken({ chainId, address })
+  }, [])
 }
 
 function serializePair(pair: Pair): SerializedPair {
@@ -139,14 +108,9 @@ function serializePair(pair: Pair): SerializedPair {
 }
 
 export function usePairAdder(): (pair: Pair) => void {
-  const dispatch = useDispatch<AppDispatch>()
-
-  return useCallback(
-    (pair: Pair) => {
-      dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
-    },
-    [dispatch],
-  )
+  return useCallback((pair: Pair) => {
+    addSerializedPair({ serializedPair: serializePair(pair) })
+  }, [])
 }
 
 /**
@@ -174,26 +138,21 @@ export function useTrackedTokenPairs(): [Token, Token][] {
       chainId
         ? flatMap(Object.keys(tokens), (tokenAddress) => {
             const token = tokens[tokenAddress]
-            // for each token on the current chain,
-            return (
-              // loop though all bases on the current chain
-              (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
-                // to construct pairs of the given token with each base
-                .map((base) => {
-                  if (base.address === token.address) {
-                    return null
-                  }
-                  return [base, token]
-                })
-                .filter((p): p is [Token, Token] => p !== null)
-            )
+            return (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
+              .map((base) => {
+                if (base.address === token.address) {
+                  return null
+                }
+                return [base, token]
+              })
+              .filter((p): p is [Token, Token] => p !== null)
           })
         : [],
     [tokens, chainId],
   )
 
   // pairs saved by users
-  const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
+  const savedSerializedPairs = useUserStore((state) => state.pairs)
 
   const userPairs: [Token, Token][] = useMemo(() => {
     if (!chainId || !savedSerializedPairs) return []

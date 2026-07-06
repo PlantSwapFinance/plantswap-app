@@ -5,8 +5,8 @@ import {
   checkedTransaction,
   clearAllTransactions,
   finalizeTransaction,
-  SerializableTransactionReceipt,
-} from './actions'
+} from './legacyActions'
+import type { SerializableTransactionReceipt } from './store'
 
 const now = () => new Date().getTime()
 

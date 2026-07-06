@@ -1,33 +1,10 @@
-import { createAction } from '@reduxjs/toolkit'
-import { ChainId } from '@pancakeswap/sdk'
-
-export interface SerializableTransactionReceipt {
-  to: string
-  from: string
-  contractAddress: string
-  transactionIndex: number
-  blockHash: string
-  transactionHash: string
-  blockNumber: number
-  status?: number
-}
-
-export const addTransaction = createAction<{
-  chainId: ChainId
-  hash: string
-  from: string
-  approval?: { tokenAddress: string; spender: string }
-  claim?: { recipient: string }
-  summary?: string
-}>('transactions/addTransaction')
-export const clearAllTransactions = createAction<{ chainId: ChainId }>('transactions/clearAllTransactions')
-export const finalizeTransaction = createAction<{
-  chainId: ChainId
-  hash: string
-  receipt: SerializableTransactionReceipt
-}>('transactions/finalizeTransaction')
-export const checkedTransaction = createAction<{
-  chainId: ChainId
-  hash: string
-  blockNumber: number
-}>('transactions/checkedTransaction')
+// Re-export the transactions action surface for backwards compatibility.
+// The legacy createAction creators are now thin wrappers around the
+// Zustand store mutations in `./store`.
+export {
+  addTransaction,
+  clearAllTransactions,
+  finalizeTransaction,
+  checkedTransaction,
+} from './store'
+export type { SerializableTransactionReceipt } from './store'

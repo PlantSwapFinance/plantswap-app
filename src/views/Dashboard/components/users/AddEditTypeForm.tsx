@@ -4,22 +4,28 @@ import { useTranslation } from 'contexts/Localization'
 import { ContextApi } from 'contexts/Localization/types'
 import { FormErrors } from '../helper'
 
-interface IAddEditForm {
-    value?: any
-    handleSubmit?: any
-    handleChange?: any
-    fieldsState?: any
-    formErrors?: any
-    onDismiss?: any
-    locationAfterSubmit?: any
-}
-
 export interface IUserTypeState {
     userTypeId?: string
     userTypeName: string
     userTypeCode: string
     userTypeInternalDescription?: string
     userTypePublicDescription?: string
+    // The form reads `userTypeShortName` and `userTypeDescription` here and the
+    // formErrors/fieldsState lookups use those names too; callers do not currently
+    // populate them. Declared optional so the prop contract stays honest without
+    // changing runtime behavior.
+    userTypeShortName?: string
+    userTypeDescription?: string
+}
+
+interface IAddEditForm {
+    value?: IUserTypeState
+    handleSubmit?: (event: React.SyntheticEvent) => void
+    handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+    fieldsState?: { [key: string]: boolean }
+    formErrors?: { [key: string]: string[] }
+    onDismiss?: () => void
+    locationAfterSubmit?: string
 }
 
 export const getFormErrors = (formData: IUserTypeState, t: ContextApi['t']) => {

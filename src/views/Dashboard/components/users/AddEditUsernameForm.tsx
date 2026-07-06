@@ -4,20 +4,20 @@ import { useTranslation } from 'contexts/Localization'
 import { ContextApi } from 'contexts/Localization/types'
 import { FormErrors } from '../helper'
 
-interface IAddEditForm {
-    value?: any
-    handleSubmit?: any
-    handleChange?: any
-    fieldsState?: any
-    formErrors?: any
-    onDismiss?: any
-    locationAfterSubmit?: any
-}
-
 export interface IUserState {
     userId?: string
     username: string
   }
+
+interface IAddEditForm {
+    value?: IUserState
+    handleSubmit?: (event: React.SyntheticEvent) => void
+    handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+    fieldsState?: { [key: string]: boolean }
+    formErrors?: { [key: string]: string[] }
+    onDismiss?: () => void
+    locationAfterSubmit?: string
+}
 
 export const getFormErrors = (formData: IUserState, t: ContextApi['t']) => {
     const { username } = formData

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Route } from 'react-router-dom'
 import usersApi from 'utils/calls/users'
 
@@ -22,28 +22,53 @@ const Dashboard = ({ userId }) => {
   const [userTypeAccessLoaded, setUserTypeAccessLoaded] = useState(false)
   const buildRoutes = []
 
-  if(userId === '0x0') {
-    return <NotFound />
-  }
-  if (!userAccessLoaded) {
-    usersApi.readUserAccessByUserId(userId).then((res) => {
-      setUserAccess(res)
-      setUserAccessLoaded(true)
+  // Fetch user access once userId is known. Side effects (network calls) must
+  // not run in the render body — StrictMode would double-fire them and any
+  // re-render before the response resolves would queue an extra request. The
+  // effect must be declared before any early return to satisfy the rules of
+  // hooks.
+  useEffect(() => {
+    let cancelled = false
+    if (!userId || userId === '0x0') {
+      return undefined
+    }
+    if (!userAccessLoaded) {
+      usersApi.readUserAccessByUserId(userId).then((res) => {
+        if (!cancelled) {
+          setUserAccess(res)
+          setUserAccessLoaded(true)
+        }
       }).catch(err => {
-      console.error(err)
-    })
-    if (!userTypeAccessLoaded) {
-      usersApi.readUserByUserId(userId).then(res => {
-        usersApi.readUserAccessByUserTypeCode(res[0].data.userType).then((response) => {
-          setUserTypeAccess(response)
-          setUserTypeAccessLoaded(true)
-        }).catch(err => {
+        if (!cancelled) {
           console.error(err)
-        })
-      }).catch(err => {
-        console.error(err)
+        }
       })
     }
+    if (!userTypeAccessLoaded) {
+      usersApi.readUserByUserId(userId).then(res => {
+        if (cancelled) return null
+        return usersApi.readUserAccessByUserTypeCode(res[0].data.userType)
+      }).then(response => {
+        if (!cancelled && response) {
+          setUserTypeAccess(response)
+          setUserTypeAccessLoaded(true)
+        }
+      }).catch(err => {
+        if (!cancelled) {
+          console.error(err)
+        }
+      })
+    }
+    return () => {
+      cancelled = true
+    }
+    // Only re-run when userId changes; userAccessLoaded/userTypeAccessLoaded
+    // toggles are handled by the early-return guards above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
+
+  if(userId === '0x0') {
+    return <NotFound />
   }
 
   const handleAddRoute = (route) => {

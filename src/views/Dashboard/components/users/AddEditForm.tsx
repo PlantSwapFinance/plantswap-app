@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Text, Button, Input, Grid, Radio } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
@@ -57,18 +57,31 @@ const AddEditForm: React.FC<IAddEditForm> = ({ value, handleSubmit, handleChange
     const { t } = useTranslation()
     const [userType, setUserType] = useState([])
     const [userTypeLoaded, setUserTypeLoaded] = useState(false)
-
-    if (!userTypeLoaded) {
-        usersApi.readAllUsersType()
-            .then((res) => {
-                setUserType(res)
-                setUserTypeLoaded(true)
-            }).catch(err => {
-                console.error(err)
-                setUserTypeLoaded(true)
-            })
-    }
     const [userTypeCode, setUserTypeCode] = useState('')
+
+    // Fetch user types once on mount. Side effects (network calls) must not run
+    // in the render body — StrictMode would double-fire them and any re-render
+    // before the response resolves would queue an extra request.
+    useEffect(() => {
+        let cancelled = false
+        if (!userTypeLoaded) {
+            usersApi.readAllUsersType()
+                .then((res) => {
+                    if (!cancelled) {
+                        setUserType(res)
+                        setUserTypeLoaded(true)
+                    }
+                }).catch(err => {
+                    if (!cancelled) {
+                        console.error(err)
+                        setUserTypeLoaded(true)
+                    }
+                })
+        }
+        return () => {
+            cancelled = true
+        }
+    }, [userTypeLoaded])
 
     const handleSubmitType = () => {
         if (locationAfterSubmit) {

@@ -1,4 +1,4 @@
-import React, { lazy, useState } from 'react'
+import React, { lazy, useEffect, useRef, useState } from 'react'
 import { Router, Redirect, Route, Switch } from 'react-router-dom'
 import { ResetCSS } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
@@ -82,8 +82,8 @@ const App: React.FC = () => {
   const [userIdLoaded, setUserIdLoaded] = useState(false)
   const [userIdCreated, setUserIdCreated] = useState(false)
   const { account } = useWeb3React()
-  const [visitorSearched, setVisitorSearched] = useState(false)
   const [visitorExist, setVisitorExist] = useState(false)
+  const visitorSearchedRef = useRef(false)
 
   if (userId && userId !== '0x0') {
     Cookies.set('userId', userId, { path: '/' })
@@ -107,19 +107,23 @@ const App: React.FC = () => {
     }
   }
   
-  if (account && !visitorSearched) {
-    setVisitorSearched(true)
-    visitorsApi.readVisitorByAddress(account).then((usernames)  => {
+  // Visitor lookup runs after `account` changes. Side effects (network calls)
+  // must not run in the render body — StrictMode would double-fire them and
+  // any re-render before the response resolves would queue an extra request.
+  // The ref guards against re-firing across re-renders without triggering one.
+  useEffect(() => {
+    if (!account || visitorSearchedRef.current) return
+    visitorSearchedRef.current = true
+    visitorsApi.readVisitorByAddress(account).then((usernames) => {
       if (usernames.length > 0) {
         setVisitorExist(true)
-      }
-      else {
+      } else {
         const newVisitor = {
           address: account,
           dateAdded: new Date(),
         }
         if (!visitorExist) {
-          visitorsApi.createVisitors(newVisitor).then(() => 
+          visitorsApi.createVisitors(newVisitor).then(() =>
             setVisitorExist(true)
           ).catch((err) => {
             console.error(err)
@@ -127,7 +131,10 @@ const App: React.FC = () => {
         }
       }
     })
-  }
+    // visitorExist is read from a stale closure intentionally — the original
+    // logic gated duplicate visitor creation within a single fetch cycle.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account])
 
   usePollBlockNumber()
   useEagerConnect()

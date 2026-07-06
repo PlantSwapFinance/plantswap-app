@@ -16,11 +16,10 @@ import { useAppDispatch } from 'state'
 import { getAddress } from 'utils/addressHelpers'
 import getLiquidityUrlPathParts from 'utils/getLiquidityUrlPathParts'
 import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalance'
-import useUnstakeGardens from '../../../hooks/useUnstakeGardens'
-import DepositModal from '../../DepositModal'
-import WithdrawModal from '../../WithdrawModal'
-import useStakeGardens from '../../../hooks/useStakeGardens'
-import useApproveGarden from '../../../hooks/useApproveGarden'
+import { PoolDepositModal, PoolWithdrawModal } from 'components/PoolModals'
+import useApprovePool from 'hooks/useApprovePool'
+import useStakePool from 'hooks/useStakePool'
+import useUnstakePool from 'hooks/useUnstakePool'
 import { ActionContainer, ActionTitles, ActionContent } from './styles'
 
 const IconButtonWrapper = styled.div`
@@ -45,8 +44,8 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   const { account } = useWeb3React()
   const [requestedApproval, setRequestedApproval] = useState(false)
   const { allowance, tokenBalance, stakedBalance } = useFarmUser(pid)
-  const { onStake } = useStakeGardens(pid)
-  const { onUnstake } = useUnstakeGardens(pid)
+  const { onStake } = useStakePool(pid)
+  const { onUnstake } = useUnstakePool(pid)
   const location = useLocation()
   const lpPrice = useLpTokenPrice(lpSymbol)
 
@@ -81,14 +80,22 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   }, [stakedBalance])
 
   const [onPresentDeposit] = useModal(
-    <DepositModal max={tokenBalance} onConfirm={handleStake} tokenName={lpSymbol} addLiquidityUrl={addLiquidityUrl} depositFee={depositFee} />,
+    <PoolDepositModal
+      max={tokenBalance}
+      onConfirm={handleStake}
+      tokenName={lpSymbol}
+      addLiquidityUrl={addLiquidityUrl}
+      depositFee={depositFee}
+      featureLabel="garden"
+      useLp={false}
+    />,
   )
   const [onPresentWithdraw] = useModal(
-    <WithdrawModal max={stakedBalance} onConfirm={handleUnstake} tokenName={lpSymbol} />,
+    <PoolWithdrawModal max={stakedBalance} onConfirm={handleUnstake} tokenName={lpSymbol} useLp={false} />,
   )
   const lpContract = useERC20(lpAddress)
   const dispatch = useAppDispatch()
-  const { onApprove } = useApproveGarden(lpContract)
+  const { onApprove } = useApprovePool(lpContract)
 
   const handleApprove = useCallback(async () => {
     try {

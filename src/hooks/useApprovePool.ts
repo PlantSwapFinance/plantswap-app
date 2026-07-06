@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { ethers, Contract } from 'ethers'
 import { useMasterchef } from 'hooks/useContract'
 
-const useApproveGarden = (lpContract: Contract) => {
+const useApprovePool = (lpContract: Contract) => {
   const masterGardenerContract = useMasterchef()
   const handleApprove = useCallback(async () => {
     try {
@@ -17,4 +17,4 @@ const useApproveGarden = (lpContract: Contract) => {
   return { onApprove: handleApprove }
 }
 
-export default useApproveGarden
+export default useApprovePool

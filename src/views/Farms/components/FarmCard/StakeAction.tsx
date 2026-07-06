@@ -10,10 +10,9 @@ import { useAppDispatch } from 'state'
 import { fetchFarmUserDataAsync } from 'state/farms'
 import { useLpTokenPrice } from 'state/farms/hooks'
 import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalance'
-import DepositModal from '../DepositModal'
-import WithdrawModal from '../WithdrawModal'
-import useUnstakeFarms from '../../hooks/useUnstakeFarms'
-import useStakeFarms from '../../hooks/useStakeFarms'
+import { PoolDepositModal as DepositModal, PoolWithdrawModal as WithdrawModal } from 'components/PoolModals'
+import useStakePool from 'hooks/useStakePool'
+import useUnstakePool from 'hooks/useUnstakePool'
 
 interface FarmCardActionsProps {
   stakedBalance?: BigNumber
@@ -40,8 +39,8 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   depositFee,
 }) => {
   const { t } = useTranslation()
-  const { onStake } = useStakeFarms(pid)
-  const { onUnstake } = useUnstakeFarms(pid)
+  const { onStake } = useStakePool(pid)
+  const { onUnstake } = useUnstakePool(pid)
   const location = useLocation()
   const dispatch = useAppDispatch()
   const { account } = useWeb3React()

@@ -21,9 +21,9 @@ import SearchInput from 'components/SearchInput'
 import Select, { OptionProps } from 'components/Select/Select'
 import Loading from 'components/Loading'
 import ToggleView, { ViewMode } from 'components/ToggleView'
+import PoolTabButtons from 'components/PoolTabButtons'
 import GardenCard, { GardenWithStakedValue } from './components/GardenCard/GardenCard'
 import Table from './components/GardenTable/GardenTable'
-import GardenTabButtons from './components/GardenTabButtons'
 import { RowProps } from './components/GardenTable/Row'
 import { DesktopColumnSchema } from './components/types'
 
@@ -421,7 +421,7 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
               <Toggle checked={stakedOnly} onChange={() => setStakedOnly(!stakedOnly)} scale="sm" />
               <Text> {t('Staked only')}</Text>
             </ToggleWrapper>
-            <GardenTabButtons hasStakeInFinishedGardens={stakedInactiveGardens.length > 0} />
+            <PoolTabButtons basePath="/gardens" hasStakeInFinishedPools={stakedInactiveGardens.length > 0} />
           </ViewControls>
           <FilterContainer>
             <LabelWrapper>

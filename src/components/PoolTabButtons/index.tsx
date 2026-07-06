@@ -4,24 +4,33 @@ import { useLocation, Link, useRouteMatch } from 'react-router-dom'
 import { ButtonMenu, ButtonMenuItem, NotificationDot } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 
-interface GardenTabButtonsProps {
-  hasStakeInFinishedGardens: boolean
+interface PoolTabButtonsProps {
+  /**
+   * Base path that prefixes each tab route (e.g. `/farms`, `/gardens`).
+   * The component renders `<basePath>`, `<basePath>/history`, and `<basePath>/archived`.
+   */
+  basePath: string
+  hasStakeInFinishedPools: boolean
 }
 
-const GardenTabButtons: React.FC<GardenTabButtonsProps> = ({ hasStakeInFinishedGardens }) => {
+const PoolTabButtons: React.FC<PoolTabButtonsProps> = ({ basePath, hasStakeInFinishedPools }) => {
   const { url } = useRouteMatch()
   const location = useLocation()
   const { t } = useTranslation()
 
+  const livePath = basePath
+  const historyPath = `${basePath}/history`
+  const archivedPath = `${basePath}/archived`
+
   let activeIndex
   switch (location.pathname) {
-    case '/gardens':
+    case livePath:
       activeIndex = 0
       break
-    case '/gardens/history':
+    case historyPath:
       activeIndex = 1
       break
-    case '/gardens/archived':
+    case archivedPath:
       activeIndex = 2
       break
     default:
@@ -35,7 +44,7 @@ const GardenTabButtons: React.FC<GardenTabButtonsProps> = ({ hasStakeInFinishedG
         <ButtonMenuItem as={Link} to={`${url}`}>
           {t('Live')}
         </ButtonMenuItem>
-        <NotificationDot show={hasStakeInFinishedGardens}>
+        <NotificationDot show={hasStakeInFinishedPools}>
           <ButtonMenuItem as={Link} to={`${url}/history`}>
             {t('Finished')}
           </ButtonMenuItem>
@@ -45,7 +54,7 @@ const GardenTabButtons: React.FC<GardenTabButtonsProps> = ({ hasStakeInFinishedG
   )
 }
 
-export default GardenTabButtons
+export default PoolTabButtons
 
 const Wrapper = styled.div`
   display: flex;

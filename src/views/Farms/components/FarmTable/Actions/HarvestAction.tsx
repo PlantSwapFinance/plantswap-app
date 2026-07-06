@@ -11,7 +11,7 @@ import { fetchFarmUserDataAsync } from 'state/farms'
 import { usePricePlantBusd } from 'state/farms/hooks'
 import useToast from 'hooks/useToast'
 import { useTranslation } from 'contexts/Localization'
-import useHarvestFarm from '../../../hooks/useHarvestFarm'
+import useHarvestPool from 'hooks/useHarvestPool'
 
 import { ActionContainer, ActionTitles, ActionContent } from './styles'
 
@@ -35,7 +35,7 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({ pid, userD
   }
 
   const [pendingTx, setPendingTx] = useState(false)
-  const { onReward } = useHarvestFarm(pid)
+  const { onReward } = useHarvestPool(pid)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { account } = useWeb3React()

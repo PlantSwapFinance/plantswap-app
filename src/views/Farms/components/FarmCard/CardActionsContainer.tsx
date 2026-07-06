@@ -9,9 +9,9 @@ import { Farm } from 'state/types'
 import { useTranslation } from 'contexts/Localization'
 import { useERC20 } from 'hooks/useContract'
 import ConnectWalletButton from 'components/ConnectWalletButton'
+import useApprovePool from 'hooks/useApprovePool'
 import StakeAction from './StakeAction'
 import HarvestAction from './HarvestAction'
-import useApproveFarm from '../../hooks/useApproveFarm'
 
 const Action = styled.div`
   padding-top: 16px;
@@ -46,7 +46,7 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, account, addLiquidi
 
   const lpContract = useERC20(lpAddress)
 
-  const { onApprove } = useApproveFarm(lpContract)
+  const { onApprove } = useApprovePool(lpContract)
 
   const handleApprove = useCallback(async () => {
     try {

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { CheckmarkIcon, CloseIcon, LinkExternal } from '@plantswap/uikit'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { getBscScanLink } from 'utils'
-import { TransactionDetails } from 'state/transactions/reducer'
+import { TransactionDetails } from 'state/transactions/store'
 import CircleLoader from '../../Loader/CircleLoader'
 
 const TransactionState = styled.div<{ pending: boolean; success?: boolean }>`

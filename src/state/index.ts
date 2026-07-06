@@ -1,72 +1,25 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import { save, load } from 'redux-localstorage-simple'
-import { useDispatch } from 'react-redux'
-import farmsReducer from './farms'
-import verticalGardensReducer from './verticalGardens'
-import collectiblesFarmsReducer from './collectiblesFarms'
-import poolsReducer from './pools'
-import profileReducer from './profile'
-import teamsReducer from './teams'
-import achievementsReducer from './achievements'
-import tasksReducer from './tasks'
-import blockReducer from './block'
-import collectiblesReducer from './collectibles'
-import marketReducer from './market'
-import listingsReducer from './market/listings'
-import votingReducer from './voting'
-import barnPancakeswapFarmsReducer from './barns/pancakeswap/farms'
-import application from './application/reducer'
-import { updateVersion } from './global/actions'
-import user from './user/reducer'
-import transactions from './transactions/reducer'
-import swap from './swap/reducer'
-import mint from './mint/reducer'
-import lists from './lists/reducer'
-import burn from './burn/reducer'
-import multicall from './multicall/reducer'
-
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'nftLists']
-
-const store = configureStore({
-  devTools: process.env.NODE_ENV !== 'production',
-  reducer: {
-    achievements: achievementsReducer,
-    tasks: tasksReducer,
-    block: blockReducer,
-    farms: farmsReducer,
-    verticalGardens: verticalGardensReducer,
-    collectiblesFarms: collectiblesFarmsReducer,
-    pools: poolsReducer,
-    profile: profileReducer,
-    teams: teamsReducer,
-    collectibles: collectiblesReducer,
-    market: marketReducer,
-    listings: listingsReducer,
-    voting: votingReducer,
-    foundationVoting: votingReducer,
-    barnPancakeswapFarms: barnPancakeswapFarmsReducer,
-
-    // Exchange
-    application,
-    user,
-    transactions,
-    swap,
-    mint,
-    burn,
-    multicall,
-    lists,
-  },
-  middleware: [...getDefaultMiddleware({ thunk: true }), save({ states: PERSISTED_KEYS })],
-  preloadedState: load({ states: PERSISTED_KEYS }),
-})
-
-store.dispatch(updateVersion())
-
 /**
- * @see https://redux-toolkit.js.org/usage/usage-with-typescript#getting-the-dispatch-type
+ * Public state barrel.
+ *
+ * After the Zustand migration, this module re-exports the compatibility
+ * `useAppDispatch` shim and the type aliases used by the small set of
+ * view files that haven't yet been rewritten to drop `dispatch(...)`.
+ *
+ * Historical note: this module used to host the Redux `configureStore`
+ * call (which imported all 23 slices and registered the
+ * `redux-localstorage-simple` middleware). That machinery has been
+ * fully replaced by per-slice Zustand stores in `state/<slice>/store.ts`.
  */
-export type AppDispatch = typeof store.dispatch
-export type AppState = ReturnType<typeof store.getState>
-export const useAppDispatch = () => useDispatch()
 
-export default store
+// Compatibility shim — replaces react-redux's `useDispatch`.
+// See `./storeUtils.ts` for the implementation.
+export { useAppDispatch } from './storeUtils'
+
+// Type aliases kept for backwards compatibility. They now resolve to
+// loosely-typed `unknown` so legacy view files that import them still
+// compile, but the runtime store layout lives in the per-slice
+// `state/<slice>/store.ts` modules.
+export type AppDispatch = (action: unknown) => unknown
+export type AppState = Record<string, unknown>
+
+export default null

@@ -1,27 +1,24 @@
 import { useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { useSelector } from 'react-redux'
-import { useAppDispatch } from 'state'
 import Nfts from 'config/constants/nfts'
-import { State } from './types'
-import { fetchWalletNfts } from './collectibles'
-
-// /!\
-// Don't add anything here. These hooks will be moved the the predictions folder
+import { fetchWalletNfts, useCollectiblesStore } from './collectibles/store'
 
 // Collectibles
 export const useGetCollectibles = () => {
   const { account } = useWeb3React()
-  const dispatch = useAppDispatch()
-  const { isInitialized, isLoading, data } = useSelector((state: State) => state.collectibles)
+  const { isInitialized, isLoading, data } = useCollectiblesStore((state) => ({
+    isInitialized: state.isInitialized,
+    isLoading: state.isLoading,
+    data: state.data,
+  }))
   const identifiers = Object.keys(data)
 
   useEffect(() => {
     // Fetch nfts only if we have not done so already
     if (!isInitialized) {
-      dispatch(fetchWalletNfts(account))
+      fetchWalletNfts(account)
     }
-  }, [isInitialized, account, dispatch])
+  }, [isInitialized, account])
 
   return {
     isInitialized,

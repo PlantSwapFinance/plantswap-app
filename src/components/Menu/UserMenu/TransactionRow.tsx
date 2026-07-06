@@ -1,7 +1,7 @@
 import React from 'react'
 import { BlockIcon, CheckmarkCircleIcon, Flex, Link, OpenNewIcon, RefreshIcon } from '@plantswap/uikit'
 import styled from 'styled-components'
-import { TransactionDetails } from 'state/transactions/reducer'
+import { TransactionDetails } from 'state/transactions/store'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { getBscScanLink } from 'utils'
 

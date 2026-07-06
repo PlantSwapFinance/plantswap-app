@@ -1,6 +1,4 @@
-// Re-export the transactions action surface for backwards compatibility.
-// The legacy createAction creators are now thin wrappers around the
-// Zustand store mutations in `./store`.
+// Backwards-compatible re-export of the transactions action surface.
 export {
   addTransaction,
   clearAllTransactions,

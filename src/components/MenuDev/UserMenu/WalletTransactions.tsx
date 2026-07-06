@@ -1,24 +1,21 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { Box, Button, Flex, Text } from '@plantswap/uikit'
-import { AppDispatch } from 'state'
 import { useAllTransactions } from 'state/transactions/hooks'
+import { clearAllTransactions } from 'state/transactions/store'
 import { useTranslation } from 'contexts/Localization'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { clearAllTransactions } from 'state/transactions/actions'
 import { orderBy } from 'lodash'
 import TransactionRow from './TransactionRow'
 
 const WalletTransactions: React.FC = () => {
   const { chainId } = useActiveWeb3React()
-  const dispatch = useDispatch<AppDispatch>()
   const { t } = useTranslation()
   const allTransactions = useAllTransactions()
   const sortedTransactions = orderBy(allTransactions, 'addedTime', 'desc')
 
   const handleClearAll = () => {
     if (chainId) {
-      dispatch(clearAllTransactions({ chainId }))
+      clearAllTransactions({ chainId })
     }
   }
 

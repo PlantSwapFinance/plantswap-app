@@ -1,14 +1,4 @@
-/**
- * Re-export the lists action surface for backwards compatibility.
- *
- * After the Zustand migration the legacy `createAction` triplets
- * (`fetchTokenList.pending/fulfilled/rejected`) are replaced by
- * standalone functions in `./store` that mutate the store directly. The
- * legacy object shape is preserved here as a tiny facade so existing
- * imports of the form `import { fetchTokenList } from 'state/lists/actions'`
- * continue to compile — `fetchTokenList.pending(payload)` now resolves
- * to the Zustand action.
- */
+// Backwards-compatible re-export of the lists action surface.
 import { Version } from '@uniswap/token-lists'
 import {
   fetchTokenListPending,
@@ -40,8 +30,7 @@ export {
   rejectNftVersionUpdate,
 } from './store'
 
-// Preserve the `fetchTokenList` namespace object for any caller that
-// accesses `.pending/.fulfilled/.rejected` properties.
+// Preserve the `fetchTokenList` namespace object.
 export const fetchTokenList = {
   pending: fetchTokenListPending,
   fulfilled: fetchTokenListFulfilled,
@@ -54,5 +43,4 @@ export const fetchNftList = {
   rejected: fetchNftListRejected,
 }
 
-// Suppress unused warning — Version is part of the public type surface.
 export type { Version }

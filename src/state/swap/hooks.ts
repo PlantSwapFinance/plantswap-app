@@ -2,7 +2,6 @@ import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@pancakeswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import useENS from 'hooks/ENS/useENS'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useCurrency } from 'hooks/Tokens'
@@ -11,14 +10,21 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useTranslation } from 'contexts/Localization'
 import { isAddress } from 'utils'
 import { computeSlippageAdjustedAmounts } from 'utils/prices'
-import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
-import { SwapState } from './reducer'
+import {
+  Field,
+  replaceSwapState,
+  selectCurrency,
+  setRecipient,
+  SwapState,
+  switchCurrencies,
+  typeInput,
+  useSwapStore,
+} from './store'
 import { useUserSlippageTolerance } from '../user/hooks'
 
-export function useSwapState(): AppState['swap'] {
-  return useSelector<AppState, AppState['swap']>((state) => state.swap)
+export function useSwapState(): SwapState {
+  return useSwapStore()
 }
 
 export function useSwapActionHandlers(): {
@@ -27,36 +33,24 @@ export function useSwapActionHandlers(): {
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
-  const dispatch = useDispatch<AppDispatch>()
-  const onCurrencySelection = useCallback(
-    (field: Field, currency: Currency) => {
-      dispatch(
-        selectCurrency({
-          field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'BNB' : '',
-        }),
-      )
-    },
-    [dispatch],
-  )
+  const onCurrencySelection = useCallback((field: Field, currency: Currency) => {
+    selectCurrency({
+      field,
+      currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'BNB' : '',
+    })
+  }, [])
 
   const onSwitchTokens = useCallback(() => {
-    dispatch(switchCurrencies())
-  }, [dispatch])
+    switchCurrencies()
+  }, [])
 
-  const onUserInput = useCallback(
-    (field: Field, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue }))
-    },
-    [dispatch],
-  )
+  const onUserInput = useCallback((field: Field, typedValue: string) => {
+    typeInput({ field, typedValue })
+  }, [])
 
-  const onChangeRecipient = useCallback(
-    (recipient: string | null) => {
-      dispatch(setRecipient({ recipient }))
-    },
-    [dispatch],
-  )
+  const onChangeRecipient = useCallback((recipient: string | null) => {
+    setRecipient({ recipient })
+  }, [])
 
   return {
     onSwitchTokens,
@@ -259,7 +253,6 @@ export function useDefaultsFromURLSearch():
   | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined }
   | undefined {
   const { chainId } = useActiveWeb3React()
-  const dispatch = useDispatch<AppDispatch>()
   const parsedQs = useParsedQueryString()
   const [result, setResult] = useState<
     { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined
@@ -269,19 +262,17 @@ export function useDefaultsFromURLSearch():
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs)
 
-    dispatch(
-      replaceSwapState({
-        typedValue: parsed.typedValue,
-        field: parsed.independentField,
-        inputCurrencyId: parsed[Field.INPUT].currencyId,
-        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
-        recipient: null,
-      }),
-    )
+    replaceSwapState({
+      typedValue: parsed.typedValue,
+      field: parsed.independentField,
+      inputCurrencyId: parsed[Field.INPUT].currencyId,
+      outputCurrencyId: parsed[Field.OUTPUT].currencyId,
+      recipient: null,
+    })
 
     setResult({ inputCurrencyId: parsed[Field.INPUT].currencyId, outputCurrencyId: parsed[Field.OUTPUT].currencyId })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, chainId])
+  }, [chainId])
 
   return result
 }

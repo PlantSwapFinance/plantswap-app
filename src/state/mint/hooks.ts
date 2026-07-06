@@ -1,39 +1,35 @@
 import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@pancakeswap/sdk'
 import { useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { PairState, usePair } from 'hooks/usePairs'
 import useTotalSupply from 'hooks/useTotalSupply'
 
 import { wrappedCurrency, wrappedCurrencyAmount } from 'utils/wrappedCurrency'
-import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, typeInput } from './actions'
+import { Field, MintState, typeInput, useMintStore } from './store'
 
 const ZERO = JSBI.BigInt(0)
 
-export function useMintState(): AppState['mint'] {
-  return useSelector<AppState, AppState['mint']>((state) => state.mint)
+export function useMintState(): MintState {
+  return useMintStore()
 }
 
 export function useMintActionHandlers(noLiquidity: boolean | undefined): {
   onFieldAInput: (typedValue: string) => void
   onFieldBInput: (typedValue: string) => void
 } {
-  const dispatch = useDispatch<AppDispatch>()
-
   const onFieldAInput = useCallback(
     (typedValue: string) => {
-      dispatch(typeInput({ field: Field.CURRENCY_A, typedValue, noLiquidity: noLiquidity === true }))
+      typeInput({ field: Field.CURRENCY_A, typedValue, noLiquidity: noLiquidity === true })
     },
-    [dispatch, noLiquidity],
+    [noLiquidity],
   )
   const onFieldBInput = useCallback(
     (typedValue: string) => {
-      dispatch(typeInput({ field: Field.CURRENCY_B, typedValue, noLiquidity: noLiquidity === true }))
+      typeInput({ field: Field.CURRENCY_B, typedValue, noLiquidity: noLiquidity === true })
     },
-    [dispatch, noLiquidity],
+    [noLiquidity],
   )
 
   return {

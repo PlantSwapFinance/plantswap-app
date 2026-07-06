@@ -1,25 +1,26 @@
-import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, AppState } from '../index'
-import { FieldNft, typeInput } from './actions'
+/**
+ * NFT swap hooks — share state with the regular swap via the same
+ * `useSwapStore`. Preserves the pre-migration behaviour where both flows
+ * wrote to `state.swap` in Redux.
+ */
 
-export function useNftSwapState(): AppState['swap'] {
-  return useSelector<AppState, AppState['swap']>((state) => state.swap)
+import { useCallback } from 'react'
+import { FieldNft, typeInput } from './actions'
+import { SwapState, useSwapStore } from '../swap/store'
+
+export function useNftSwapState(): SwapState {
+  return useSwapStore()
 }
 
 export function useNftSwapActionHandlers(): {
   onNftSelection: (field: FieldNft, currency: string) => void
   onUserNftInput: (field: FieldNft, typedValue: string) => void
 } {
-  const dispatch = useDispatch<AppDispatch>()
   const onNftSelection = null
 
-  const onUserNftInput = useCallback(
-    (field: FieldNft, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue }))
-    },
-    [dispatch],
-  )
+  const onUserNftInput = useCallback((field: FieldNft, typedValue: string) => {
+    typeInput({ field, typedValue })
+  }, [])
 
   return {
     onNftSelection,

@@ -276,34 +276,3 @@ export const acceptListUpdate = (payload: string): void => {
 export const rejectVersionUpdate = (_payload: Version): void => {
   // no-op
 }
-
-// nftLists — stub for backwards compat. The pre-migration `nftLists` key
-// in PERSISTED_KEYS has no corresponding reducer registered; we keep the
-// action creators available but don't wire them.
-export const fetchNftListPending = (): void => {
-  /* no-op: nftLists has no backing store */
-}
-export const fetchNftListFulfilled = (): void => {
-  /* no-op */
-}
-export const fetchNftListRejected = (): void => {
-  /* no-op */
-}
-export const addNftList = (): void => {
-  /* no-op */
-}
-export const removeNftList = (): void => {
-  /* no-op */
-}
-export const enableNftList = (): void => {
-  /* no-op */
-}
-export const disableNftList = (): void => {
-  /* no-op */
-}
-export const acceptNftListUpdate = (): void => {
-  /* no-op */
-}
-export const rejectNftVersionUpdate = (): void => {
-  /* no-op */
-}

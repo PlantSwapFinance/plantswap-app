@@ -163,8 +163,9 @@ const Pools: React.FC = () => {
             if (!collectiblesFarm.userData || !collectiblesFarm.stakingExtraRewardTokenPrice) {
               return 0
             }
-            return 0
-          //  return collectiblesFarm.userData.pendingReward.times(collectiblesFarm.stakingExtraRewardTokenPrice).toNumber()
+            return collectiblesFarm.userData.pendingReward
+              .times(collectiblesFarm.stakingExtraRewardTokenPrice)
+              .toNumber()
           },
           'desc',
         )

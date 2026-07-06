@@ -12,6 +12,7 @@ import ToggleView, { ViewMode } from 'components/ToggleView'
 import { useAppDispatch } from 'state'
 import { fetchWalletNfts } from 'state/collectibles'
 import { useGetCollectibles } from 'state/hooks'
+import { Nft } from 'config/constants/types'
 import { useTranslation } from 'contexts/Localization'
 import { latinise } from 'utils/latinise'
 import { useProfile } from 'state/profile/hooks'
@@ -20,7 +21,6 @@ import NftCard from './NftCard'
 // import NftTabButtons from './NftTabButtons'
 import Table from './NftTable/NftTable'
 import { RowProps } from './NftTable/Row'
-import { ExtraProps } from './NftTable/Extra'
 import NftGrid from './NftGrid'
 import { DesktopColumnSchema } from './types'
 import MasterGardeningSchoolNftCard from './NftCard/MasterGardeningSchoolNftCard'
@@ -117,11 +117,13 @@ const NftList = () => {
     const sortCollectibles = (collectibles) => {
       switch (sortOption) {
         case 'name':
-          return orderBy(collectibles, (nft: ExtraProps) => nft.name, 'asc')
+          return orderBy(collectibles, (nft: Nft) => nft.name, 'asc')
         case 'variantId':
-          return orderBy(collectibles, (nft: ExtraProps) => nft.name, 'desc')
+          return orderBy(collectibles, (nft: Nft) => nft.variationId, 'desc')
         case 'idenditifier':
-          return orderBy(collectibles, (nft: ExtraProps) => nft.name, 'desc')
+          return orderBy(collectibles, (nft: Nft) => nft.identifier, 'desc')
+        case 'hot':
+          return orderBy(collectibles, (nft: Nft) => nft.sortOrder, 'asc')
         default:
           return collectibles
       }
@@ -309,8 +311,6 @@ const NftList = () => {
         },
       ]}
       sortOptions={[
-        { label: t('Sell type'), value: 'sellType' },
-        { label: t('Auction end date'), value: 'auctionEndData' },
         { label: t('Hot'), value: 'hot' },
         { label: t('Name'), value: 'name' },
         { label: t('GardenerId'), value: 'variantId' },

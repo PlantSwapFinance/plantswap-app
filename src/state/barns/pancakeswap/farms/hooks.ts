@@ -1,17 +1,19 @@
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useAppDispatch } from 'state'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { getBalanceAmount } from 'utils/formatBalance'
 import { farmsConfig } from 'config/constants'
 import useRefresh from 'hooks/useRefresh'
-import { fetchFarmsPublicDataAsync, fetchFarmUserDataAsync, nonArchivedFarms } from '.'
-import { State, BarnPancakeswapFarm, BarnPancakeswapFarmsState } from '../../../types'
+import {
+  fetchFarmUserData,
+  fetchFarmsPublicData,
+  nonArchivedFarms,
+  useBarnPancakeswapFarmsStore,
+} from './store'
+import { BarnPancakeswapFarm, BarnPancakeswapFarmsState } from '../../../types'
 
 export const usePollFarmsData = (includeArchive = false) => {
-  const dispatch = useAppDispatch()
   const { slowRefresh } = useRefresh()
   const { account } = useWeb3React()
 
@@ -19,12 +21,12 @@ export const usePollFarmsData = (includeArchive = false) => {
     const farmsToFetch = includeArchive ? farmsConfig : nonArchivedFarms
     const pids = farmsToFetch.map((farmToFetch) => farmToFetch.pid)
 
-    dispatch(fetchFarmsPublicDataAsync(pids))
+    fetchFarmsPublicData(pids)
 
     if (account) {
-      dispatch(fetchFarmUserDataAsync({ account, pids }))
+      fetchFarmUserData({ account, pids })
     }
-  }, [includeArchive, dispatch, slowRefresh, account])
+  }, [includeArchive, slowRefresh, account])
 }
 
 /**
@@ -33,27 +35,23 @@ export const usePollFarmsData = (includeArchive = false) => {
  * 252 = BUSD-BNB LP
  */
 export const usePollCoreFarmData = () => {
-  const dispatch = useAppDispatch()
   const { fastRefresh } = useRefresh()
 
   useEffect(() => {
-    dispatch(fetchFarmsPublicDataAsync([252, 251]))
-  }, [dispatch, fastRefresh])
+    fetchFarmsPublicData([252, 251])
+  }, [fastRefresh])
 }
 
 export const useFarms = (): BarnPancakeswapFarmsState => {
-  const barnPancakeswapFarms = useSelector((state: State) => state.barnPancakeswapFarms)
-  return barnPancakeswapFarms
+  return useBarnPancakeswapFarmsStore()
 }
 
 export const useFarmFromPid = (pid): BarnPancakeswapFarm => {
-  const barnPancakeswapFarm = useSelector((state: State) => state.barnPancakeswapFarms.data.find((f) => f.pid === pid))
-  return barnPancakeswapFarm
+  return useBarnPancakeswapFarmsStore((state) => state.data.find((f) => f.pid === pid))
 }
 
 export const useFarmFromLpSymbol = (lpSymbol: string): BarnPancakeswapFarm => {
-  const barnPancakeswapFarm = useSelector((state: State) => state.barnPancakeswapFarms.data.find((f) => f.lpSymbol === lpSymbol))
-  return barnPancakeswapFarm
+  return useBarnPancakeswapFarmsStore((state) => state.data.find((f) => f.lpSymbol === lpSymbol))
 }
 
 export const useFarmUser = (pid) => {
@@ -67,7 +65,6 @@ export const useFarmUser = (pid) => {
   }
 }
 
-// Return the base token price for a barnPancakeswapFarm, from a given pid
 export const useBusdPriceFromPid = (pid: number): BigNumber => {
   const barnPancakeswapFarm = useFarmFromPid(pid)
   return barnPancakeswapFarm && new BigNumber(barnPancakeswapFarm.token.busdPrice)
@@ -79,19 +76,14 @@ export const useLpTokenPrice = (symbol: string) => {
   let lpTokenPrice = BIG_ZERO
 
   if (barnPancakeswapFarm.lpTotalSupply && barnPancakeswapFarm.lpTotalInQuoteToken) {
-    // Total value of base token in LP
     const valueOfBaseTokenInFarm = barnPancakeswapFarmTokenPriceInUsd.times(barnPancakeswapFarm.tokenAmountTotal)
-    // Double it to get overall value in LP
     const overallValueOfAllTokensInFarm = valueOfBaseTokenInFarm.times(2)
-    // Divide total value of all tokens, by the number of LP tokens
     const totalLpTokens = getBalanceAmount(new BigNumber(barnPancakeswapFarm.lpTotalSupply))
     lpTokenPrice = overallValueOfAllTokensInFarm.div(totalLpTokens)
   }
 
   return lpTokenPrice
 }
-
-// /!\ Deprecated , use the BUSD hook in /hooks
 
 export const usePriceBnbBusd = (): BigNumber => {
   const bnbBusdFarm = useFarmFromPid(252)

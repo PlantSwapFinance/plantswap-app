@@ -1,18 +1,16 @@
 import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@pancakeswap/sdk'
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { usePair } from 'hooks/usePairs'
 import useTotalSupply from 'hooks/useTotalSupply'
 
-import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useTokenBalances } from '../wallet/hooks'
-import { Field, typeInput } from './actions'
+import { BurnState, Field, typeInput, useBurnStore } from './store'
 
-export function useBurnState(): AppState['burn'] {
-  return useSelector<AppState, AppState['burn']>((state) => state.burn)
+export function useBurnState(): BurnState {
+  return useBurnStore()
 }
 
 export function useDerivedBurnInfo(
@@ -130,14 +128,9 @@ export function useDerivedBurnInfo(
 export function useBurnActionHandlers(): {
   onUserInput: (field: Field, typedValue: string) => void
 } {
-  const dispatch = useDispatch<AppDispatch>()
-
-  const onUserInput = useCallback(
-    (field: Field, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue }))
-    },
-    [dispatch],
-  )
+  const onUserInput = useCallback((field: Field, typedValue: string) => {
+    typeInput({ field, typedValue })
+  }, [])
 
   return {
     onUserInput,

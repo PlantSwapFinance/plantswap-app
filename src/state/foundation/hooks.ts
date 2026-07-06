@@ -1,28 +1,25 @@
-import { useSelector } from 'react-redux'
-import { State } from '../types'
+import { FoundationProposal, FoundationVote } from 'state/types'
+import { useFoundationStore } from './store'
 
-// Voting
-export const useGetFoundationProposals = () => {
-  const foundationProposals = useSelector((state: State) => state.foundationVoting.foundationProposals)
+// Foundation voting
+export const useGetFoundationProposals = (): FoundationProposal[] => {
+  const foundationProposals = useFoundationStore((state) => state.foundationProposals)
   return Object.values(foundationProposals)
 }
 
-export const useGetFoundatioProposal = (proposalId: string) => {
-  const foundationProposal = useSelector((state: State) => state.foundationVoting.foundationProposals[proposalId])
-  return foundationProposal
+export const useGetFoundatioProposal = (proposalId: string): FoundationProposal | undefined => {
+  return useFoundationStore((state) => state.foundationProposals[proposalId])
 }
 
-export const useGetFoundatioVotes = (proposalId: string) => {
-  const foundationVotes = useSelector((state: State) => state.foundationVoting.foundationVotes[proposalId])
+export const useGetFoundatioVotes = (proposalId: string): FoundationVote[] => {
+  const foundationVotes = useFoundationStore((state) => state.foundationVotes[proposalId])
   return foundationVotes ? foundationVotes.filter((vote) => vote._inValid !== true) : []
 }
 
 export const useGetFoundatioVotingStateLoadingStatus = () => {
-  const foundationVotingStatus = useSelector((state: State) => state.foundationVoting.foundationVoteLoadingStatus)
-  return foundationVotingStatus
+  return useFoundationStore((state) => state.foundationVoteLoadingStatus)
 }
 
 export const useGetFoundatioProposalLoadingStatus = () => {
-  const foundationVotingStatus = useSelector((state: State) => state.foundationVoting.foundationProposalLoadingStatus)
-  return foundationVotingStatus
+  return useFoundationStore((state) => state.foundationProposalLoadingStatus)
 }

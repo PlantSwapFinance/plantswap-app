@@ -1,43 +1,37 @@
-import { useEffect, } from 'react'
-import { useSelector } from 'react-redux'
-import { useAppDispatch } from 'state'
+import { useEffect } from 'react'
 import { simpleRpcProvider } from 'utils/providers'
 import useRefresh from 'hooks/useRefresh'
 import {
-  fetchPoolsPublicDataAsync,
-  fetchPoolsUserDataAsync,
-  fetchPoolsStakingLimitsAsync,
-} from '.'
-import { State, Pool } from '../types'
+  fetchPoolsPublicData,
+  fetchPoolsStakingLimits,
+  fetchPoolsUserData,
+  usePoolsStore,
+} from './store'
+import { Pool } from '../types'
 import { transformPool } from './helpers'
 
 export const useFetchPublicPoolsData = () => {
-  const dispatch = useAppDispatch()
   const { slowRefresh } = useRefresh()
 
   useEffect(() => {
-    const fetchPoolsPublicData = async () => {
+    const fetchData = async () => {
       const blockNumber = await simpleRpcProvider.getBlockNumber()
-      dispatch(fetchPoolsPublicDataAsync(blockNumber))
+      await fetchPoolsPublicData(blockNumber)
     }
-
-    fetchPoolsPublicData()
-    dispatch(fetchPoolsStakingLimitsAsync())
-  }, [dispatch, slowRefresh])
+    fetchData()
+    fetchPoolsStakingLimits()
+  }, [slowRefresh])
 }
 
 export const usePools = (account): { pools: Pool[]; userDataLoaded: boolean } => {
   const { fastRefresh } = useRefresh()
-  const dispatch = useAppDispatch()
   useEffect(() => {
     if (account) {
-      dispatch(fetchPoolsUserDataAsync(account))
+      fetchPoolsUserData(account)
     }
-  }, [account, dispatch, fastRefresh])
+  }, [account, fastRefresh])
 
-  const { pools, userDataLoaded } = useSelector((state: State) => ({
-    pools: state.pools.data,
-    userDataLoaded: state.pools.userDataLoaded,
-  }))
+  const pools = usePoolsStore((state) => state.data)
+  const userDataLoaded = usePoolsStore((state) => state.userDataLoaded)
   return { pools: pools.map(transformPool), userDataLoaded }
 }

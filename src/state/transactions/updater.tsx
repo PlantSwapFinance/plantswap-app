@@ -1,12 +1,10 @@
 import React, { useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { Text, Flex, Link } from '@plantswap/uikit'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { getBscScanLink } from 'utils'
 import useToast from 'hooks/useToast'
 import { useBlockNumber } from '../application/hooks'
-import { AppDispatch, AppState } from '../index'
-import { checkedTransaction, finalizeTransaction } from './actions'
+import { checkedTransaction, finalizeTransaction, useTransactionsStore } from './store'
 
 export function shouldCheck(
   lastBlockNumber: number,
@@ -34,9 +32,7 @@ export default function Updater(): null {
 
   const lastBlockNumber = useBlockNumber()
 
-  const dispatch = useDispatch<AppDispatch>()
-  const state = useSelector<AppState, AppState['transactions']>((s) => s.transactions)
-
+  const state = useTransactionsStore()
   const transactions = useMemo(() => (chainId ? state[chainId] ?? {} : {}), [chainId, state])
 
   const { toastError, toastSuccess } = useToast()
@@ -51,22 +47,20 @@ export default function Updater(): null {
           .getTransactionReceipt(hash)
           .then((receipt) => {
             if (receipt) {
-              dispatch(
-                finalizeTransaction({
-                  chainId,
-                  hash,
-                  receipt: {
-                    blockHash: receipt.blockHash,
-                    blockNumber: receipt.blockNumber,
-                    contractAddress: receipt.contractAddress,
-                    from: receipt.from,
-                    status: receipt.status,
-                    to: receipt.to,
-                    transactionHash: receipt.transactionHash,
-                    transactionIndex: receipt.transactionIndex,
-                  },
-                }),
-              )
+              finalizeTransaction({
+                chainId,
+                hash,
+                receipt: {
+                  blockHash: receipt.blockHash,
+                  blockNumber: receipt.blockNumber,
+                  contractAddress: receipt.contractAddress,
+                  from: receipt.from,
+                  status: receipt.status,
+                  to: receipt.to,
+                  transactionHash: receipt.transactionHash,
+                  transactionIndex: receipt.transactionIndex,
+                },
+              })
 
               const toast = receipt.status === 1 ? toastSuccess : toastError
               toast(
@@ -81,14 +75,14 @@ export default function Updater(): null {
                 </Flex>,
               )
             } else {
-              dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
+              checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber })
             }
           })
           .catch((error) => {
             console.error(`failed to check transaction hash: ${hash}`, error)
           })
       })
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, toastSuccess, toastError])
+  }, [chainId, library, transactions, lastBlockNumber, toastSuccess, toastError])
 
   return null
 }

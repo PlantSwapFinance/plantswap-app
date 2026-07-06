@@ -1,38 +1,29 @@
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useAppDispatch } from 'state'
 import useRefresh from 'hooks/useRefresh'
 import {
-  fetchVerticalGardensPublicDataAsync,
-  fetchVerticalGardensUserDataAsync,
-} from '.'
-import { State, VerticalGarden } from '../types'
+  fetchVerticalGardensPublicData,
+  fetchVerticalGardensUserData,
+  useVerticalGardensStore,
+} from './store'
+import { VerticalGarden } from '../types'
 
 export const useFetchPubliVerticalGardensData = () => {
-  const dispatch = useAppDispatch()
   const { slowRefresh } = useRefresh()
 
   useEffect(() => {
-    const fetchVerticalGardensPublicData = async () => {
-      dispatch(fetchVerticalGardensPublicDataAsync())
-    }
-
     fetchVerticalGardensPublicData()
-  }, [dispatch, slowRefresh])
+  }, [slowRefresh])
 }
 
 export const useVerticalGardens = (account): { verticalGardens: VerticalGarden[]; userDataLoaded: boolean } => {
   const { fastRefresh } = useRefresh()
-  const dispatch = useAppDispatch()
   useEffect(() => {
     if (account) {
-      dispatch(fetchVerticalGardensUserDataAsync(account))
+      fetchVerticalGardensUserData(account)
     }
-  }, [account, dispatch, fastRefresh])
+  }, [account, fastRefresh])
 
-  const { verticalGardens, userDataLoaded } = useSelector((state: State) => ({
-    verticalGardens: state.verticalGardens.data,
-    userDataLoaded: state.verticalGardens.userDataLoaded,
-  }))
+  const verticalGardens = useVerticalGardensStore((state) => state.data)
+  const userDataLoaded = useVerticalGardensStore((state) => state.userDataLoaded)
   return { verticalGardens, userDataLoaded }
 }

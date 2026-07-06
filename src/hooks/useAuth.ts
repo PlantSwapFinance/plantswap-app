@@ -13,13 +13,11 @@ import { ConnectorNames, connectorLocalStorageKey } from '@plantswap/uikit'
 import { connectorsByName } from 'utils/web3React'
 import { setupNetwork } from 'utils/wallet'
 import useToast from 'hooks/useToast'
-import { profileClear } from 'state/profile'
-import { useAppDispatch } from 'state'
+import { profileClear } from 'state/profile/store'
 import { useTranslation } from 'contexts/Localization'
 
 const useAuth = () => {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
   const { activate, deactivate } = useWeb3React()
   const { toastError } = useToast()
 
@@ -35,7 +33,8 @@ const useAuth = () => {
             }
           } else {
             window.localStorage.removeItem(connectorLocalStorageKey)
-            if (error instanceof NoEthereumProviderError) { //  || error instanceof NoBscProviderError
+            if (error instanceof NoEthereumProviderError) {
+              // || error instanceof NoBscProviderError
               toastError(t('Provider Error'), t('No provider was found'))
             } else if (
               error instanceof UserRejectedRequestErrorInjected ||
@@ -45,7 +44,7 @@ const useAuth = () => {
                 const walletConnector = connector as WalletConnectConnector
                 walletConnector.walletConnectProvider = null
               }
-              toastError(t('Authorization Error'), t('Please authorize to access your account'))
+              toastError(t('Authorization Error'), t('Please authorize to access your wallet'))
             } else {
               toastError(error.name, error.message)
             }
@@ -59,14 +58,14 @@ const useAuth = () => {
   )
 
   const logout = useCallback(() => {
-    dispatch(profileClear())
+    profileClear()
     deactivate()
     // This localStorage key is set by @web3-react/walletconnect-connector
     if (window.localStorage.getItem('walletconnect')) {
       connectorsByName.walletconnect.close()
       connectorsByName.walletconnect.walletConnectProvider = null
     }
-  }, [deactivate, dispatch])
+  }, [deactivate])
 
   return { login, logout }
 }

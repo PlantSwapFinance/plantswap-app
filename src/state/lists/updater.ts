@@ -1,20 +1,17 @@
 import { useAllLists } from 'state/lists/hooks'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useCallback, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { useAllInactiveTokens } from 'hooks/Tokens'
 import { UNSUPPORTED_LIST_URLS } from 'config/constants/lists'
 import useWeb3Provider from 'hooks/useActiveWeb3React'
 import useFetchListCallback from 'hooks/useFetchListCallback'
 import useInterval from 'hooks/useInterval'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { AppDispatch } from '../index'
-import { acceptListUpdate } from './actions'
+import { acceptListUpdate } from './store'
 import { useActiveListUrls } from './hooks'
 
 export default function Updater(): null {
   const { library } = useWeb3Provider()
-  const dispatch = useDispatch<AppDispatch>()
   const isWindowVisible = useIsWindowVisible()
 
   // get all loaded lists, and the active urls
@@ -43,7 +40,7 @@ export default function Updater(): null {
         fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
       }
     })
-  }, [dispatch, fetchList, library, lists])
+  }, [fetchList, library, lists])
 
   // if any lists from unsupported lists are loaded, check them too (in case new updates since last visit)
   useEffect(() => {
@@ -53,7 +50,7 @@ export default function Updater(): null {
         fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
       }
     })
-  }, [dispatch, fetchList, library, lists])
+  }, [fetchList, library, lists])
 
   // automatically update lists if versions are minor/patch
   useEffect(() => {
@@ -69,11 +66,11 @@ export default function Updater(): null {
           case VersionUpgrade.PATCH:
           case VersionUpgrade.MINOR:
           case VersionUpgrade.MAJOR:
-            dispatch(acceptListUpdate(listUrl))
+            acceptListUpdate(listUrl)
         }
       }
     })
-  }, [dispatch, lists, activeListUrls])
+  }, [lists, activeListUrls])
 
   return null
 }

@@ -1,28 +1,27 @@
-import { createStore, Store } from 'redux'
-
-import { Field, typeInput } from './actions'
-import reducer, { MintState } from './reducer'
+import { Field, initialState, mintReducer, MintState } from './store'
 
 describe('mint reducer', () => {
-  let store: Store<MintState>
-
-  beforeEach(() => {
-    store = createStore(reducer, {
-      independentField: Field.CURRENCY_A,
-      typedValue: '',
-      otherTypedValue: '',
-    })
-  })
-
   describe('typeInput', () => {
     it('sets typed value', () => {
-      store.dispatch(typeInput({ field: Field.CURRENCY_A, typedValue: '1.0', noLiquidity: false }))
-      expect(store.getState()).toEqual({ independentField: Field.CURRENCY_A, typedValue: '1.0', otherTypedValue: '' })
+      const start: MintState = { ...initialState }
+      const next = mintReducer(start, {
+        type: 'mint/typeInput',
+        payload: { field: Field.CURRENCY_A, typedValue: '1.0', noLiquidity: false },
+      })
+      expect(next).toEqual({ independentField: Field.CURRENCY_A, typedValue: '1.0', otherTypedValue: '' })
     })
+
     it('clears other value', () => {
-      store.dispatch(typeInput({ field: Field.CURRENCY_A, typedValue: '1.0', noLiquidity: false }))
-      store.dispatch(typeInput({ field: Field.CURRENCY_B, typedValue: '1.0', noLiquidity: false }))
-      expect(store.getState()).toEqual({ independentField: Field.CURRENCY_B, typedValue: '1.0', otherTypedValue: '' })
+      const start: MintState = { ...initialState }
+      const after1 = mintReducer(start, {
+        type: 'mint/typeInput',
+        payload: { field: Field.CURRENCY_A, typedValue: '1.0', noLiquidity: false },
+      })
+      const after2 = mintReducer(after1, {
+        type: 'mint/typeInput',
+        payload: { field: Field.CURRENCY_B, typedValue: '1.0', noLiquidity: false },
+      })
+      expect(after2).toEqual({ independentField: Field.CURRENCY_B, typedValue: '1.0', otherTypedValue: '' })
     })
   })
 })

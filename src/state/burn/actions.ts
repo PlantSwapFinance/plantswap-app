@@ -1,10 +1,3 @@
-import { createAction } from '@reduxjs/toolkit'
-
-export enum Field {
-  LIQUIDITY_PERCENT = 'LIQUIDITY_PERCENT',
-  LIQUIDITY = 'LIQUIDITY',
-  CURRENCY_A = 'CURRENCY_A',
-  CURRENCY_B = 'CURRENCY_B',
-}
-
-export const typeInput = createAction<{ field: Field; typedValue: string }>('burn/typeInputBurn')
+// Re-exports for backwards compatibility. Action creators now live in
+// `./store` and write directly to the Zustand `useBurnStore`.
+export { Field, typeInput } from './store'

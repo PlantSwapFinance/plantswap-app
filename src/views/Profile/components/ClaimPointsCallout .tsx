@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { sumBy } from 'lodash'
-import { useAppDispatch } from 'state'
 import { useWeb3React } from '@web3-react/core'
 import { Card, CardBody, CardHeader, Flex, Heading, PrizeIcon } from '@plantswap/uikit'
 import { useProfile } from 'state/profile/hooks'
 import { Achievement } from 'state/types'
-import { addPoints } from 'state/profile'
-import { addAchievement } from 'state/achievements'
+import { addPoints } from 'state/profile/store'
+import { addAchievement } from 'state/achievements/store'
 import { useTranslation } from 'contexts/Localization'
 import { getClaimableIfoData } from 'utils/achievements'
 import AchievementRow from './AchievementRow'
@@ -14,7 +13,6 @@ import AchievementRow from './AchievementRow'
 const ClaimPointsCallout = () => {
   const [claimableAchievements, setClaimableAchievement] = useState<Achievement[]>([])
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
   const { profile } = useProfile()
   const { account } = useWeb3React()
 
@@ -27,11 +25,11 @@ const ClaimPointsCallout = () => {
     if (account) {
       fetchIfoClaims()
     }
-  }, [account, dispatch, setClaimableAchievement])
+  }, [account, setClaimableAchievement])
 
   const handleCollectSuccess = (achievement: Achievement) => {
-    dispatch(addAchievement(achievement))
-    dispatch(addPoints(achievement.points))
+    addAchievement(achievement)
+    addPoints(achievement.points)
 
     setClaimableAchievement((prevClaimableAchievements) =>
       prevClaimableAchievements.filter((prevClaimableAchievement) => prevClaimableAchievement.id !== achievement.id),

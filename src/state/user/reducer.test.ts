@@ -1,33 +1,25 @@
-import { createStore, Store } from 'redux'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../config/constants'
-import { updateVersion } from '../global/actions'
-import reducer, { initialState, UserState } from './reducer'
+import { initialState, userReducer, UserState } from './store'
 
-describe('swap reducer', () => {
-  let store: Store<UserState>
-
-  beforeEach(() => {
-    store = createStore(reducer, initialState)
-  })
-
+describe('user reducer', () => {
   describe('updateVersion', () => {
     it('has no timestamp originally', () => {
-      expect(store.getState().lastUpdateVersionTimestamp).toBeUndefined()
+      expect(initialState.lastUpdateVersionTimestamp).toBeUndefined()
     })
     it('sets the lastUpdateVersionTimestamp', () => {
       const time = new Date().getTime()
-      store.dispatch(updateVersion())
-      expect(store.getState().lastUpdateVersionTimestamp).toBeGreaterThanOrEqual(time)
+      const next = userReducer(initialState, { type: 'global/updateVersion' })
+      expect(next.lastUpdateVersionTimestamp).toBeGreaterThanOrEqual(time)
     })
     it('sets allowed slippage and deadline', () => {
-      store = createStore(reducer, {
+      const start: UserState = {
         ...initialState,
-        userDeadline: undefined,
-        userSlippageTolerance: undefined,
-      } as any)
-      store.dispatch(updateVersion())
-      expect(store.getState().userDeadline).toEqual(DEFAULT_DEADLINE_FROM_NOW)
-      expect(store.getState().userSlippageTolerance).toEqual(INITIAL_ALLOWED_SLIPPAGE)
+        userDeadline: undefined as any,
+        userSlippageTolerance: undefined as any,
+      }
+      const next = userReducer(start, { type: 'global/updateVersion' })
+      expect(next.userDeadline).toEqual(DEFAULT_DEADLINE_FROM_NOW)
+      expect(next.userSlippageTolerance).toEqual(INITIAL_ALLOWED_SLIPPAGE)
     })
   })
 })

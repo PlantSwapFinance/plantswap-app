@@ -1,9 +1,3 @@
-import { createAction } from '@reduxjs/toolkit'
-
-export enum Field {
-  CURRENCY_A = 'CURRENCY_A',
-  CURRENCY_B = 'CURRENCY_B',
-}
-
-export const typeInput = createAction<{ field: Field; typedValue: string; noLiquidity: boolean }>('mint/typeInputMint')
-export const resetMintState = createAction<void>('mint/resetMintState')
+// Re-exports for backwards compatibility. Action creators now live in
+// `./store` and write directly to the Zustand `useMintStore`.
+export { Field, typeInput, resetMintState } from './store'

@@ -1,10 +1,6 @@
-import { ThunkAction } from 'redux-thunk'
-import { AnyAction } from '@reduxjs/toolkit'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import { CampaignType, FarmConfig, VerticalGardenConfig, CollectiblesFarmConfig, Nft, PoolConfig, Team } from 'config/constants/types'
-
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, State, unknown, AnyAction>
 
 export interface BigNumberToJson {
   type: 'BigNumber'

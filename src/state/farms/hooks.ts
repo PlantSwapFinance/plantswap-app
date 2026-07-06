@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useAppDispatch } from 'state'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { BIG_ZERO } from 'utils/bigNumber'
@@ -9,8 +7,8 @@ import { farmsConfig } from 'config/constants'
 import useRefresh from 'hooks/useRefresh'
 import { nanoid } from 'nanoid'
 import unchainedDatas from 'utils/calls/unchainedDatas'
-import { fetchFarmsPublicDataAsync, fetchFarmUserDataAsync, nonArchivedFarms } from '.'
-import { State, Farm, FarmsState } from '../types'
+import { fetchFarmUserData, fetchFarmsPublicData, nonArchivedFarms, useFarmsStore } from './store'
+import { Farm, FarmsState } from '../types'
 
 interface UnchainedData {
   dataType: string
@@ -25,7 +23,6 @@ interface UnchainedLogData extends UnchainedData {
 }
 
 export const usePollFarmsData = (includeArchive = false) => {
-  const dispatch = useAppDispatch()
   const { slowRefresh } = useRefresh()
   const { account } = useWeb3React()
 
@@ -33,12 +30,12 @@ export const usePollFarmsData = (includeArchive = false) => {
     const farmsToFetch = includeArchive ? farmsConfig : nonArchivedFarms
     const pids = farmsToFetch.map((farmToFetch) => farmToFetch.pid)
 
-    dispatch(fetchFarmsPublicDataAsync(pids))
+    fetchFarmsPublicData(pids)
 
     if (account) {
-      dispatch(fetchFarmUserDataAsync({ account, pids }))
+      fetchFarmUserData({ account, pids })
     }
-  }, [includeArchive, dispatch, slowRefresh, account])
+  }, [includeArchive, slowRefresh, account])
 }
 
 /**
@@ -47,27 +44,23 @@ export const usePollFarmsData = (includeArchive = false) => {
  * 252 = BUSD-BNB LP
  */
 export const usePollCoreFarmData = () => {
-  const dispatch = useAppDispatch()
   const { fastRefresh } = useRefresh()
 
   useEffect(() => {
-    dispatch(fetchFarmsPublicDataAsync([4, 28]))
-  }, [dispatch, fastRefresh])
+    fetchFarmsPublicData([4, 28])
+  }, [fastRefresh])
 }
 
 export const useFarms = (): FarmsState => {
-  const farms = useSelector((state: State) => state.farms)
-  return farms
+  return useFarmsStore()
 }
 
 export const useFarmFromPid = (pid): Farm => {
-  const farm = useSelector((state: State) => state.farms.data.find((f) => f.pid === pid))
-  return farm
+  return useFarmsStore((state) => state.data.find((f) => f.pid === pid))
 }
 
 export const useFarmFromLpSymbol = (lpSymbol: string): Farm => {
-  const farm = useSelector((state: State) => state.farms.data.find((f) => f.lpSymbol === lpSymbol))
-  return farm
+  return useFarmsStore((state) => state.data.find((f) => f.lpSymbol === lpSymbol))
 }
 
 export const useFarmUser = (pid) => {
@@ -124,28 +117,30 @@ export const usePricePlantBusd = (): BigNumber => {
       dataType: 'plantPrice',
       value: plantBnbBusdPrice,
       dateAdded: new Date(),
-      dateUpdated: new Date()
+      dateUpdated: new Date(),
     }
     const priceLogData: UnchainedLogData = {
       ...priceData,
       dataId: nanoid(),
-      userId: 'test'
+      userId: 'test',
     }
     if (!dataCheck) {
       setDataCheck(true)
-      unchainedDatas.readUnchainedDatasByDataType('plantPrice').then((foundUnchainedData) => {
-        if (foundUnchainedData[0] !== undefined && foundUnchainedData[0].data !== undefined) {
-          unchainedDatas.updateUnchainedDatas(foundUnchainedData[0].id, priceData)
-        } else {
+      unchainedDatas
+        .readUnchainedDatasByDataType('plantPrice')
+        .then((foundUnchainedData) => {
+          if (foundUnchainedData[0] !== undefined && foundUnchainedData[0].data !== undefined) {
+            unchainedDatas.updateUnchainedDatas(foundUnchainedData[0].id, priceData)
+          } else {
+            unchainedDatas.createUnchainedDatas(priceData)
+          }
+        })
+        .catch(() => {
           unchainedDatas.createUnchainedDatas(priceData)
-        }
-      }).catch(() => {
-        unchainedDatas.createUnchainedDatas(priceData)
-      })
+        })
       unchainedDatas.createUnchainedLogDatas(priceLogData)
     }
-  }
-  else {
+  } else {
     // eslint-disable-next-line
     if (!dataMissingCheck) {
       setDataMissingCheck(true)

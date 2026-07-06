@@ -1,12 +1,9 @@
 import React, { useMemo, useCallback } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useDispatch } from 'react-redux'
 import { Modal, ModalBody, Text, Button, Flex, InjectedModalProps } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
-import { TransactionDetails } from 'state/transactions/reducer'
-import { AppDispatch } from 'state'
-import { clearAllTransactions } from 'state/transactions/actions'
+import { TransactionDetails, clearAllTransactions } from 'state/transactions/store'
 import { AutoRow } from '../../Layout/Row'
 import Transaction from './Transaction'
 
@@ -27,7 +24,6 @@ function renderTransactions(transactions: TransactionDetails[]) {
 
 const TransactionsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
   const { account, chainId } = useActiveWeb3React()
-  const dispatch = useDispatch<AppDispatch>()
   const allTransactions = useAllTransactions()
 
   const { t } = useTranslation()
@@ -41,8 +37,8 @@ const TransactionsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt)
 
   const clearAllTransactionsCallback = useCallback(() => {
-    if (chainId) dispatch(clearAllTransactions({ chainId }))
-  }, [dispatch, chainId])
+    if (chainId) clearAllTransactions({ chainId })
+  }, [chainId])
 
   return (
     <Modal title={t('Recent Transactions')} headerBackground="gradients.cardHeader" onDismiss={onDismiss}>

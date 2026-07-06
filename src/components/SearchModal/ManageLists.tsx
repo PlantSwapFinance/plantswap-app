@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useMemo, useState, useEffect } from 'react'
 import { Button, Text, CheckmarkIcon, CogIcon, Input, Toggle, LinkExternal, useTooltip } from '@plantswap/uikit'
-import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { TokenList, Version } from '@uniswap/token-lists'
 import Card from 'components/Card'
@@ -9,8 +8,13 @@ import { parseENSAddress } from 'utils/ENS/parseENSAddress'
 import { useTranslation } from 'contexts/Localization'
 import useFetchListCallback from '../../hooks/useFetchListCallback'
 
-import { AppDispatch, AppState } from '../../state'
-import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
+import {
+  acceptListUpdate,
+  removeList,
+  disableList,
+  enableList,
+  useListsStore,
+} from '../../state/lists/store'
 import { useIsListActive, useAllLists, useActiveListUrls } from '../../state/lists/hooks'
 import uriToHttp from '../../utils/uriToHttp'
 
@@ -43,8 +47,7 @@ function listUrlRowHTMLId(listUrl: string) {
 }
 
 const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
-  const dispatch = useDispatch<AppDispatch>()
+  const listsByUrl = useListsStore((state) => state.byUrl)
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
   const isActive = useIsListActive(listUrl)
@@ -53,23 +56,23 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
 
   const handleAcceptListUpdate = useCallback(() => {
     if (!pending) return
-    dispatch(acceptListUpdate(listUrl))
-  }, [dispatch, listUrl, pending])
+    acceptListUpdate(listUrl)
+  }, [listUrl, pending])
 
   const handleRemoveList = useCallback(() => {
     // eslint-disable-next-line no-alert
     if (window.confirm('Please confirm you would like to remove this list')) {
-      dispatch(removeList(listUrl))
+      removeList(listUrl)
     }
-  }, [dispatch, listUrl])
+  }, [listUrl])
 
   const handleEnableList = useCallback(() => {
-    dispatch(enableList(listUrl))
-  }, [dispatch, listUrl])
+    enableList(listUrl)
+  }, [listUrl])
 
   const handleDisableList = useCallback(() => {
-    dispatch(disableList(listUrl))
-  }, [dispatch, listUrl])
+    disableList(listUrl)
+  }, [listUrl])
 
   const { targetRef, tooltip, tooltipVisible } = useTooltip(
     <div>

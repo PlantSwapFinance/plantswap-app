@@ -1,5 +1,18 @@
 import React, { memo, useCallback, useMemo, useState, useEffect } from 'react'
-import { Button, Text, CheckmarkIcon, CogIcon, Input, Toggle, LinkExternal, useTooltip } from '@plantswap/uikit'
+import {
+  Button,
+  Text,
+  CheckmarkIcon,
+  CogIcon,
+  Input,
+  Toggle,
+  LinkExternal,
+  Modal,
+  ModalBody,
+  useModal,
+  useTooltip,
+  InjectedModalProps,
+} from '@plantswap/uikit'
 import styled from 'styled-components'
 import { TokenList, Version } from '@uniswap/token-lists'
 import Card from 'components/Card'
@@ -49,6 +62,42 @@ function listUrlRowHTMLId(listUrl: string) {
   return `list-row-${listUrl.replace(/\./g, '-')}`
 }
 
+interface RemoveListModalProps extends InjectedModalProps {
+  listName: string
+  onConfirm: () => void
+}
+
+const RemoveListModal: React.FC<RemoveListModalProps> = ({ listName, onConfirm, onDismiss }) => {
+  const { t } = useTranslation()
+  return (
+    <Modal title={t('Remove list')} onDismiss={onDismiss}>
+      <ModalBody>
+        <Text mb="24px">
+          {t(
+            'Are you sure you want to remove %listName%? Tokens from this list will no longer appear in the token selector.',
+            { listName },
+          )}
+        </Text>
+        <RowBetween>
+          <Button variant="secondary" onClick={onDismiss}>
+            {t('Cancel')}
+          </Button>
+          <Button
+            variant="danger"
+            id="confirm-remove-list"
+            onClick={() => {
+              onConfirm()
+              onDismiss()
+            }}
+          >
+            {t('Remove')}
+          </Button>
+        </RowBetween>
+      </ModalBody>
+    </Modal>
+  )
+}
+
 const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   const listsByUrl = useListsStore((state) => state.byUrl)
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
@@ -62,12 +111,20 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     acceptListUpdate(listUrl)
   }, [listUrl, pending])
 
+  const [onPresentRemoveModal] = useModal(
+    <RemoveListModal
+      listName={list?.name ?? ''}
+      onConfirm={() => {
+        if (Object.keys(listsByUrl).length > 1) {
+          removeList(listUrl)
+        }
+      }}
+    />,
+  )
+
   const handleRemoveList = useCallback(() => {
-    // eslint-disable-next-line no-alert
-    if (window.confirm('Please confirm you would like to remove this list')) {
-      removeList(listUrl)
-    }
-  }, [listUrl])
+    onPresentRemoveModal()
+  }, [onPresentRemoveModal])
 
   const handleEnableList = useCallback(() => {
     enableList(listUrl)

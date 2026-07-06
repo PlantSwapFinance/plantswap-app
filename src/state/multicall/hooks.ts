@@ -2,18 +2,10 @@ import { Interface, FunctionFragment } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useBlockNumber } from '../application/hooks'
-import { AppDispatch, AppState } from '../index'
-import {
-  addMulticallListeners,
-  Call,
-  removeMulticallListeners,
-  parseCallKey,
-  toCallKey,
-  ListenerOptions,
-} from './actions'
+import { Call, ListenerOptions, parseCallKey, toCallKey } from './actions'
+import { addMulticallListeners, removeMulticallListeners, useMulticallStore } from './store'
 
 export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any
@@ -51,10 +43,7 @@ export const NEVER_RELOAD: ListenerOptions = {
 // the lowest level call for subscribing to contract data
 function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): CallResult[] {
   const { chainId } = useActiveWeb3React()
-  const callResults = useSelector<AppState, AppState['multicall']['callResults']>(
-    (state) => state.multicall.callResults,
-  )
-  const dispatch = useDispatch<AppDispatch>()
+  const callResults = useMulticallStore((state) => state.callResults)
 
   const serializedCallKeys: string = useMemo(
     () =>
@@ -73,24 +62,20 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
     if (!chainId || callKeys.length === 0) return undefined
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const calls = callKeys.map((key) => parseCallKey(key))
-    dispatch(
-      addMulticallListeners({
+    addMulticallListeners({
+      chainId,
+      calls,
+      options,
+    })
+
+    return () => {
+      removeMulticallListeners({
         chainId,
         calls,
         options,
-      }),
-    )
-
-    return () => {
-      dispatch(
-        removeMulticallListeners({
-          chainId,
-          calls,
-          options,
-        }),
-      )
+      })
     }
-  }, [chainId, dispatch, options, serializedCallKeys])
+  }, [chainId, options, serializedCallKeys])
 
   return useMemo(
     () =>

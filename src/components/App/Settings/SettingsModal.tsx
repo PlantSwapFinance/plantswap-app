@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Text, PlantToggle, Flex, Message, Modal, ModalBody, InjectedModalProps } from '@plantswap/uikit'
+import { Button, Input, Text, PlantToggle, Flex, Message, Modal, ModalBody, InjectedModalProps } from '@plantswap/uikit'
 import {
   useAudioModeManager,
   useExpertModeManager,
@@ -17,6 +17,7 @@ import TransactionSettings from './TransactionSettings'
 
 const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
   const [showConfirmExpertModal, setShowConfirmExpertModal] = useState(false)
+  const [expertConfirmText, setExpertConfirmText] = useState('')
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
   const [ttl, setTtl] = useUserTransactionTTL()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
@@ -43,15 +44,22 @@ const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
             </Text>
           </Message>
           <Text mb="24px">{t('Only use this mode if you know what you’re doing.')}</Text>
+          <Input
+            scale="lg"
+            placeholder={t('Type "confirm" to enable')}
+            value={expertConfirmText}
+            onChange={(e) => setExpertConfirmText(e.target.value)}
+            mb="24px"
+          />
           <Button
             variant="danger"
             id="confirm-expert-mode"
+            width="100%"
+            disabled={expertConfirmText !== 'confirm'}
             onClick={() => {
-              // eslint-disable-next-line no-alert
-              if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
-                toggleExpertMode()
-                setShowConfirmExpertModal(false)
-              }
+              toggleExpertMode()
+              setShowConfirmExpertModal(false)
+              setExpertConfirmText('')
             }}
           >
             {t('Turn On Expert Mode')}

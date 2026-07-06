@@ -17,16 +17,18 @@ interface HarvestActionProps extends CollectiblesFarm {
   userDataLoaded: boolean
 }
 
+const collectiblesApiUrl = process.env.REACT_APP_COLLECTIBLES_API_URL
+
 const getOwnerToken = async (address: string, setUserToken): Promise<number[]> => {
   try {
-    const response = await fetch(`http://localhost:3003/tokensByOwner/${address}`)
+    const response = await fetch(`${collectiblesApiUrl}/tokensByOwner/${address}`)
 
     if (!response.ok) {
       return []
     }
     const { data } = await response.json()
     setUserToken(data)
-    return data 
+    return data
   } catch (error) {
     return []
   }

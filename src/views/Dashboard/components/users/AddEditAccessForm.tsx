@@ -8,16 +8,6 @@ import usernamesApi from 'utils/calls/usernames'
 import pagesApi from 'utils/calls/pages'
 import { FormErrors, SelectStyled, RadioTextStyled } from '../helper'
 
-interface IAddEditForm {
-    value?: any
-    handleSubmit?: any
-    handleChange?: any
-    fieldsState?: any
-    formErrors?: any
-    onDismiss?: any
-    locationAfterSubmit?: any
-}
-
 export interface IUserAccessState {
     userAccessId?: string
     userAccessType: string
@@ -25,6 +15,19 @@ export interface IUserAccessState {
     userTypeCode?: string
     userAccessPageShortName?: string
     userAccessPagesActionId?: string
+    // The form reads `value.userAccessUserTypeId`; callers do not currently populate
+    // it, so it stays optional. Kept here so the form's prop contract stays honest.
+    userAccessUserTypeId?: string
+}
+
+interface IAddEditForm {
+    value?: IUserAccessState
+    handleSubmit?: (event: React.SyntheticEvent) => void
+    handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+    fieldsState?: { [key: string]: boolean }
+    formErrors?: { [key: string]: string[] }
+    onDismiss?: () => void
+    locationAfterSubmit?: string
 }
 
 export const getFormErrors = (formData: IUserAccessState, t: ContextApi['t']) => {

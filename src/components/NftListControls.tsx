@@ -22,11 +22,9 @@ interface NftListControlsProps {
   toggles: NftListControlToggle[]
   /** Options for the sort dropdown. */
   sortOptions: NftListSortOption[]
-  sortOption: string
   onSortChange: (option: OptionProps) => void
   /** Localized placeholder for the search input. */
   searchPlaceholder: string
-  searchValue: string
   onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -101,10 +99,8 @@ const NftListControls = ({
   viewToggle,
   toggles,
   sortOptions,
-  sortOption,
   onSortChange,
   searchPlaceholder,
-  searchValue,
   onSearchChange,
 }: NftListControlsProps) => (
   <ControlContainer>

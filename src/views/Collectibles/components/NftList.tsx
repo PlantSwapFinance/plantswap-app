@@ -306,10 +306,8 @@ const NftList = () => {
         { label: t('GardenerId'), value: 'variantId' },
         { label: t('Identifier'), value: 'idenditifier' },
       ]}
-      sortOption={sortOption}
       onSortChange={handleSortOptionChange}
       searchPlaceholder={t('Search Collectibles')}
-      searchValue={query}
       onSearchChange={handleChangeQuery}
     />
         {renderContent()}

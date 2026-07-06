@@ -53,15 +53,11 @@ import bep20Abi from 'config/abi/erc20.json'
 import erc721Abi from 'config/abi/erc721.json'
 import lpTokenAbi from 'config/abi/lpToken.json'
 
-  // Not used
-import ifoV1Abi from 'config/abi/ifoV1.json'
-import ifoV2Abi from 'config/abi/ifoV2.json'
+  // Multicall, sous variants, and point center
 import pointCenterIfo from 'config/abi/pointCenterIfo.json'
 import sousChefV2 from 'config/abi/sousChefV2.json'
 import sousChefBnb from 'config/abi/sousChefBnb.json'
-import chainlinkOracleAbi from 'config/abi/chainlinkOracle.json'
 import MultiCallAbi from 'config/abi/Multicall.json'
-import { ChainLinkOracleContract } from './types'
 
 const getContract = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
   const signerOrProvider = signer ?? simpleRpcProvider
@@ -164,20 +160,11 @@ export const hasSufficientAllowance = async (
 }
 
 
-// Not used
-export const getIfoV1Contract = (address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
-  return getContract(ifoV1Abi, address, signer)
-}
-export const getIfoV2Contract = (address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
-  return getContract(ifoV2Abi, address, signer)
-}
+// Other helpers
 export const getSouschefV2Contract = (id: number, signer?: ethers.Signer | ethers.providers.Provider) => {
   const config = poolsConfig.find((pool) => pool.sousId === id)
   return getContract(sousChefV2, getAddress(config.contractAddress), signer)
 }
 export const getPointCenterIfoContract = (signer?: ethers.Signer | ethers.providers.Provider) => {
   return getContract(pointCenterIfo, getPointCenterIfoAddress(), signer)
-}
-export const getChainlinkOracleContract = (signer?: ethers.Signer | ethers.providers.Provider) => {
-  return getContract(chainlinkOracleAbi, getChainlinkOracleAddress(), signer) as ChainLinkOracleContract
 }

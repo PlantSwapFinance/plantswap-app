@@ -1,14 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Route, useLocation, useRouteMatch } from 'react-router-dom'
-import styled from 'styled-components'
 import orderBy from 'lodash/orderBy'
-import { Text, Toggle, Flex, RowType } from '@plantswap/uikit'
+import { Flex, RowType } from '@plantswap/uikit'
 import { useWeb3React } from '@web3-react/core'
 import nfts from 'config/constants/nfts'
 import usePersistState from 'hooks/usePersistState'
-import SearchInput from 'components/SearchInput'
 import Loading from 'components/Loading'
-import Select, { OptionProps } from 'components/Select/Select'
+import NftListControls from 'components/NftListControls'
+import { OptionProps } from 'components/Select/Select'
 import { useAppDispatch } from 'state'
 import { fetchWalletNfts } from 'state/collectibles'
 import { useGetCollectibles } from 'state/hooks'
@@ -39,73 +38,6 @@ const nftComponents = {
   'Relax PLANT CAKE Gardener': MasterGardeningSchoolNftCard,
 }
 
-
-const ControlContainer = styled.div`
-  display: flex;
-  width: 100%;
-  align-items: center;
-  position: relative;
-
-  justify-content: space-between;
-  flex-direction: column;
-  margin-bottom: 32px;
-
-  ${({ theme }) => theme.mediaQueries.sm} {
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 16px 32px;
-    margin-bottom: 0;
-  }
-`
-
-const ToggleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-
-  ${Text} {
-    margin-left: 8px;
-  }
-`
-
-const LabelWrapper = styled.div`
-  > ${Text} {
-    font-size: 12px;
-  }
-`
-
-const FilterContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 8px 0px;
-
-  ${({ theme }) => theme.mediaQueries.sm} {
-    width: auto;
-    padding: 0;
-  }
-`
-
-const ViewControls = styled.div`
-  flex-wrap: wrap;
-  justify-content: space-between;
-  display: flex;
-  align-items: center;
-  width: 100%;
-
-  > div {
-    padding: 8px 0px;
-  }
-
-  ${({ theme }) => theme.mediaQueries.sm} {
-    justify-content: flex-start;
-    width: auto;
-
-    > div {
-      padding: 0;
-    }
-  }
-`
 
 const NUMBER_OF_COLLECTIBLES_VISIBLE = 8
 
@@ -359,45 +291,25 @@ const NftList = () => {
 
   return (
     <>
-    <ControlContainer>
-        <ViewControls>
-          <ToggleView viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />
-            <ToggleWrapper>
-              <Toggle checked={walletOnly} onChange={() => setWalletOnly(!walletOnly)} scale="sm" />
-              <Text> {t('In Wallet')}</Text>
-            </ToggleWrapper>
-        </ViewControls>
-        <FilterContainer>
-          <LabelWrapper>
-            <Text textTransform="uppercase">{t('Sort by')}</Text>
-            <Select
-              options={[
-                {
-                  label: t('Hot'),
-                  value: 'hot',
-                },
-                {
-                  label: t('Name'),
-                  value: 'name',
-                },
-                {
-                  label: t('GardenerId'),
-                  value: 'variantId',
-                },
-                {
-                  label: t('Identifier'),
-                  value: 'idenditifier',
-                },
-              ]}
-              onChange={handleSortOptionChange}
-            />
-          </LabelWrapper>
-          <LabelWrapper style={{ marginLeft: 16 }}>
-            <Text textTransform="uppercase">{t('Search')}</Text>
-            <SearchInput onChange={handleChangeQuery} placeholder="Search Collectibles" />
-          </LabelWrapper>
-        </FilterContainer>
-      </ControlContainer>
+    <NftListControls
+      viewToggle={<ToggleView viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />}
+      toggles={[
+        {
+          label: t('In Wallet'),
+          checked: walletOnly,
+          onChange: () => setWalletOnly(!walletOnly),
+        },
+      ]}
+      sortOptions={[
+        { label: t('Hot'), value: 'hot' },
+        { label: t('Name'), value: 'name' },
+        { label: t('GardenerId'), value: 'variantId' },
+        { label: t('Identifier'), value: 'idenditifier' },
+      ]}
+      onSortChange={handleSortOptionChange}
+      searchPlaceholder={t('Search Collectibles')}
+      onSearchChange={handleChangeQuery}
+    />
         {renderContent()}
         <Flex justifyContent="center">
           <Loading />

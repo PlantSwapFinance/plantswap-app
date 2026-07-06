@@ -7,7 +7,7 @@ import useWeb3Provider from 'hooks/useActiveWeb3React'
 import useFetchListCallback from 'hooks/useFetchListCallback'
 import useInterval from 'hooks/useInterval'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { acceptListUpdate } from './store'
+import { acceptListUpdate, fetchTokenListPending, fetchTokenListFulfilled, fetchTokenListRejected } from './store'
 import { useActiveListUrls } from './hooks'
 
 export default function Updater(): null {
@@ -21,7 +21,11 @@ export default function Updater(): null {
   // initiate loading
   useAllInactiveTokens()
 
-  const fetchList = useFetchListCallback()
+  const fetchList = useFetchListCallback({
+    fetchPending: fetchTokenListPending,
+    fetchFulfilled: fetchTokenListFulfilled,
+    fetchRejected: fetchTokenListRejected,
+  })
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
     Object.keys(lists).forEach((url) =>

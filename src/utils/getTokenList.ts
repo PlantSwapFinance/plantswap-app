@@ -14,7 +14,7 @@ const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
  * @param listUrl list url
  * @param resolveENSContentHash resolves an ens name to a contenthash
  */
-export default async function getTokenList(
+export default async function resolveListFromUrl(
   listUrl: string,
   resolveENSContentHash: (ensName: string) => Promise<string>,
 ): Promise<TokenList> {

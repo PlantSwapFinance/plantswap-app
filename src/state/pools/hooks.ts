@@ -8,7 +8,7 @@ import {
   usePoolsStore,
 } from './store'
 import { Pool } from '../types'
-import { transformPool } from './helpers'
+import { transformPool } from '../staking/helpers'
 
 export const useFetchPublicPoolsData = () => {
   const { slowRefresh } = useRefresh()

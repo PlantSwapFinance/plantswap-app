@@ -11,7 +11,7 @@ const StyledHero = styled.div`
   padding-bottom: 32px;
 `
 
-const Collectibles = () => {
+const Market = () => {
   const { t } = useTranslation()
 
   return (
@@ -27,4 +27,4 @@ const Collectibles = () => {
   )
 }
 
-export default Collectibles
+export default Market

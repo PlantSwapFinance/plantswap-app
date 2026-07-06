@@ -326,6 +326,33 @@ const App: React.FC = () => {
               <Route path="/collectibles">
                 <Collectibles />
               </Route>
+              <Route exact path="/market">
+                <Market />
+              </Route>
+              <Route exact path="/market/sellNft">
+                <MarketSellNft />
+              </Route>
+              <Route path="/market/sellNft/:id">
+                <MarketSellNft />
+              </Route>
+              <Route exact path="/market/buyNft">
+                <MarketBuyNft />
+              </Route>
+              <Route path="/market/buyNft/:id">
+                <MarketBuyNft />
+              </Route>
+              <Route exact path="/market/createAuction">
+                <MarketCreateAuction />
+              </Route>
+              <Route path="/market/createAuction/:id">
+                <MarketCreateAuction />
+              </Route>
+              <Route exact path="/market/makeOffer">
+                <MarketMakeOffer />
+              </Route>
+              <Route path="/market/makeOffer/:id">
+                <MarketMakeOffer />
+              </Route>
               <Route exact path="/teams">
                 <Teams />
               </Route>

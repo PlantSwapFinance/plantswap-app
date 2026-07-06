@@ -4,9 +4,6 @@ import {
   fetchTokenListPending,
   fetchTokenListFulfilled,
   fetchTokenListRejected,
-  fetchNftListPending,
-  fetchNftListFulfilled,
-  fetchNftListRejected,
 } from './store'
 
 export {
@@ -19,15 +16,6 @@ export {
   disableList,
   acceptListUpdate,
   rejectVersionUpdate,
-  fetchNftListPending,
-  fetchNftListFulfilled,
-  fetchNftListRejected,
-  addNftList,
-  removeNftList,
-  enableNftList,
-  disableNftList,
-  acceptNftListUpdate,
-  rejectNftVersionUpdate,
 } from './store'
 
 // Preserve the `fetchTokenList` namespace object.
@@ -35,12 +23,6 @@ export const fetchTokenList = {
   pending: fetchTokenListPending,
   fulfilled: fetchTokenListFulfilled,
   rejected: fetchTokenListRejected,
-}
-
-export const fetchNftList = {
-  pending: fetchNftListPending,
-  fulfilled: fetchNftListFulfilled,
-  rejected: fetchNftListRejected,
 }
 
 export type { Version }

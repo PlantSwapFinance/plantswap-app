@@ -3,6 +3,7 @@ import { Modal, Flex, Text } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
 import { useTranslation } from 'contexts/Localization'
 import { usePlant, useProfile } from 'hooks/useContract'
+import { hasSufficientAllowance } from 'utils/contractHelpers'
 import { getPlantswapGardenersAddress } from 'utils/addressHelpers'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
 import { fetchProfile } from 'state/profile/store'
@@ -38,13 +39,7 @@ const ConfirmProfileCreationModal: React.FC<Props> = ({
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({
       onRequiresApproval: async () => {
-        try {
-          const response = await plantContract.allowance(account, profileContract.address)
-          const currentAllowance = new BigNumber(response.toString())
-          return currentAllowance.gte(minimumPlantRequired)
-        } catch (error) {
-          return false
-        }
+        return hasSufficientAllowance(plantContract, account, profileContract.address, minimumPlantRequired)
       },
       onApprove: () => {
         return plantContract.approve(profileContract.address, allowance.toJSON())

@@ -8,6 +8,7 @@ import { Button, InjectedModalProps, Modal, Text, Flex } from '@plantswap/uikit'
 import { Nft } from 'config/constants/types'
 import useHasPlantBalance from 'hooks/useHasPlantBalance'
 import { usePlant, useMasterGardeningSchoolNftContract } from 'hooks/useContract'
+import { hasSufficientAllowance } from 'utils/contractHelpers'
 import { getMasterGardeningSchoolNftAddress } from 'utils/addressHelpers'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
@@ -36,7 +37,7 @@ const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss
   const plantContract = usePlant()
   const masterGardeningSchoolNftContract = useMasterGardeningSchoolNftContract()
   const masterGardeningSchoolNftContractAddress = getMasterGardeningSchoolNftAddress()
-  const { toastError, toastSuccess } = useToast()
+  const { toastSuccess } = useToast()
 
   const nftCost = new BigNumber(1000000000000000000)
   const nftApproval = new BigNumber(5).times(nftCost)
@@ -48,15 +49,12 @@ const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({
       onRequiresApproval: async () => {
-        // TODO: Move this to a helper, this check will be probably be used many times
-        try {
-          const response = await plantContract.allowance(account, masterGardeningSchoolNftContractAddress)
-          const currentAllowance = new BigNumber(response.toString())
-          return currentAllowance.gte(nftApproval)
-        } catch (error) {
-          toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
-          return false
-        }
+        return hasSufficientAllowance(
+          plantContract,
+          account,
+          masterGardeningSchoolNftContractAddress,
+          nftApproval,
+        )
       },
       onApprove: () => {
         return plantContract.approve(masterGardeningSchoolNftContractAddress, nftApproval.toJSON())
@@ -90,17 +88,6 @@ const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss
 
   const handleApprove = () => {
     plantContract.approve(masterGardeningSchoolNftContractAddress, nftApproval.toJSON())
-  } */
-  /*
-  const allowance = async () => {
-    // TODO: Move this to a helper, this check will be probably be used many times
-    try {
-      const response = await plantContract.allowance(account, masterGardeningSchoolNftContractAddress)
-      const currentAllowance = new BigNumber(response.toString())
-      return currentAllowance.gte(nftCost)
-    } catch (error) {
-      return false
-    }
   } */
     
   return (

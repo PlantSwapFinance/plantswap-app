@@ -31,7 +31,6 @@ const Actions = styled.div`
 `
 
 const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss }) => {
-       // const [isConfirming, setIsConfirming] = useState(false)
   const { t } = useTranslation()
   const { account } = useWeb3React()
   const plantContract = usePlant()
@@ -69,27 +68,7 @@ const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss
         return null
       },
     })
-/*
-  const plantAllowance = async () => { await plantContract.allowance(account, masterGardeningSchoolNftContractAddress) }
 
-  const handleConfirm = async () => {
-    const tx = await onClaim()
-    setIsConfirming(true)
-    const receipt = await tx.wait()
-    if (receipt.status) {
-      toastSuccess(t('Successfully claimed!'))
-      onDismiss()
-      onSuccess()
-    } else {
-      toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
-      setIsConfirming(false)
-    }
-  }
-
-  const handleApprove = () => {
-    plantContract.approve(masterGardeningSchoolNftContractAddress, nftApproval.toJSON())
-  } */
-    
   return (
     <Modal title={t('Claim Collectible')} onDismiss={onDismiss}>
       <ModalContent>

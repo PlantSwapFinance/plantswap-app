@@ -1,12 +1,11 @@
 import React from 'react'
 import { Modal, Flex, Text } from '@plantswap/uikit'
-import { useAppDispatch } from 'state'
 import BigNumber from 'bignumber.js'
 import { useTranslation } from 'contexts/Localization'
 import { usePlant, useProfile } from 'hooks/useContract'
 import { getPlantswapGardenersAddress } from 'utils/addressHelpers'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
-import { fetchProfile } from 'state/profile'
+import { fetchProfile } from 'state/profile/store'
 import useToast from 'hooks/useToast'
 import { REGISTER_COST } from '../ProfileCreation/config'
 import ApproveConfirmButtons from './ApproveConfirmButtons'
@@ -32,7 +31,6 @@ const ConfirmProfileCreationModal: React.FC<Props> = ({
 }) => {
   const { t } = useTranslation()
   const profileContract = useProfile()
-  const dispatch = useAppDispatch()
   const { toastSuccess } = useToast()
   const plantContract = usePlant()
   const plantswapGardenersContract = getPlantswapGardenersAddress()
@@ -55,7 +53,7 @@ const ConfirmProfileCreationModal: React.FC<Props> = ({
         return profileContract.createProfile(teamId, plantswapGardenersContract, selectedNft.tokenId)
       },
       onSuccess: async () => {
-        await dispatch(fetchProfile(account))
+        await fetchProfile(account)
         onDismiss()
         toastSuccess(t('Profile created!'))
       },

@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { Button, InjectedModalProps, Skeleton, Text } from '@plantswap/uikit'
 import { useWeb3React } from '@web3-react/core'
-import { useAppDispatch } from 'state'
 import { useGetCollectibles } from 'state/hooks'
 import { useProfile } from 'state/profile/hooks'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
-import { fetchProfile } from 'state/profile'
+import { fetchProfile } from 'state/profile/store'
 import { getAddressByType } from 'utils/collectibles'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
 import { useProfile as useProfileContract, usePlantswapGardeners } from 'hooks/useContract'
@@ -23,7 +22,6 @@ const ChangeProfilePicPage: React.FC<ChangeProfilePicPageProps> = ({ onDismiss }
   })
   const { t } = useTranslation()
   const { isLoading, tokenIds, nftsInWallet } = useGetCollectibles()
-  const dispatch = useAppDispatch()
   const { profile } = useProfile()
   const profileContract = useProfileContract()
   const plantswapGardenersContract = usePlantswapGardeners()
@@ -44,7 +42,7 @@ const ChangeProfilePicPage: React.FC<ChangeProfilePicPageProps> = ({ onDismiss }
       },
       onSuccess: async () => {
         // Re-fetch profile
-        await dispatch(fetchProfile(account))
+        await fetchProfile(account)
         toastSuccess(t('Profile Updated!'))
 
         onDismiss()

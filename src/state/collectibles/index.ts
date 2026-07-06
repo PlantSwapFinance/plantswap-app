@@ -1,3 +1,8 @@
+/**
+ * Collectibles slice — exports both the legacy Redux reducer (kept inert
+ * for `state/index.ts`'s configureStore registration) and the new
+ * Zustand `fetchWalletNfts` action under the legacy thunk name.
+ */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { CollectiblesState } from 'state/types'
 import { nftSources } from 'config/constants/nfts'
@@ -15,11 +20,11 @@ const initialState: CollectiblesState = {
 
 type NftSourceItem = [number, string]
 
-// Thunks
-export const fetchWalletNfts = createAsyncThunk<NftSourceItem[], string>(
+// Legacy thunk kept inert — never dispatched. Kept so the slice's
+// extraReducers don't complain if the reducer is registered.
+const _legacyFetchWalletNfts = createAsyncThunk<NftSourceItem[], string>(
   'collectibles/fetchWalletNfts',
   async (account) => {
-    // For each nft source get nft data
     const nftSourcePromises = Object.keys(nftSources).map(async (nftSourceType) => {
       const { address: addressObj } = nftSources[nftSourceType as NftType]
       const address = getAddress(addressObj)
@@ -29,7 +34,6 @@ export const fetchWalletNfts = createAsyncThunk<NftSourceItem[], string>(
         try {
           const tokenIdBn: ethers.BigNumber = await contract.tokenOfOwnerByIndex(account, index)
           const tokenId = tokenIdBn.toNumber()
-
           const walletNft = await getNftByTokenId(address, tokenId)
           return [tokenId, walletNft.identifier]
         } catch (error) {
@@ -40,46 +44,34 @@ export const fetchWalletNfts = createAsyncThunk<NftSourceItem[], string>(
 
       const balanceOfResponse = await contract.balanceOf(account)
       const balanceOf = balanceOfResponse.toNumber()
-
-      if (balanceOf === 0) {
-        return []
-      }
+      if (balanceOf === 0) return []
 
       const nftDataFetchPromises = []
-
-      // For each index get the tokenId and data associated with it
       for (let i = 0; i < balanceOf; i++) {
         nftDataFetchPromises.push(getTokenIdAndData(i))
       }
-
       const nftData = await Promise.all(nftDataFetchPromises)
       return nftData
     })
-
     const nftSourceData = await Promise.all(nftSourcePromises)
-
     return nftSourceData.flat()
   },
 )
 
-export const collectiblesSlice = createSlice({
+const collectiblesSlice = createSlice({
   name: 'collectibles',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchWalletNfts.pending, (state) => {
+    builder.addCase(_legacyFetchWalletNfts.pending, (state) => {
       state.isLoading = true
     })
-    builder.addCase(fetchWalletNfts.fulfilled, (state, action) => {
+    builder.addCase(_legacyFetchWalletNfts.fulfilled, (state, action) => {
       state.isLoading = false
       state.isInitialized = true
       state.data = action.payload.reduce((accum, association) => {
-        if (!association) {
-          return accum
-        }
-
+        if (!association) return accum
         const [tokenId, identifier] = association as NftSourceItem
-
         return {
           ...accum,
           [identifier]: accum[identifier] ? [...accum[identifier], tokenId] : [tokenId],
@@ -88,5 +80,7 @@ export const collectiblesSlice = createSlice({
     })
   },
 })
+
+export { fetchWalletNfts, useCollectiblesStore } from './store'
 
 export default collectiblesSlice.reducer

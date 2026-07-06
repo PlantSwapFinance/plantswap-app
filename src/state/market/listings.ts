@@ -1,71 +1,49 @@
+/**
+ * Listings slice (market/listings) — exports both the legacy Redux reducer
+ * (kept inert for `state/index.ts`'s configureStore registration) and the
+ * new Zustand action surface under the legacy thunk/action names.
+ *
+ * Preserved pre-migration bugs:
+ *  - `fetchListingsEtaAsync.fulfilled` is a no-op spread.
+ *  - `fetchListingsDataAsync` is defined but never wired into extraReducers
+ *    (i.e. the result is fetched but discarded).
+ */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { ListingsState } from '../types'
 import fetchListingsEta from './fetchListingsEta'
-import {
-  fetchMarketListingMeta, 
-//  fetchMarketListingBuyData, 
-  fetchMarketListingSellData,
-//  fetchMarketListingStats,
-//  fetchMarketItem 
-} from './fetchListings'
 
 const initialState: ListingsState = { data: null, listingsDataLoaded: false, userDataLoaded: false }
 
-// Async thunks
-export const fetchListingsEtaAsync = createAsyncThunk(
-  'market/fetchListings',
-  async (listingId: number) => {
-    const listingsEta = await fetchListingsEta(listingId)
-    return listingsEta
-  },
-)
+const _legacyFetchListingsEtaAsync = createAsyncThunk('market/fetchListings', async (listingId: number) => {
+  return fetchListingsEta(listingId)
+})
 
-interface ListingsDataResponse {
-  listingId: number
-  seller: string
-  sellNftElseToken: boolean
-  sellTokenAddress: string
-  sellTokenId: number
-  sellCount: number
-}
-
-export const fetchListingsDataAsync = createAsyncThunk<ListingsDataResponse, { listingId: number }>(
-  'farms/fetchFarmUserDataAsync',
-  async ({ listingId }) => {
-    const listingMeta = await fetchMarketListingMeta(listingId)
-    const listingSellData = await fetchMarketListingSellData(listingId)
-
-      return {
-        listingId,
-        seller: listingMeta.seller,
-        sellNftElseToken: listingSellData.sellNftElseToken,
-        sellTokenAddress: listingSellData.sellTokenAddress,
-        sellTokenId: listingSellData.sellTokenId,
-        sellCount: listingSellData.sellCount,
-      }
-  },
-)
-
-export const listingsSlice = createSlice({
-    name: 'Listings',
-    initialState,
-    reducers: {
-        setListingsDataLoaded: (state, action) => {
-          const listingsDataLoaded = action.payload
-          state.listingsDataLoaded = listingsDataLoaded
-        },
+const listingsSlice = createSlice({
+  name: 'Listings',
+  initialState,
+  reducers: {
+    setListingsDataLoaded: (state, action) => {
+      state.listingsDataLoaded = action.payload
+    },
   },
   extraReducers: (builder) => {
-    // Update listings with live data
-    builder.addCase(fetchListingsEtaAsync.fulfilled, (state) => {
-      state.data = state.data.map((listing) => {
-        return { ...listing }
-      })
+    builder.addCase(_legacyFetchListingsEtaAsync.fulfilled, (state) => {
+      // Preserve legacy no-op spread behaviour.
+      state.data = state.data ? (state.data as any[]).map((listing) => ({ ...listing })) : state.data
     })
+    // Intentionally NOT wiring _legacyFetchListingsDataAsync into extraReducers —
+    // preserves the pre-migration "defined but unwired" behaviour.
   },
 })
 
-// Actions
 export const { setListingsDataLoaded } = listingsSlice.actions
+
+// Zustand action surface. fetchListingsDataAsync is exported but its
+// result is intentionally discarded to preserve legacy behaviour.
+export {
+  fetchListingsEtaAsync,
+  fetchListingsDataAsync,
+  useListingsStore,
+} from './listings.store'
 
 export default listingsSlice.reducer

@@ -2,9 +2,8 @@ import React, { useState } from 'react'
 import { AutoRenewIcon, Button, Checkbox, Flex, InjectedModalProps, Text } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import useGetProfileCosts from 'views/Profile/hooks/useGetProfileCosts'
-import { useAppDispatch } from 'state'
 import { useProfile } from 'state/profile/hooks'
-import { fetchProfile } from 'state/profile'
+import { fetchProfile } from 'state/profile/store'
 import useToast from 'hooks/useToast'
 import { getBalanceNumber } from 'utils/formatBalance'
 import { useProfile as useProfileContract } from 'hooks/useContract'
@@ -21,7 +20,6 @@ const PauseProfilePage: React.FC<PauseProfilePageProps> = ({ onDismiss }) => {
   const plantswapProfileContract = useProfileContract()
   const { account } = useWeb3React()
   const { toastSuccess, toastError } = useToast()
-  const dispatch = useAppDispatch()
 
   const handleChange = () => setIsAcknowledged(!isAcknowledged)
 
@@ -31,7 +29,7 @@ const PauseProfilePage: React.FC<PauseProfilePageProps> = ({ onDismiss }) => {
     const receipt = await tx.wait()
     if (receipt.status) {
       // Re-fetch profile
-      await dispatch(fetchProfile(account))
+      await fetchProfile(account)
       toastSuccess(t('Profile Paused!'))
       onDismiss()
     } else {

@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { CurrencyAmount, JSBI, Trade } from '@pancakeswap/sdk'
+import { CurrencyAmount, JSBI } from '@pancakeswap/sdk'
 import { Button, Text, Box, useModal } from '@plantswap/uikit'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/UnsupportedCurrencyFooter'
 import ProgressSteps from 'components/ProgressSteps'
 import { useTranslation } from 'contexts/Localization'
 import useConfirmPriceImpactWithoutFee from 'hooks/useConfirmPriceImpactWithoutFee'
+import { SwapExecutionState, useExecuteSwap } from 'hooks/useExecuteSwap'
 import { GreyCard } from '../../../components/Card'
 import Column, { AutoColumn } from '../../../components/Layout/Column'
 import ConfirmSwapModal from './components/ConfirmSwapModal'
@@ -85,12 +86,7 @@ export default function FoundationDonate() {
   )
 
   // modal and loading
-  const [{ tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
-    tradeToConfirm: Trade | undefined
-    attemptingTxn: boolean
-    swapErrorMessage: string | undefined
-    txHash: string | undefined
-  }>({
+  const [{ tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<SwapExecutionState>({
     tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
@@ -133,28 +129,13 @@ export default function FoundationDonate() {
 
   const [singleHopOnly] = useUserSingleHopOnly()
 
-  const handleSwap = useCallback(async () => {
-    if (priceImpactWithoutFee) {
-      const ok = await confirmPriceImpactWithoutFee(priceImpactWithoutFee)
-      if (!ok) return
-    }
-    if (!swapCallback) {
-      return
-    }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, swapErrorMessage: undefined, txHash: undefined })
-    swapCallback()
-      .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, swapErrorMessage: undefined, txHash: hash })
-      })
-      .catch((error) => {
-        setSwapState({
-          attemptingTxn: false,
-          tradeToConfirm,
-          swapErrorMessage: error.message,
-          txHash: undefined,
-        })
-      })
-  }, [priceImpactWithoutFee, swapCallback, tradeToConfirm, confirmPriceImpactWithoutFee])
+  const handleSwap = useExecuteSwap({
+    swapCallback,
+    tradeToConfirm,
+    priceImpactWithoutFee,
+    confirmPriceImpactWithoutFee,
+    setSwapState,
+  })
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)

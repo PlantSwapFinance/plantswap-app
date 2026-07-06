@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import BigNumber from 'bignumber.js'
 import { simpleRpcProvider } from 'utils/providers'
 import { verticalGardensConfig, collectiblesFarmConfig, poolsConfig } from 'config/constants'
 import { PoolCategory } from 'config/constants/types'
@@ -140,6 +141,26 @@ export const getErc721Contract = (address: string, signer?: ethers.Signer | ethe
 }
 export const getLpContract = (address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
   return getContract(lpTokenAbi, address, signer)
+}
+
+/**
+ * Returns true when `owner`'s allowance on `contract` for `spender` is at least `required`.
+ * Swallows errors and returns false so callers can use it interchangeably in onRequiresApproval
+ * callbacks without per-site try/catch boilerplate.
+ */
+export const hasSufficientAllowance = async (
+  contract: ethers.Contract,
+  owner: string,
+  spender: string,
+  required: BigNumber,
+): Promise<boolean> => {
+  try {
+    const response = await contract.allowance(owner, spender)
+    const currentAllowance = new BigNumber(response.toString())
+    return currentAllowance.gte(required)
+  } catch (error) {
+    return false
+  }
 }
 
 

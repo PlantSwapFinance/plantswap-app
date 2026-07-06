@@ -6,6 +6,7 @@ import { useTranslation } from 'contexts/Localization'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
 import { DEFAULT_TOKEN_DECIMAL } from 'config'
 import { usePlant, useGardeningSchoolNftContract } from 'hooks/useContract'
+import { hasSufficientAllowance } from 'utils/contractHelpers'
 import { Nft } from 'config/constants/types'
 import useHasPlantBalance from 'hooks/useHasPlantBalance'
 import nftList from 'config/constants/nfts'
@@ -30,14 +31,7 @@ const Mint: React.FC = () => {
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({
       onRequiresApproval: async () => {
-        // TODO: Move this to a helper, this check will be probably be used many times
-        try {
-          const response = await plantContract.allowance(account, gardeningSchoolContract.address)
-          const currentAllowance = new BigNumber(response.toString())
-          return currentAllowance.gte(minimumPlantRequired)
-        } catch (error) {
-          return false
-        }
+        return hasSufficientAllowance(plantContract, account, gardeningSchoolContract.address, minimumPlantRequired)
       },
       onApprove: () => {
         return plantContract.approve(gardeningSchoolContract.address, allowance.toJSON())

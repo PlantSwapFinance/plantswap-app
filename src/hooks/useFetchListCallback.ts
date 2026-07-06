@@ -5,7 +5,6 @@ import { useCallback } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import resolveListFromUrl from '../utils/getTokenList'
 import resolveENSContentHash from '../utils/ENS/resolveENSContentHash'
-import useWeb3Provider from './useActiveWeb3React'
 
 type FetcherActions = {
   fetchPending: (payload: { requestId: string; url: string }) => void
@@ -14,8 +13,7 @@ type FetcherActions = {
 }
 
 function useFetchListCallback(actions: FetcherActions): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList> {
-  const { library } = useWeb3Provider()
-  const { chainId } = useActiveWeb3React()
+  const { library, chainId } = useActiveWeb3React()
   const { fetchPending, fetchFulfilled, fetchRejected } = actions
 
   const ensResolver = useCallback(

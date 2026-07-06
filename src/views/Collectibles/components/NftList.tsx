@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Route, useLocation, useRouteMatch } from 'react-router-dom'
 import orderBy from 'lodash/orderBy'
+import styled from 'styled-components'
 import { Flex, RowType } from '@plantswap/uikit'
 import { useWeb3React } from '@web3-react/core'
 import nfts from 'config/constants/nfts'
@@ -8,6 +9,7 @@ import usePersistState from 'hooks/usePersistState'
 import Loading from 'components/Loading'
 import NftListControls from 'components/NftListControls'
 import { OptionProps } from 'components/Select/Select'
+import ToggleView, { ViewMode } from 'components/ToggleView'
 import { useAppDispatch } from 'state'
 import { fetchWalletNfts } from 'state/collectibles'
 import { useGetCollectibles } from 'state/hooks'
@@ -21,8 +23,7 @@ import Table from './NftTable/NftTable'
 import { RowProps } from './NftTable/Row'
 import { ExtraProps } from './NftTable/Extra'
 import NftGrid from './NftGrid'
-import ToggleView from './ToggleView/ToggleView'
-import { DesktopColumnSchema, ViewMode } from './types'
+import { DesktopColumnSchema } from './types'
 import MasterGardeningSchoolNftCard from './NftCard/MasterGardeningSchoolNftCard'
 
 /**
@@ -37,6 +38,15 @@ const nftComponents = {
   'Relax PLANT USDC Farmer': MasterGardeningSchoolNftCard,
   'Relax PLANT CAKE Gardener': MasterGardeningSchoolNftCard,
 }
+
+// Adds the right-side spacing variant used by Collectibles on small+ screens.
+const StyledToggleView = styled(ToggleView)`
+  margin-right: 0;
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin-right: 16px;
+  }
+`
 
 
 const NUMBER_OF_COLLECTIBLES_VISIBLE = 8
@@ -292,7 +302,7 @@ const NftList = () => {
   return (
     <>
     <NftListControls
-      viewToggle={<ToggleView viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />}
+      viewToggle={<StyledToggleView id="clickPool" viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />}
       toggles={[
         {
           label: t('In Wallet'),

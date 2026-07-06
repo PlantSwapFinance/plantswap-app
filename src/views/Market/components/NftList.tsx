@@ -8,6 +8,7 @@ import usePersistState from 'hooks/usePersistState'
 import Loading from 'components/Loading'
 import NftListControls from 'components/NftListControls'
 import { OptionProps } from 'components/Select/Select'
+import ToggleView, { ViewMode } from 'components/ToggleView'
 import { useAppDispatch } from 'state'
 import { fetchWalletNfts } from 'state/collectibles'
 import { useGetCollectibles } from 'state/hooks'
@@ -21,8 +22,7 @@ import Table from './NftTable/NftTable'
 import { RowProps } from './NftTable/Row'
 import { ExtraProps } from './NftTable/Extra'
 import NftGrid from './NftGrid'
-import ToggleView from './ToggleView/ToggleView'
-import { DesktopColumnSchema, ViewMode } from './types'
+import { DesktopColumnSchema } from './types'
 import MasterGardeningSchoolNftCard from './NftCard/MasterGardeningSchoolNftCard'
 
 /**
@@ -292,7 +292,7 @@ const NftList = () => {
   return (
     <>
     <NftListControls
-      viewToggle={<ToggleView viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />}
+      viewToggle={<ToggleView id="clickGarden" viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />}
       // TODO: both toggles below currently share the same setter (a copy-paste
       // artifact from the original two columns). The 'Only auction' / 'Only
       // collectibles I don't have' filters should each map to a distinct state.

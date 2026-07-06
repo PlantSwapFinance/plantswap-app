@@ -13,6 +13,9 @@ import {
   removeList,
   disableList,
   enableList,
+  fetchTokenListPending,
+  fetchTokenListFulfilled,
+  fetchTokenListRejected,
   useListsStore,
 } from '../../state/lists/store'
 import { useIsListActive, useAllLists, useActiveListUrls } from '../../state/lists/hooks'
@@ -163,7 +166,11 @@ function ManageLists({
     setListUrlInput(e.target.value)
   }, [])
 
-  const fetchList = useFetchListCallback()
+  const fetchList = useFetchListCallback({
+    fetchPending: fetchTokenListPending,
+    fetchFulfilled: fetchTokenListFulfilled,
+    fetchRejected: fetchTokenListRejected,
+  })
 
   const validUrl: boolean = useMemo(() => {
     return uriToHttp(listUrlInput).length > 0 || Boolean(parseENSAddress(listUrlInput))

@@ -8,7 +8,7 @@ import useTheme from 'hooks/useTheme'
 import { ListLogo } from 'components/Logo'
 import { TokenList } from '@uniswap/token-lists'
 import useFetchListCallback from 'hooks/useFetchListCallback'
-import { removeList, enableList } from 'state/lists/store'
+import { removeList, enableList, fetchTokenListPending, fetchTokenListFulfilled, fetchTokenListRejected } from 'state/lists/store'
 import { useAllLists } from 'state/lists/hooks'
 import { useTranslation } from 'contexts/Localization'
 
@@ -39,7 +39,11 @@ function ImportList({ listURL, list, onImport }: ImportProps) {
   const [confirmed, setConfirmed] = useState(false)
 
   const lists = useAllLists()
-  const fetchList = useFetchListCallback()
+  const fetchList = useFetchListCallback({
+    fetchPending: fetchTokenListPending,
+    fetchFulfilled: fetchTokenListFulfilled,
+    fetchRejected: fetchTokenListRejected,
+  })
 
   // monitor is list is loading
   const adding = Boolean(lists[listURL]?.loadingRequestId)

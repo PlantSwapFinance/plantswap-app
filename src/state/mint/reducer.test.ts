@@ -1,5 +1,4 @@
-import { Field, initialState, mintReducer } from './store'
-import { MintState } from './store'
+import { Field, initialState, mintReducer, MintState } from './store'
 
 describe('mint reducer', () => {
   describe('typeInput', () => {

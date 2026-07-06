@@ -1,28 +1,25 @@
-import { useSelector } from 'react-redux'
-import { State } from '../types'
+import { Proposal, Vote } from 'state/types'
+import { useVotingStore } from './store'
 
 // Voting
-export const useGetProposals = () => {
-  const proposals = useSelector((state: State) => state.voting.proposals)
+export const useGetProposals = (): Proposal[] => {
+  const proposals = useVotingStore((state) => state.proposals)
   return Object.values(proposals)
 }
 
-export const useGetProposal = (proposalId: string) => {
-  const proposal = useSelector((state: State) => state.voting.proposals[proposalId])
-  return proposal
+export const useGetProposal = (proposalId: string): Proposal | undefined => {
+  return useVotingStore((state) => state.proposals[proposalId])
 }
 
-export const useGetVotes = (proposalId: string) => {
-  const votes = useSelector((state: State) => state.voting.votes[proposalId])
+export const useGetVotes = (proposalId: string): Vote[] => {
+  const votes = useVotingStore((state) => state.votes[proposalId])
   return votes ? votes.filter((vote) => vote._inValid !== true) : []
 }
 
 export const useGetVotingStateLoadingStatus = () => {
-  const votingStatus = useSelector((state: State) => state.voting.voteLoadingStatus)
-  return votingStatus
+  return useVotingStore((state) => state.voteLoadingStatus)
 }
 
 export const useGetProposalLoadingStatus = () => {
-  const votingStatus = useSelector((state: State) => state.voting.proposalLoadingStatus)
-  return votingStatus
+  return useVotingStore((state) => state.proposalLoadingStatus)
 }

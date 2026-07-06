@@ -1,5 +1,4 @@
-import { Field, initialState, swapReducer } from './store'
-import { SwapState } from './store'
+import { Field, initialState, swapReducer, SwapState } from './store'
 
 describe('swap reducer', () => {
   describe('selectToken', () => {

@@ -1,28 +1,26 @@
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useAppDispatch } from 'state'
 import { Team } from 'config/constants/types'
-import { State, TeamsState } from '../types'
-import { fetchTeam, fetchTeams } from '.'
+import { TeamsState } from '../types'
+import { fetchTeam, fetchTeams, useTeamsStore } from './store'
 
-export const useTeam = (id: number) => {
-  const team: Team = useSelector((state: State) => state.teams.data[id])
-  const dispatch = useAppDispatch()
+export const useTeam = (id: number): Team => {
+  const team = useTeamsStore((state) => state.data[id])
 
   useEffect(() => {
-    dispatch(fetchTeam(id))
-  }, [id, dispatch])
+    fetchTeam(id)
+  }, [id])
 
   return team
 }
 
-export const useTeams = () => {
-  const { isInitialized, isLoading, data }: TeamsState = useSelector((state: State) => state.teams)
-  const dispatch = useAppDispatch()
+export const useTeams = (): { teams: TeamsState['data']; isInitialized: boolean; isLoading: boolean } => {
+  const isInitialized = useTeamsStore((state) => state.isInitialized)
+  const isLoading = useTeamsStore((state) => state.isLoading)
+  const data = useTeamsStore((state) => state.data)
 
   useEffect(() => {
-    dispatch(fetchTeams())
-  }, [dispatch])
+    fetchTeams()
+  }, [])
 
   return { teams: data, isInitialized, isLoading }
 }

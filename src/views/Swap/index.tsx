@@ -9,7 +9,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { useTranslation } from 'contexts/Localization'
 import SwapWarningTokens from 'config/constants/swapWarningTokens'
 import { getAddress } from 'utils/addressHelpers'
-import confirmPriceImpactWithoutFee from 'utils/confirmPriceImpactWithoutFee'
+import useConfirmPriceImpactWithoutFee from 'hooks/useConfirmPriceImpactWithoutFee'
 import AddressInputPanel from './components/AddressInputPanel'
 import { GreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Layout/Column'
@@ -168,9 +168,10 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const [singleHopOnly] = useUserSingleHopOnly()
 
-  const handleSwap = useCallback(() => {
-    if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
-      return
+  const handleSwap = useCallback(async () => {
+    if (priceImpactWithoutFee) {
+      const ok = await confirmPriceImpactWithoutFee(priceImpactWithoutFee)
+      if (!ok) return
     }
     if (!swapCallback) {
       return
@@ -188,7 +189,7 @@ export default function Swap({ history }: RouteComponentProps) {
           txHash: undefined,
         })
       })
-  }, [priceImpactWithoutFee, swapCallback, tradeToConfirm])
+  }, [priceImpactWithoutFee, swapCallback, tradeToConfirm, confirmPriceImpactWithoutFee])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -301,6 +302,8 @@ export default function Swap({ history }: RouteComponentProps) {
     true,
     'confirmSwapModal',
   )
+
+  const [priceImpactModal, confirmPriceImpactWithoutFee] = useConfirmPriceImpactWithoutFee()
 
   return (
     <Page>
@@ -497,6 +500,7 @@ export default function Swap({ history }: RouteComponentProps) {
       ) : (
         <UnsupportedCurrencyFooter currencies={[currencies.INPUT, currencies.OUTPUT]} />
       )}
+      {priceImpactModal}
     </Page>
   )
 }

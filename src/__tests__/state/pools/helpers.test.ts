@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 import poolsConfig from 'config/constants/pools'
 import { PoolConfig } from 'config/constants/types'
-import { transformPool, transformUserData } from 'state/pools/helpers'
+import { transformPool, transformUserData } from 'state/staking/helpers'
 import { Pool } from 'state/types'
 
 describe('transformUserData', () => {

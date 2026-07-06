@@ -2,7 +2,7 @@ import React, { lazy, useState } from 'react'
 import { Router, Redirect, Route, Switch } from 'react-router-dom'
 import { ResetCSS } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
-import Cookies from 'universal-cookie'
+import Cookies from 'js-cookie'
 import useEagerConnect from 'hooks/useEagerConnect'
 import visitorsApi from 'utils/calls/visitors'
 import { useWeb3React } from '@web3-react/core'
@@ -81,16 +81,15 @@ const App: React.FC = () => {
   const [userId, setUserId] = useState('0x0')
   const [userIdLoaded, setUserIdLoaded] = useState(false)
   const [userIdCreated, setUserIdCreated] = useState(false)
-  const cookies = new Cookies()
   const { account } = useWeb3React()
   const [visitorSearched, setVisitorSearched] = useState(false)
   const [visitorExist, setVisitorExist] = useState(false)
 
   if (userId && userId !== '0x0') {
-    cookies.set('userId', userId, { path: '/' })
+    Cookies.set('userId', userId, { path: '/' })
   }
   else if (!userIdLoaded) {
-    const getUserId = cookies.get('userId')
+    const getUserId = Cookies.get('userId')
     if (getUserId) {
       setUserId(getUserId)
       setUserIdLoaded(true)

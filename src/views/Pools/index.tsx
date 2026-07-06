@@ -143,10 +143,10 @@ const Pools: React.FC = () => {
   const sortPools = (poolsToSort: Pool[]) => {
     switch (sortOption) {
       case 'apr':
-        // Ternary is needed to prevent pools without APR (like MIX) getting top spot
+        // Keep pools without APR (like MIX) at the bottom, then rank by APR value.
         return orderBy(
           poolsToSort,
-          (pool: Pool) => (pool.apr ? 0 : 0),
+          (pool: Pool) => (pool.apr ? pool.apr : 0),
           'desc',
         )
       case 'earned':

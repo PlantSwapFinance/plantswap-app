@@ -21,12 +21,12 @@ import PageHeader from 'components/PageHeader'
 import SearchInput from 'components/SearchInput'
 import Select, { OptionProps } from 'components/Select/Select'
 import Loading from 'components/Loading'
+import ToggleView, { ViewMode } from 'components/ToggleView'
+import PoolTabButtons from 'components/PoolTabButtons'
 import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import Table from './components/FarmTable/FarmTable'
-import FarmTabButtons from './components/FarmTabButtons'
 import { RowProps } from './components/FarmTable/Row'
-import ToggleView from './components/ToggleView/ToggleView'
-import { DesktopColumnSchema, ViewMode } from './components/types'
+import { DesktopColumnSchema } from './components/types'
 import AddFarmsModal from './components/AddFarmsModal'
 
 export interface FarmsProps{
@@ -422,12 +422,12 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
       <Page>
         <ControlContainer>
           <ViewControls>
-            <ToggleView viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />
+            <ToggleView id="clickFarm" viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />
             <ToggleWrapper>
               <Toggle checked={stakedOnly} onChange={() => setStakedOnly(!stakedOnly)} scale="sm" />
               <Text> {t('Staked only')}</Text>
             </ToggleWrapper>
-            <FarmTabButtons hasStakeInFinishedFarms={stakedInactiveFarms.length > 0} />
+            <PoolTabButtons basePath="/farms" hasStakeInFinishedPools={stakedInactiveFarms.length > 0} />
           </ViewControls>
           <FilterContainer>
             <LabelWrapper>

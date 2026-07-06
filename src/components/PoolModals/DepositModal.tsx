@@ -1,19 +1,40 @@
 import BigNumber from 'bignumber.js'
 import React, { useCallback, useMemo, useState } from 'react'
-import { Button, Modal } from '@plantswap/uikit'
+import { Button, Modal, LinkExternal, Text } from '@plantswap/uikit'
 import { ModalActions, ModalInput } from 'components/Modal'
 import { useTranslation } from 'contexts/Localization'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import useToast from 'hooks/useToast'
 
-interface WithdrawModalProps {
+export interface PoolDepositModalProps {
   max: BigNumber
   onConfirm: (amount: string) => void
   onDismiss?: () => void
   tokenName?: string
+  addLiquidityUrl?: string
+  depositFee?: number
+  /**
+   * Identifier used in the fee notice and success toast ("farm" or "garden").
+   * Both `/farms` and `/gardens` use the same masterchef pool.
+   */
+  featureLabel?: 'farm' | 'garden'
+  /**
+   * When true the modal title reads "Stake LP tokens"; otherwise "Stake tokens".
+   * LP pools stake an LP token; single-token pools stake the token directly.
+   */
+  useLp?: boolean
 }
 
-const WithdrawModal: React.FC<WithdrawModalProps> = ({ onConfirm, onDismiss, max, tokenName = '' }) => {
+const PoolDepositModal: React.FC<PoolDepositModalProps> = ({
+  max,
+  onConfirm,
+  onDismiss,
+  tokenName = '',
+  addLiquidityUrl,
+  depositFee,
+  featureLabel = 'farm',
+  useLp = true,
+}) => {
   const [val, setVal] = useState('')
   const { toastSuccess, toastError } = useToast()
   const [pendingTx, setPendingTx] = useState(false)
@@ -38,27 +59,32 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ onConfirm, onDismiss, max
     setVal(fullBalance)
   }, [fullBalance, setVal])
 
+  const title = useLp ? t('Stake LP tokens') : t('Stake tokens')
+
   return (
-    <Modal title={t('Unstake tokens')} onDismiss={onDismiss}>
+    <Modal title={title} onDismiss={onDismiss}>
+      {depositFee > 0 && <Text>This {featureLabel} has a {depositFee / 100}% deposit fee!</Text>}
       <ModalInput
+        value={val}
         onSelectMax={handleSelectMax}
         onChange={handleChange}
-        value={val}
         max={fullBalance}
         symbol={tokenName}
-        inputTitle={t('Unstake')}
+        addLiquidityUrl={addLiquidityUrl}
+        inputTitle={t('Stake')}
       />
       <ModalActions>
         <Button variant="secondary" onClick={onDismiss} width="100%" disabled={pendingTx}>
           {t('Cancel')}
         </Button>
         <Button
+          width="100%"
           disabled={pendingTx || !valNumber.isFinite() || valNumber.eq(0) || valNumber.gt(fullBalanceNumber)}
           onClick={async () => {
             setPendingTx(true)
             try {
               await onConfirm(val)
-              toastSuccess(t('Unstaked!'), t('Your earnings have also been harvested to your wallet'))
+              toastSuccess(t('Staked!'), t(`Your funds have been staked in the ${featureLabel}`))
               onDismiss()
             } catch (e) {
               toastError(
@@ -70,13 +96,15 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ onConfirm, onDismiss, max
               setPendingTx(false)
             }
           }}
-          width="100%"
         >
           {pendingTx ? t('Confirming') : t('Confirm')}
         </Button>
       </ModalActions>
+      <LinkExternal href={addLiquidityUrl} style={{ alignSelf: 'center' }}>
+        {t('Get %symbol%', { symbol: tokenName })}
+      </LinkExternal>
     </Modal>
   )
 }
 
-export default WithdrawModal
+export default PoolDepositModal

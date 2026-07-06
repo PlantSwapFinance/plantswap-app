@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { stakeFarm } from 'utils/calls'
 import { useMasterchef } from 'hooks/useContract'
 
-const useStakeGardens = (pid: number) => {
+const useStakePool = (pid: number) => {
   const masterGardenerContract = useMasterchef()
 
   const handleStake = useCallback(
@@ -16,4 +16,4 @@ const useStakeGardens = (pid: number) => {
   return { onStake: handleStake }
 }
 
-export default useStakeGardens
+export default useStakePool

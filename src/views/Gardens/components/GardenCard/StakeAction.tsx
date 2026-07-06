@@ -10,10 +10,9 @@ import { useAppDispatch } from 'state'
 import { fetchFarmUserDataAsync } from 'state/farms'
 import { useLpTokenPrice } from 'state/farms/hooks'
 import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalance'
-import DepositModal from '../DepositModal'
-import WithdrawModal from '../WithdrawModal'
-import useUnstakeGardens from '../../hooks/useUnstakeGardens'
-import useStakeGardens from '../../hooks/useStakeGardens'
+import { PoolDepositModal, PoolWithdrawModal } from 'components/PoolModals'
+import useStakePool from 'hooks/useStakePool'
+import useUnstakePool from 'hooks/useUnstakePool'
 
 interface GardenCardActionsProps {
   stakedBalance?: BigNumber
@@ -40,8 +39,8 @@ const StakeAction: React.FC<GardenCardActionsProps> = ({
   depositFee,
 }) => {
   const { t } = useTranslation()
-  const { onStake } = useStakeGardens(pid)
-  const { onUnstake } = useUnstakeGardens(pid)
+  const { onStake } = useStakePool(pid)
+  const { onUnstake } = useUnstakePool(pid)
   const location = useLocation()
   const dispatch = useAppDispatch()
   const { account } = useWeb3React()
@@ -69,10 +68,18 @@ const StakeAction: React.FC<GardenCardActionsProps> = ({
   }, [stakedBalance])
 
   const [onPresentDeposit] = useModal(
-    <DepositModal max={tokenBalance} onConfirm={handleStake} tokenName={tokenName} addLiquidityUrl={addLiquidityUrl} depositFee={depositFee} />,
+    <PoolDepositModal
+      max={tokenBalance}
+      onConfirm={handleStake}
+      tokenName={tokenName}
+      addLiquidityUrl={addLiquidityUrl}
+      depositFee={depositFee}
+      featureLabel="garden"
+      useLp={false}
+    />,
   )
   const [onPresentWithdraw] = useModal(
-    <WithdrawModal max={stakedBalance} onConfirm={handleUnstake} tokenName={tokenName} />,
+    <PoolWithdrawModal max={stakedBalance} onConfirm={handleUnstake} tokenName={tokenName} useLp={false} />,
   )
 
   const renderStakingButtons = () => {

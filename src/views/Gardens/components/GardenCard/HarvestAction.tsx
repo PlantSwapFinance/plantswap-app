@@ -10,7 +10,7 @@ import { BIG_ZERO } from 'utils/bigNumber'
 import { useWeb3React } from '@web3-react/core'
 import { usePricePlantBusd } from 'state/farms/hooks'
 import Balance from 'components/Balance'
-import useHarvestGarden from '../../hooks/useHarvestGarden'
+import useHarvestPool from 'hooks/useHarvestPool'
 
 interface GardenCardActionsProps {
   earnings?: BigNumber
@@ -22,7 +22,7 @@ const HarvestAction: React.FC<GardenCardActionsProps> = ({ earnings, pid }) => {
   const { toastSuccess, toastError } = useToast()
   const { t } = useTranslation()
   const [pendingTx, setPendingTx] = useState(false)
-  const { onReward } = useHarvestGarden(pid)
+  const { onReward } = useHarvestPool(pid)
   const plantPrice = usePricePlantBusd()
   const dispatch = useAppDispatch()
   const rawEarningsBalance = account ? getBalanceAmount(earnings) : BIG_ZERO

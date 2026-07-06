@@ -16,11 +16,10 @@ import { useAppDispatch } from 'state'
 import { getAddress } from 'utils/addressHelpers'
 import getLiquidityUrlPathParts from 'utils/getLiquidityUrlPathParts'
 import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalance'
-import useUnstakeFarms from '../../../hooks/useUnstakeFarms'
-import DepositModal from '../../DepositModal'
-import WithdrawModal from '../../WithdrawModal'
-import useStakeFarms from '../../../hooks/useStakeFarms'
-import useApproveFarm from '../../../hooks/useApproveFarm'
+import { PoolDepositModal as DepositModal, PoolWithdrawModal as WithdrawModal } from 'components/PoolModals'
+import useApprovePool from 'hooks/useApprovePool'
+import useStakePool from 'hooks/useStakePool'
+import useUnstakePool from 'hooks/useUnstakePool'
 import { ActionContainer, ActionTitles, ActionContent } from './styles'
 
 const IconButtonWrapper = styled.div`
@@ -44,8 +43,8 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   const { account } = useWeb3React()
   const [requestedApproval, setRequestedApproval] = useState(false)
   const { allowance, tokenBalance, stakedBalance } = useFarmUser(pid)
-  const { onStake } = useStakeFarms(pid)
-  const { onUnstake } = useUnstakeFarms(pid)
+  const { onStake } = useStakePool(pid)
+  const { onUnstake } = useUnstakePool(pid)
   const location = useLocation()
   const lpPrice = useLpTokenPrice(lpSymbol)
 
@@ -87,7 +86,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   )
   const lpContract = useERC20(lpAddress)
   const dispatch = useAppDispatch()
-  const { onApprove } = useApproveFarm(lpContract)
+  const { onApprove } = useApprovePool(lpContract)
 
   const handleApprove = useCallback(async () => {
     try {

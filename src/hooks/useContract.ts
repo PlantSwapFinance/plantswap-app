@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { ethers } from 'ethers'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import {
   getBep20Contract,
@@ -16,11 +17,8 @@ import {
   getSharePlantswapLoveSchoolNftContract,
   getProfileContract,
   getPlantswapMarketContract,
-  getIfoV1Contract,
-  getIfoV2Contract,
   getSouschefContract,
   getPointCenterIfoContract,
-  getChainlinkOracleContract,
 } from 'utils/contractHelpers'
 
 // Imports below migrated from Exchange useContract.ts
@@ -33,142 +31,91 @@ import { ERC20_BYTES32_ABI } from '../config/abi/erc20'
 import ERC20_ABI from '../config/abi/erc20.json'
 import WETH_ABI from '../config/abi/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../config/constants/multicall'
-import { getContract } from '../utils'
+import { getContract, getSigner } from '../utils'
+
+type SignerArg = ethers.Signer | ethers.providers.Provider
+
+/**
+ * Returns a contract bound to a signer when the user is connected, or to the
+ * provider (simpleRpcProvider fallback when no wallet) when they're not.
+ *
+ * Avoids the `UNSUPPORTED_OPERATION` error that fires from
+ * `library.getSigner()` on direct page loads for disconnected users, and keeps
+ * read-only calls working before wallet connection. Write methods on the
+ * returned contract will throw when there's no signer — that's intentional,
+ * because every write path in the app is gated behind a connected-wallet UI.
+ *
+ * The getter must accept `signerOrProvider` as its final argument, matching the
+ * shape of the helpers in `src/utils/contractHelpers.ts`.
+ */
+function useContractWithOptionalSigner<A extends unknown[], R>(
+  getContractFn: (...args: [...A, SignerArg]) => R,
+  ...args: A
+): R {
+  const { library, account } = useActiveWeb3React()
+
+  const signerOrProvider = useMemo(
+    () => (account ? getSigner(library, account) : library),
+    [library, account],
+  )
+
+  return useMemo(() => getContractFn(...args, signerOrProvider as SignerArg), [signerOrProvider, ...args])
+}
 
 // Plant token
 
-export const usePlant = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getPlantContract(library.getSigner()), [library])
-}
+export const usePlant = () => useContractWithOptionalSigner(getPlantContract)
 
 // Farms and Gardens
 
-export const useMasterchef = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getMasterchefContract(library.getSigner()), [library])
-}
+export const useMasterchef = () => useContractWithOptionalSigner(getMasterchefContract)
 
-export const useVerticalGarden = (id) => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getVerticalGardenContract(id, library.getSigner()), [id, library])
-}
+export const useVerticalGarden = (id: number) => useContractWithOptionalSigner(getVerticalGardenContract, id)
 
-export const useCollectiblesFarm = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getCollectiblesFarmContract(library.getSigner()), [library])
-}
+export const useCollectiblesFarm = () => useContractWithOptionalSigner(getCollectiblesFarmContract)
 
-export const useCollectiblesFarmingPool = (id) => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getCollectiblesFarmingPoolContract(id, library.getSigner()), [id, library])
-}
+export const useCollectiblesFarmingPool = (id: number) =>
+  useContractWithOptionalSigner(getCollectiblesFarmingPoolContract, id)
 
 // GardenV1
 
-export const useSousChef = (id) => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getSouschefContract(id, library.getSigner()), [id, library])
-}
+export const useSousChef = (id: number) => useContractWithOptionalSigner(getSouschefContract, id)
 
 // Collectibles
 
-export const usePlantswapGardeners = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getPlantswapGardenersContract(library.getSigner()), [library])
-}
+export const usePlantswapGardeners = () => useContractWithOptionalSigner(getPlantswapGardenersContract)
 
 // Foundations
-export const useFoundationNonProfit = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getFoundationNonProfitContract(library.getSigner()), [library])
-}
+export const useFoundationNonProfit = () => useContractWithOptionalSigner(getFoundationNonProfitContract)
 
 // Profile
 
-export const useProfile = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getProfileContract(library.getSigner()), [library])
-}
+export const useProfile = () => useContractWithOptionalSigner(getProfileContract)
 
 // Market
-export const usePlantswapMarket = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getPlantswapMarketContract(library.getSigner()), [library])
-}
+export const usePlantswapMarket = () => useContractWithOptionalSigner(getPlantswapMarketContract)
 
 // Collectibles Claiming School
 
-export const useGardeningSchoolNftContract = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getGardeningSchoolNftContract(library.getSigner()), [library])
-}
+export const useGardeningSchoolNftContract = () => useContractWithOptionalSigner(getGardeningSchoolNftContract)
 
-export const useMasterGardeningSchoolNftContract = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getMasterGardeningSchoolNftContract(library.getSigner()), [library])
-}
+export const useMasterGardeningSchoolNftContract = () =>
+  useContractWithOptionalSigner(getMasterGardeningSchoolNftContract)
 
-export const usePointsRewardSchoolNftContract = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getPointsRewardSchoolNftContract(library.getSigner()), [library])
-}
+export const usePointsRewardSchoolNftContract = () => useContractWithOptionalSigner(getPointsRewardSchoolNftContract)
 
-export const useSharePlantswapLoveSchoolNftContract = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getSharePlantswapLoveSchoolNftContract(library.getSigner()), [library])
-}
+export const useSharePlantswapLoveSchoolNftContract = () =>
+  useContractWithOptionalSigner(getSharePlantswapLoveSchoolNftContract)
 
 // Multicall and other basic abi
 
-export const useERC20 = (address: string) => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getBep20Contract(address, library.getSigner()), [address, library])
-}
-export const useERC721 = (address: string) => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getErc721Contract(address, library.getSigner()), [address, library])
-}
+export const useERC20 = (address: string) => useContractWithOptionalSigner(getBep20Contract, address)
 
-// Not used
+export const useERC721 = (address: string) => useContractWithOptionalSigner(getErc721Contract, address)
 
-/**
- * Helper hooks to get specific contracts (by ABI)
- */
+// Live contracts not tied to the multicall/ABIv2 path
 
-export const useIfoV1Contract = (address: string) => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getIfoV1Contract(address, library.getSigner()), [address, library])
-}
-
-export const useIfoV2Contract = (address: string) => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getIfoV2Contract(address, library.getSigner()), [address, library])
-}
-
-export const usePointCenterIfoContract = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getPointCenterIfoContract(library.getSigner()), [library])
-}
-
-export const useChainlinkOracleContract = () => {
-  const { library } = useActiveWeb3React()
-  return useMemo(() => getChainlinkOracleContract(library.getSigner()), [library])
-}
-
-   //  const { account, library } = useActiveWeb3React()
-  // This hook is slightly different from others
-  // Calls were failing if unconnected user goes to farm auction page
-  // Using library instead of library.getSigner() fixes the problem for unconnected users
-  // However, this fix is not ideal, it currently has following behavior:
-  // - If you visit Farm Auction page coming from some other page there are no errors in console (unconnceted or connected)
-  // - If you go directly to Farm Auction page
-  //   - as unconnected user you don't see any console errors
-  //   - as connected user you see `unknown account #0 (operation="getAddress", code=UNSUPPORTED_OPERATION, ...` errors
-  //     the functionality of the page is not affected, data is loading fine and you can interact with the contract
-  //
-  // Similar behavior was also noticed on Trading Competition page.
-      // return useMemo(() => getFarmAuctionContract(account ? library.getSigner() : library), [library, account])
+export const usePointCenterIfoContract = () => useContractWithOptionalSigner(getPointCenterIfoContract)
 
 // Code below migrated from Exchange useContract.ts
 

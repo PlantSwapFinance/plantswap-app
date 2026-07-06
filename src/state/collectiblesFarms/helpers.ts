@@ -12,9 +12,11 @@ type UserData =
       pendingReward: number | string
     }
 
+const collectiblesApiUrl = process.env.REACT_APP_COLLECTIBLES_API_URL
+
 export const getOwnerToken = async (address: string): Promise<number[]> => {
     try {
-      const response = await fetch(`http://localhost:3003/tokensByOwner/${address}`)
+      const response = await fetch(`${collectiblesApiUrl}/tokensByOwner/${address}`)
   
       if (!response.ok) {
         return []

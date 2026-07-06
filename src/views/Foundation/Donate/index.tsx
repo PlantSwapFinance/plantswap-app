@@ -6,7 +6,7 @@ import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/UnsupportedCurrencyFooter'
 import ProgressSteps from 'components/ProgressSteps'
 import { useTranslation } from 'contexts/Localization'
-import confirmPriceImpactWithoutFee from 'utils/confirmPriceImpactWithoutFee'
+import useConfirmPriceImpactWithoutFee from 'hooks/useConfirmPriceImpactWithoutFee'
 import { GreyCard } from '../../../components/Card'
 import Column, { AutoColumn } from '../../../components/Layout/Column'
 import ConfirmSwapModal from './components/ConfirmSwapModal'
@@ -133,9 +133,10 @@ export default function FoundationDonate() {
 
   const [singleHopOnly] = useUserSingleHopOnly()
 
-  const handleSwap = useCallback(() => {
-    if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
-      return
+  const handleSwap = useCallback(async () => {
+    if (priceImpactWithoutFee) {
+      const ok = await confirmPriceImpactWithoutFee(priceImpactWithoutFee)
+      if (!ok) return
     }
     if (!swapCallback) {
       return
@@ -153,7 +154,7 @@ export default function FoundationDonate() {
           txHash: undefined,
         })
       })
-  }, [priceImpactWithoutFee, swapCallback, tradeToConfirm])
+  }, [priceImpactWithoutFee, swapCallback, tradeToConfirm, confirmPriceImpactWithoutFee])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -215,6 +216,8 @@ export default function FoundationDonate() {
     true,
     'confirmSwapModal',
   )
+
+  const [priceImpactModal, confirmPriceImpactWithoutFee] = useConfirmPriceImpactWithoutFee()
 
   return (
     <Donation>
@@ -360,6 +363,7 @@ export default function FoundationDonate() {
       ) : (
         <UnsupportedCurrencyFooter currencies={[currencies.INPUT, currencies.OUTPUT]} />
       )}
+      {priceImpactModal}
     </Donation>
   )
 }

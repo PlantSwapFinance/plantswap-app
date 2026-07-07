@@ -106,13 +106,17 @@ const useApproveConfirmTransaction = ({
     isConfirming: state.confirmState === 'loading',
     isConfirmed: state.confirmState === 'success',
     handleApprove: async () => {
+      // Dispatch before awaiting so the UI reflects the loading state immediately,
+      // not after the wallet popup has resolved.
+      dispatch({ type: 'approve_sending' })
       try {
         const tx = await onApprove()
-        dispatch({ type: 'approve_sending' })
         const receipt = await tx.wait()
         if (receipt.status) {
           dispatch({ type: 'approve_receipt' })
-          onApproveSuccess(state)
+          // Build the post-dispatch state explicitly: `state` from this closure is
+          // still the pre-receipt value because useReducer updates asynchronously.
+          onApproveSuccess({ ...state, approvalState: 'success' })
         }
       } catch (error) {
         dispatch({ type: 'approve_error' })
@@ -126,7 +130,8 @@ const useApproveConfirmTransaction = ({
         const receipt = await tx.wait()
         if (receipt.status) {
           dispatch({ type: 'confirm_receipt' })
-          onSuccess(state)
+          // Same rationale as handleApprove: avoid the stale-closure state.
+          onSuccess({ ...state, confirmState: 'success' })
         }
       } catch (error) {
         dispatch({ type: 'confirm_error' })

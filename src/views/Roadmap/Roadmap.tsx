@@ -22,29 +22,33 @@ const Roadmap = () => {
             </Heading>
           </Flex>
           <Flex flex="1" height="fit-content" justifyContent="center" alignItems="center" mt={['24px', null, '0']}>
-            <img src="/images/roadmap.svg" alt="Gardens" width={600} height={315} />
+            <img src="/images/roadmap.svg" alt="PlantSwap roadmap — past milestones and what is next for $PLANT" width={600} height={315} />
           </Flex>
         </Flex>
       </PageHeader>
       <Page>
-          <Heading as="h2" size="xl" mb="14px">Short-term Roadmap</Heading>
-            <br />
-            <Text>Announce of the Presale details (10 April 2021)</Text>
-            <Text>Fair Presale of the $PLANT token on Bounce (12 to 19 April 2021)</Text>
-            <Text>Add initial liquidity for PLANT/BNB (75% of Presale BNB profits) (21 April 2021)</Text>
-            <Text>Launch the initial PLANT/BNB and PLANT/BUSD farm and the PLANT garden (21 April 2021)</Text>
-            <br />
-          <Heading as="h2" size="xl" mb="14px">Long-term Roadmap</Heading>
-            <br />
-            <Text>Development of the barn to see all of your farming across multiple DeFi platform (Q2 2021)</Text>
-            <Text>Adding control and emergency tools to the barn to control, remove your spending approval and emergency withdraw from other smart contracts (Q2 2021)</Text>
-            <Text>Partnering with other projects for multiple cross-project pools and gardens (Q2 2021)</Text>
-            <Text>Addition of multiple liquidity pools with stable coins and other wrapped tokens</Text>
-            <Text>Creation and distribution of a governance token</Text>
-            <Text>Smart Contract Audit (Q3 2021)</Text>
-            <Text>Cross-chain compatibility (Q3 2021)</Text>
-            <Text>Much more</Text>
-          <br /><br />
+        <Heading as="h2" size="xl" mb="14px">Completed milestones</Heading>
+        <Text>Presale of the $PLANT token on Bounce (April 2021)</Text>
+        <Text>Initial liquidity for PLANT/BNB and the first PLANT/BNB and PLANT/BUSD farms and the PLANT garden (April 2021)</Text>
+        <Text>Launch of the PlantSwap Development Fund — 45% of fees fund tree planting, 45% are burned, 10% kept in treasury</Text>
+        <Text>First on-chain donations to the Rainforest Foundation (proof of impact)</Text>
+        <Text>Release of the Barn dashboard — track yield-farming positions across multiple BSC DeFi projects in one place</Text>
+        <Text>Collectibles and collectibles farms for NFT holders</Text>
+        <Text>Community-driven proposals and on-chain voting on the Foundation</Text>
+        <Text>Marketplace for peer-to-peer NFT trading</Text>
+        <br />
+        <Heading as="h2" size="xl" mb="14px">What is next for PlantSwap</Heading>
+        <Text>Expand <a href="/farms">PlantSwap farms</a> with new BSC DeFi partnerships and cross-chain yield strategies</Text>
+        <Text>Grow <a href="/gardens">PlantSwap gardens</a> with more single-token auto-compounding pools for $PLANT and partner tokens</Text>
+        <Text>Deeper <a href="/foundation">Foundation</a> tooling — recurring donations, new environmental non-profits, and transparent proof-of-burn</Text>
+        <Text>More $PLANT <a href="/pools">pools</a> and integration with trusted BSC DeFi partners</Text>
+        <Text>Continued <a href="/documentation">documentation</a> and developer resources for the PlantSwap ecosystem</Text>
+        <Text>Smart contract audits and security reviews for all new contracts</Text>
+        <Text>Cross-chain compatibility — beyond BSC</Text>
+        <Text>Expanded <a href="/market">NFT marketplace</a> features: auctions, offers, and partner collections</Text>
+        <br />
+        <Text>Have a feature request or want to contribute to the roadmap? Open a proposal in the <a href="/foundation">Foundation</a> or reach out on the <a href="/contact-us">contact page</a>.</Text>
+        <br /><br />
         <Divider />
         <EndPage />
       </Page>

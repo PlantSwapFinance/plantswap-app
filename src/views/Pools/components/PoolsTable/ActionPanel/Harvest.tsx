@@ -1,15 +1,13 @@
 import React from 'react'
-import { Button, Text, useModal, Flex, Skeleton, Heading } from '@plantswap/uikit'
+import { Text } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { PoolCategory } from 'config/constants/types'
 import { formatNumber, getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalance'
 import { useTranslation } from 'contexts/Localization'
-import Balance from 'components/Balance'
 import { BIG_ZERO } from 'utils/bigNumber'
+import StakingHarvestActionPanel from 'components/StakingHarvestActionPanel'
 import { Pool } from 'state/types'
 
-import { ActionContainer, ActionTitles, ActionContent } from './styles'
 import CollectModal from '../../PoolCard/Modals/CollectModal'
 
 interface HarvestActionProps extends Pool {
@@ -26,29 +24,17 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({
   earningTokenPrice,
 }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
 
   const earnings = userData?.pendingReward ? new BigNumber(userData.pendingReward) : BIG_ZERO
-  // These will be reassigned later if its Auto PLANT vault
   const earningTokenBalance = getBalanceNumber(earnings, earningToken.decimals)
-  const earningTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(earningTokenPrice), earningToken.decimals)
-  const hasEarnings = earnings.gt(0)
+  const earningTokenDollarBalance = getBalanceNumber(
+    earnings.multipliedBy(earningTokenPrice),
+    earningToken.decimals,
+  )
   const fullBalance = getFullDisplayBalance(earnings, earningToken.decimals)
   const formattedBalance = formatNumber(earningTokenBalance, 3, 3)
   const isCompoundPool = sousId === 0
   const isBnbPool = poolCategory === PoolCategory.BINANCE
-
-  const [onPresentCollect] = useModal(
-    <CollectModal
-      formattedBalance={formattedBalance}
-      fullBalance={fullBalance}
-      earningToken={earningToken}
-      earningsDollarValue={earningTokenDollarBalance}
-      sousId={sousId}
-      isBnbPool={isBnbPool}
-      isCompoundPool={isCompoundPool}
-    />,
-  )
 
   const actionTitle = isAutoVault ? (
     <Text fontSize="12px" bold color="secondary" as="span" textTransform="uppercase">
@@ -65,65 +51,26 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({
     </>
   )
 
-  if (!account) {
-    return (
-      <ActionContainer>
-        <ActionTitles>{actionTitle}</ActionTitles>
-        <ActionContent>
-          <Heading>0</Heading>
-          <Button disabled>{isCompoundPool ? t('Collect') : t('Harvest')}</Button>
-        </ActionContent>
-      </ActionContainer>
-    )
-  }
-
-  if (!userDataLoaded) {
-    return (
-      <ActionContainer>
-        <ActionTitles>{actionTitle}</ActionTitles>
-        <ActionContent>
-          <Skeleton width={180} height="32px" marginTop={14} />
-        </ActionContent>
-      </ActionContainer>
-    )
-  }
-
   return (
-    <ActionContainer>
-      <ActionTitles>{actionTitle}</ActionTitles>
-      <ActionContent>
-        <Flex flex="1" pt="16px" flexDirection="column" alignSelf="flex-start">
-          <>
-            {hasEarnings ? (
-              <>
-                <Balance lineHeight="1" bold fontSize="20px" decimals={5} value={earningTokenBalance} />
-                {earningTokenPrice > 0 && (
-                  <Balance
-                    display="inline"
-                    fontSize="12px"
-                    color="textSubtle"
-                    decimals={2}
-                    prefix="~"
-                    value={earningTokenDollarBalance}
-                    unit=" USD"
-                  />
-                )}
-              </>
-            ) : (
-              <>
-                <Heading color="textDisabled">0</Heading>
-                <Text fontSize="12px" color="textDisabled">
-                  0 USD
-                </Text>
-              </>
-            )}
-          </>
-        </Flex>
-          <Button disabled={!hasEarnings} onClick={onPresentCollect}>
-            {isCompoundPool ? t('Collect') : t('Harvest')}
-          </Button>
-      </ActionContent>
-    </ActionContainer>
+    <StakingHarvestActionPanel
+      earnings={earnings}
+      earningsToken={earningToken}
+      earningsTokenPrice={earningTokenPrice}
+      isCompoundPool={isCompoundPool}
+      userDataLoaded={userDataLoaded}
+      collectModalNode={
+        <CollectModal
+          formattedBalance={formattedBalance}
+          fullBalance={fullBalance}
+          earningToken={earningToken}
+          earningsDollarValue={earningTokenDollarBalance}
+          sousId={sousId}
+          isBnbPool={isBnbPool}
+          isCompoundPool={isCompoundPool}
+        />
+      }
+      title={actionTitle}
+    />
   )
 }
 

@@ -8,10 +8,8 @@ import multicall from 'utils/multicall'
 import BigNumber from 'bignumber.js'
 import plantswapFoundationNonProfitAbi from 'config/abi/plantswapFoundationNonProfit.json'
 import Container from 'components/Layout/Container'
-// import { useGetProposalLoadingStatus, useGetProposals } from 'state/foundation/hooks'
 import { ProposalState, ProposalType } from 'state/types'
 import TabMenu from './TabMenu'
-// import ProposalRow from './ProposalRow'
 import Filters from './Filters'
 
 interface State {

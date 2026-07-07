@@ -18,7 +18,6 @@ import { latinise } from 'utils/latinise'
 import { useProfile } from 'state/profile/hooks'
 // import { useMasterGardeningSchoolNftContract } from 'hooks/useContract'
 import NftCard from './NftCard'
-// import NftTabButtons from './NftTabButtons'
 import Table from './NftTable/NftTable'
 import { RowProps } from './NftTable/Row'
 import NftGrid from './NftGrid'
@@ -332,4 +331,3 @@ const NftList = () => {
 }
 
 export default NftList
-// <NftTabButtons isClaimable={false} />

@@ -32,7 +32,25 @@
     "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state", "memo"] }],
     "react/require-default-props": 0,
     "no-nested-ternary": 0,
-    "max-classes-per-file": 0
+    "max-classes-per-file": 0,
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@web3-react/core",
+            "importNames": ["useWeb3React"],
+            "message": "Use useActiveWeb3React from 'hooks/useActiveWeb3React' instead — it provides chainId/library fallbacks for disconnected users."
+          }
+        ]
+      }
+    ]
     // End temporary rules
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/hooks/useActiveWeb3React.ts"],
+      "rules": { "no-restricted-imports": "off" }
+    }
+  ]
 }

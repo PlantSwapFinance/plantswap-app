@@ -18,7 +18,6 @@ import {
   getProfileContract,
   getPlantswapMarketContract,
   getSouschefContract,
-  getPointCenterIfoContract,
 } from 'utils/contractHelpers'
 
 // Imports below migrated from Exchange useContract.ts
@@ -117,8 +116,6 @@ export const useERC20 = (address: string) => useContractWithOptionalSigner(getBe
 export const useERC721 = (address: string) => useContractWithOptionalSigner(getErc721Contract, address)
 
 // Live contracts not tied to the multicall/ABIv2 path
-
-export const usePointCenterIfoContract = () => useContractWithOptionalSigner(getPointCenterIfoContract)
 
 // Code below migrated from Exchange useContract.ts
 

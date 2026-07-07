@@ -19,36 +19,6 @@ export interface Token {
   busdPrice?: string
 }
 
-export enum PoolIds {
-  poolBasic = 'poolBasic',
-  poolUnlimited = 'poolUnlimited',
-}
-
-export type IfoStatus = 'idle' | 'coming_soon' | 'live' | 'finished'
-
-interface IfoPoolInfo {
-  saleAmount: string
-  raiseAmount: string
-  plantToBurn: string
-  distributionRatio: number // Range [0-1]
-}
-
-export interface Ifo {
-  id: string
-  isActive: boolean
-  address: string
-  name: string
-  currency: Token
-  token: Token
-  releaseBlockNumber: number
-  articleUrl: string
-  campaignId: string
-  tokenOfferingPrice: number
-  version: number
-  [PoolIds.poolBasic]?: IfoPoolInfo
-  [PoolIds.poolUnlimited]: IfoPoolInfo
-}
-
 export enum PoolCategory {
   'COMMUNITY' = 'Community',
   'CORE' = 'Core',
@@ -214,7 +184,7 @@ export type Team = {
   textColor: string
 }
 
-export type CampaignType = 'participation' | 'teambattle' | 'ifo'
+export type CampaignType = 'participation' | 'teambattle'
 
 export type Campaign = {
   id: string

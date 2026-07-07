@@ -34,11 +34,9 @@ const Body = styled(Flex)`
   }
 `
 
-// Render-only row. The previous "Collect" button called
-// `usePointCenterIfoContract().getPoints(...)` to claim IFO participation
-// points; that contract wiring was removed when PlantSwap dropped the IFO
-// feature, so the action is gone. The component remains so future achievement
-// types that need an on-collect action can hook in without re-creating the row.
+// Render-only row. The "Collect" action was removed when the underlying claim
+// contract was unwired; the row stays so future achievement types that need an
+// on-collect handler can hook in here without re-creating the layout.
 const AchievementRow: React.FC<AchievementRowProps> = ({ achievement }) => {
   return (
     <StyledAchievementRow>

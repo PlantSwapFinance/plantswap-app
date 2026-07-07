@@ -21,7 +21,6 @@ import {
   getSharePlantswapLoveSchooldNftAddress,
   getMulticallAddress,
   getPointCenterIfoAddress,
-  getChainlinkOracleAddress,
 } from 'utils/addressHelpers'
 
 // ABI

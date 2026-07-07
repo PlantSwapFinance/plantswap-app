@@ -49,7 +49,7 @@ type SignerArg = ethers.Signer | ethers.providers.Provider
  * shape of the helpers in `src/utils/contractHelpers.ts`.
  */
 function useContractWithOptionalSigner<A extends unknown[], R>(
-  getContractFn: (...args: [...A, SignerArg]) => R,
+  getContractFn: (...getterArgs: [...A, SignerArg]) => R,
   ...args: A
 ): R {
   const { library, account } = useActiveWeb3React()
@@ -59,6 +59,9 @@ function useContractWithOptionalSigner<A extends unknown[], R>(
     [library, account],
   )
 
+  // `args` is variadic and intentionally spread into the deps array. The getter
+  // is a module-level import whose identity never changes, so we exclude it.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useMemo(() => getContractFn(...args, signerOrProvider as SignerArg), [signerOrProvider, ...args])
 }
 

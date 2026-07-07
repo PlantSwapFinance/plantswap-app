@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import BigNumber from 'bignumber.js'
 import { Modal, Text, Button, AutoRenewIcon, ModalBody, Box, Input, Flex } from '@plantswap/uikit'
 import { ContextApi } from 'contexts/Localization/types'
 import { verticalGardensConfig } from 'config/constants'
@@ -7,6 +8,7 @@ import { useTranslation } from 'contexts/Localization'
 import useTheme from 'hooks/useTheme'
 import useToast from 'hooks/useToast'
 import useMasterGardenerOwner from 'hooks/useMasterGardenerOwner'
+import useFetchMasterGardenerPools from '../../Farms/hooks/useFetchMasterGardenerPools'
 import useUpdateFarm from '../../Farms/hooks/useUpdateFarm'
 
 interface ManageVerticalGardensModalProps {
@@ -63,6 +65,13 @@ const CellAction = styled(Box)`
   text-align: right;
 `
 
+const TotalsRow = styled(Flex)`
+  padding: 8px 0;
+  border-top: 1px solid ${({ theme }) => theme.colors.cardBorder};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
+  background-color: ${({ theme }) => theme.colors.background};
+`
+
 const FormError: React.FC = ({ children }) => (
   <Text color="failure" mb="4px">
     {children}
@@ -98,6 +107,7 @@ const ManageVerticalGardensModal: React.FC<ManageVerticalGardensModalProps> = ({
   const { theme } = useTheme()
   const { toastSuccess, toastError } = useToast()
   const { owner, isOwner } = useMasterGardenerOwner()
+  const { totalAllocPoint } = useFetchMasterGardenerPools()
   const { onUpdate, isPending } = useUpdateFarm()
 
   const [editingVgId, setEditingVgId] = useState<number | null>(null)
@@ -137,7 +147,12 @@ const ManageVerticalGardensModal: React.FC<ManageVerticalGardensModalProps> = ({
   const anyPending = pendingPid !== null
 
   return (
-    <Modal title={t('Manage Vertical Gardens')} onDismiss={onDismiss} headerBackground={theme.colors.gradients.newTrees}>
+    <Modal
+      title={t('Manage Vertical Gardens')}
+      onDismiss={onDismiss}
+      headerBackground={theme.colors.gradients.newTrees}
+      minWidth="min(95vw, 1100px)"
+    >
       <ModalBody>
         {!isOwner && (
           <Box mb="16px">
@@ -174,8 +189,34 @@ const ManageVerticalGardensModal: React.FC<ManageVerticalGardensModalProps> = ({
               {t('Alloc points')}
             </Text>
           </CellNumber>
+          <CellNumber>
+            <Text fontSize="12px" bold color="textSubtle">
+              {t('Share')}
+            </Text>
+          </CellNumber>
           <CellAction />
         </TableHeader>
+
+        <TotalsRow>
+          <CellVgId>
+            <Text fontSize="12px" bold>
+              Σ
+            </Text>
+          </CellVgId>
+          <CellLabel>
+            <Text fontSize="12px" bold>
+              {t('Total')}
+            </Text>
+          </CellLabel>
+          <CellNumber />
+          <CellNumber>
+            <Text bold>{totalAllocPoint}</Text>
+          </CellNumber>
+          <CellNumber>
+            <Text bold>100%</Text>
+          </CellNumber>
+          <CellAction />
+        </TotalsRow>
 
         {verticalGardensConfig.length === 0 ? (
           <Flex justifyContent="center" my="24px">
@@ -234,6 +275,12 @@ const ManageVerticalGardensModal: React.FC<ManageVerticalGardensModalProps> = ({
               )
             }
 
+            const total = new BigNumber(totalAllocPoint)
+            const allocBn = new BigNumber(allocPt ?? 0)
+            const share = total.isGreaterThan(0)
+              ? `${allocBn.times(100).div(total).toFixed(2)}%`
+              : '—'
+
             return (
               <TableRow key={key}>
                 <CellVgId>
@@ -247,6 +294,9 @@ const ManageVerticalGardensModal: React.FC<ManageVerticalGardensModalProps> = ({
                 </CellNumber>
                 <CellNumber>
                   <Text>{allocPt ?? 0}</Text>
+                </CellNumber>
+                <CellNumber>
+                  <Text>{share}</Text>
                 </CellNumber>
                 <CellAction>
                   <Button scale="sm" variant="secondary" disabled={anyPending || pid === undefined} onClick={() => startEdit(vg.vgId, allocPt ?? 0)}>

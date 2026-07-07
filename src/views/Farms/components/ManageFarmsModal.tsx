@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useMemo, useState } from 'react'
 import styled from 'styled-components'
+import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
 import { Modal, Text, Button, AutoRenewIcon, ModalBody, Box, Input, Radio, Flex } from '@plantswap/uikit'
 import { ContextApi } from 'contexts/Localization/types'
@@ -85,6 +86,13 @@ const CellAction = styled(Box)`
   text-align: right;
 `
 
+const TotalsRow = styled(Flex)`
+  padding: 8px 0;
+  border-top: 1px solid ${({ theme }) => theme.colors.cardBorder};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
+  background-color: ${({ theme }) => theme.colors.background};
+`
+
 const FormError: React.FC = ({ children }) => (
   <Text color="failure" mb="4px">
     {children}
@@ -165,7 +173,7 @@ const ManageFarmsModal: React.FC<ManageFarmsModalProps> = ({ tokenMode = false, 
   const { theme } = useTheme()
   const { toastSuccess, toastError } = useToast()
   const { owner, isOwner } = useMasterGardenerOwner()
-  const { pools, isLoading, refresh } = useFetchMasterGardenerPools()
+  const { pools, totalAllocPoint, isLoading, refresh } = useFetchMasterGardenerPools()
   const { onUpdate } = useUpdateFarm()
 
   // ----- Add new pool form state (moved from AddFarmsModal) -----
@@ -323,6 +331,11 @@ const ManageFarmsModal: React.FC<ManageFarmsModalProps> = ({ tokenMode = false, 
     }
 
     const anyPending = pendingPid !== null
+    const total = new BigNumber(totalAllocPoint)
+    const alloc = new BigNumber(pool.allocPoint)
+    const share = total.isGreaterThan(0)
+      ? `${alloc.times(100).div(total).toFixed(2)}%`
+      : '—'
     return (
       <TableRow key={pool.pid}>
         <CellPid>
@@ -340,6 +353,9 @@ const ManageFarmsModal: React.FC<ManageFarmsModalProps> = ({ tokenMode = false, 
         <CellNumber>
           <Text>{(pool.depositFeeBP / 100).toFixed(2)}%</Text>
         </CellNumber>
+        <CellNumber>
+          <Text>{share}</Text>
+        </CellNumber>
         <CellAction>
           <Button scale="sm" variant="secondary" disabled={anyPending} onClick={() => startEdit(pool)}>
             {t('Edit')}
@@ -356,6 +372,7 @@ const ManageFarmsModal: React.FC<ManageFarmsModalProps> = ({ tokenMode = false, 
       title={`${t('Manage')} ${titleSuffix}`}
       onDismiss={onDismiss}
       headerBackground={theme.colors.gradients.newTrees}
+      minWidth="min(95vw, 1100px)"
     >
       <ModalBody>
         {!isOwner && (
@@ -393,8 +410,34 @@ const ManageFarmsModal: React.FC<ManageFarmsModalProps> = ({ tokenMode = false, 
               {t('Deposit fee (BP)')}
             </Text>
           </CellNumber>
+          <CellNumber>
+            <Text fontSize="12px" bold color="textSubtle">
+              {t('Share')}
+            </Text>
+          </CellNumber>
           <CellAction />
         </TableHeader>
+
+        <TotalsRow>
+          <CellPid>
+            <Text fontSize="12px" bold>
+              Σ
+            </Text>
+          </CellPid>
+          <CellLp>
+            <Text fontSize="12px" bold>
+              {t('Total')}
+            </Text>
+          </CellLp>
+          <CellNumber>
+            <Text bold>{totalAllocPoint}</Text>
+          </CellNumber>
+          <CellNumber />
+          <CellNumber>
+            <Text bold>100%</Text>
+          </CellNumber>
+          <CellAction />
+        </TotalsRow>
 
         {isLoading ? (
           <Flex justifyContent="center" my="24px">

@@ -92,17 +92,24 @@ const CompositeImage: React.FC<ComponentProps> = ({ path, attributes, maxHeight 
         maxHeight={maxHeight}
         srcSet={getSrcSet(path, attributes[0].src)}
       />
-      {path !== '/images/foundation/plant/' && attributes.map((image) => (
-        <ImageWrapper key={image.src}>
-          <img src={getImageUrl(path, image.src)} srcSet={getSrcSet(path, image.src)} alt={image.alt} />
-        </ImageWrapper>
-      ))}
-      {path === '/images/foundation/plant/' && attributes.map((image) => (
-        <ImageWrapper key={image.src}>
-          <>
-          </>
-        </ImageWrapper>
-      ))}
+      {path !== '/images/foundation/plant/' &&
+        attributes.map((image) => (
+          <ImageWrapper key={image.src}>
+            <img
+              src={getImageUrl(path, image.src)}
+              srcSet={getSrcSet(path, image.src)}
+              alt={image.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </ImageWrapper>
+        ))}
+      {path === '/images/foundation/plant/' &&
+        attributes.map((image) => (
+          <ImageWrapper key={image.src}>
+            <></>
+          </ImageWrapper>
+        ))}
     </Wrapper>
   )
 }

@@ -18,32 +18,35 @@ const Documentation = () => {
               {t('Documentation')}
             </Heading>
             <Heading scale="lg" color="text">
-              {t('Learn how to connect your wallet to Plantswap')}<br />
+              {t('Learn how to connect your wallet to Plantswap')}
+              <br />
             </Heading>
           </Flex>
           <Flex flex="1" height="fit-content" justifyContent="center" alignItems="center" mt={['24px', null, '0']}>
-            <img src="/images/roadmap.svg" alt="Gardens" width={600} height={315} />
+            <img src="/images/roadmap.svg" alt="Gardens" width={600} height={315} loading="lazy" decoding="async" />
           </Flex>
         </Flex>
       </PageHeader>
 
       <Page>
-        <Heading as="h2" size="xl" mb="14px">Connecting MetaMask to Binance Smart Chain</Heading>
-        
-        <ReactPlayer 
-          url="https://www.youtube.com/watch?v=HVH6wpaHcDI" 
+        <Heading as="h2" size="xl" mb="14px">
+          Connecting MetaMask to Binance Smart Chain
+        </Heading>
+
+        <ReactPlayer
+          url="https://www.youtube.com/watch?v=HVH6wpaHcDI"
           preload="auto"
-          width="100%" 
+          width="100%"
           height="500px"
-          style={{  
+          style={{
             padding: 0,
             paddingTop: 0,
             left: 0,
             zIndex: -1,
-            maxHeight: "100%",
-            maxWidth: "100%",
-            objectFit: "cover",
-            objectPosition: "center"
+            maxHeight: '100%',
+            maxWidth: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
           }}
         />
         <Divider />

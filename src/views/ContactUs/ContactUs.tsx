@@ -9,10 +9,10 @@ import Divider from './components/Divider'
 import { getContactFormErrors, FormErrors } from './helper'
 
 interface ContactFormState {
-  clientName: string;
-  email: string;
-  sujet: string;
-  message: string;
+  clientName: string
+  email: string
+  sujet: string
+  message: string
 }
 
 const ContactUs = () => {
@@ -20,10 +20,10 @@ const ContactUs = () => {
   const [send, setSend] = useState(false)
   const [state, setState] = useState<ContactFormState>({
     clientName: '',
-      email: '',
-      sujet: '',
-      message: '',
-      })
+    email: '',
+    sujet: '',
+    message: '',
+  })
   // eslint-disable-next-line
   const { clientName, email, sujet, message } = state
   // eslint-disable-next-line
@@ -35,28 +35,25 @@ const ContactUs = () => {
     setState((prevState) => ({ ...prevState, [name]: value }))
   }
 
-  const clearState = () => setState({
-    clientName: '',
+  const clearState = () =>
+    setState({
+      clientName: '',
       email: '',
       sujet: '',
       message: '',
-      })
+    })
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    emailjs
-      .sendForm(
-        'service_2heraoe', 'template_revj3os', e.target, 'user_LncbCjsg709omIRnMnAH3'
-      )
-      .then(
-        () => {
-          clearState()
-          setSend(true)
-        },
-        (error) => {
-          console.error(error.text)
-        }
-      ) 
+    emailjs.sendForm('service_2heraoe', 'template_revj3os', e.target, 'user_LncbCjsg709omIRnMnAH3').then(
+      () => {
+        clearState()
+        setSend(true)
+      },
+      (error) => {
+        console.error(error.text)
+      },
+    )
   }
 
   return (
@@ -68,24 +65,29 @@ const ContactUs = () => {
               {t('Contact-Us')}
             </Heading>
             <Heading scale="lg" color="text">
-              {t('Learn how to connect your wallet to Plantswap')}<br />
+              {t('Learn how to connect your wallet to Plantswap')}
+              <br />
             </Heading>
           </Flex>
           <Flex flex="1" height="fit-content" justifyContent="center" alignItems="center" mt={['24px', null, '0']}>
-            <img src="/images/roadmap.svg" alt="Gardens" width={600} height={315} />
+            <img src="/images/roadmap.svg" alt="Gardens" width={600} height={315} loading="lazy" decoding="async" />
           </Flex>
         </Flex>
       </PageHeader>
 
       <Page>
-      {send && (
+        {send && (
           <Flex alignItems="center" mb="16px">
-              <Text color="success" mr="16px">{t('Your message has been sent!')}</Text>
+            <Text color="success" mr="16px">
+              {t('Your message has been sent!')}
+            </Text>
           </Flex>
         )}
         <form id="form" onSubmit={handleSubmit}>
-        <Flex mb="16px">
-            <Text color="textSubtle" mr="16px">{t('Your name')}</Text>
+          <Flex mb="16px">
+            <Text color="textSubtle" mr="16px">
+              {t('Your name')}
+            </Text>
             <Input
               type="hidden"
               name="emailSubject"
@@ -103,75 +105,54 @@ const ContactUs = () => {
               \n\n\n
               Sent from ESportsCentral.ca`}
             />
-        </Flex>
-          <Flex mb="16px">
-              <Input 
-                type="text" 
-                name="clientName" 
-                id="clientName"
-                required
-                onChange={handleChange}
-              />
-              {formErrors.clientName && fieldsState.clientName && <FormErrors errors={formErrors.clientName} />}
           </Flex>
           <Flex mb="16px">
-              <Text color="textSubtle" mr="16px">{t('Your email')}</Text>
+            <Input type="text" name="clientName" id="clientName" required onChange={handleChange} />
+            {formErrors.clientName && fieldsState.clientName && <FormErrors errors={formErrors.clientName} />}
           </Flex>
           <Flex mb="16px">
-              <Input 
-                type="text" 
-                name="email" 
-                id="email"
-                required
-                onChange={handleChange}
-              />
-              {formErrors.email && fieldsState.email && <FormErrors errors={formErrors.email} />}
+            <Text color="textSubtle" mr="16px">
+              {t('Your email')}
+            </Text>
           </Flex>
           <Flex mb="16px">
-              <Text color="textSubtle" mr="16px">{t('Subjet')}</Text>
+            <Input type="text" name="email" id="email" required onChange={handleChange} />
+            {formErrors.email && fieldsState.email && <FormErrors errors={formErrors.email} />}
           </Flex>
           <Flex mb="16px">
-              <Input 
-                type="text" 
-                name="sujet" 
-                id="sujet"
-                required
-                onChange={handleChange} 
-              />
-              {formErrors.sujet && fieldsState.sujet && <FormErrors errors={formErrors.sujet} />}
+            <Text color="textSubtle" mr="16px">
+              {t('Subjet')}
+            </Text>
           </Flex>
-        {clientName && (
-          <>
-            <Flex mb="16px">
-                <Text color="textSubtle" mr="16px">{t('Message')}</Text>
-            </Flex>
-            <Flex mb="16px">
-                <Textarea 
-                  name="message" 
-                  id="message"
-                  value={message}
-                  required
-                  onChange={handleChange} 
-                />
+          <Flex mb="16px">
+            <Input type="text" name="sujet" id="sujet" required onChange={handleChange} />
+            {formErrors.sujet && fieldsState.sujet && <FormErrors errors={formErrors.sujet} />}
+          </Flex>
+          {clientName && (
+            <>
+              <Flex mb="16px">
+                <Text color="textSubtle" mr="16px">
+                  {t('Message')}
+                </Text>
+              </Flex>
+              <Flex mb="16px">
+                <Textarea name="message" id="message" value={message} required onChange={handleChange} />
                 {formErrors.message && fieldsState.message && <FormErrors errors={formErrors.message} />}
-            </Flex>
-            <Flex alignItems="center" mb="16px">
-                <Button 
-                  type="submit" 
-                  id="button" 
-                  value="Send Email"
-                  onClick={() => handleSubmit}
-                  disabled={send}>
+              </Flex>
+              <Flex alignItems="center" mb="16px">
+                <Button type="submit" id="button" value="Send Email" onClick={() => handleSubmit} disabled={send}>
                   {t('Send your message')}
                 </Button>
-            </Flex>
+              </Flex>
             </>
-        )}
-            {send && (
-                <Flex alignItems="center" mb="16px">
-                    <Text color="success" mr="16px">{t('Your message has been sent!')}</Text>
-                </Flex>
-            )}
+          )}
+          {send && (
+            <Flex alignItems="center" mb="16px">
+              <Text color="success" mr="16px">
+                {t('Your message has been sent!')}
+              </Text>
+            </Flex>
+          )}
         </form>
         <Divider />
         <EndPage />
@@ -209,4 +190,4 @@ const Textarea = styled.textarea`
   &:focus:not(:disabled) {
     box-shadow: ${({ theme }) => theme.shadows.focus};
   }
-`;
+`

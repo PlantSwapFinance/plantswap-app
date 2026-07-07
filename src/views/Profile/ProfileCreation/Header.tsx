@@ -20,20 +20,14 @@ const Header: React.FC = () => {
     <Wrapper>
       <Hero>
         <div>
-            <Heading as="h1" scale="xxl" color="secondary">
-              {t('Create your Profile')}
-            </Heading>
-            <Text bold>
-              {t('Creat a unique profile by minting a Gardeners (NFT)and locking it in your profile.')}
-            </Text>
-            <Text bold>
-              {t('This gardeners profile will give you access to special things...')}
-            </Text>
-            <Text color="secondary">
-              {t('Total cost: 2 PLANT')}
-            </Text>
+          <Heading as="h1" scale="xxl" color="secondary">
+            {t('Create your Profile')}
+          </Heading>
+          <Text bold>{t('Creat a unique profile by minting a Gardeners (NFT)and locking it in your profile.')}</Text>
+          <Text bold>{t('This gardeners profile will give you access to special things...')}</Text>
+          <Text color="secondary">{t('Total cost: 2 PLANT')}</Text>
         </div>
-        <img src="/images/teams.svg" alt="Plantswap Teams" width={400} height={210} />
+        <img src="/images/teams.svg" alt="Plantswap Teams" width={400} height={210} loading="lazy" decoding="async" />
       </Hero>
       <Breadcrumbs>
         {steps.map((translationKey, index) => {

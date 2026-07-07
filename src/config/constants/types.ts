@@ -150,7 +150,7 @@ export interface EcologicalNonProfitConfig {
   enpId: number
   description?: string
   isValid?: boolean
-}  
+}
 
 export type Images = {
   lg: string
@@ -240,4 +240,5 @@ export type PageMeta = {
   image?: string
   path?: string
   noindex?: boolean
+  schema?: Record<string, unknown>
 }

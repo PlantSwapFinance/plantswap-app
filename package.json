@@ -28,6 +28,7 @@
   "dependencies": {
     "@binance-chain/bsc-connector": "^1.0.0",
     "@ethersproject/experimental": "^5.0.1",
+    "@fontsource/kanit": "^5.2.8",
     "@neondatabase/serverless": "^1.0.2",
     "@pancakeswap/sdk": "^2.3.2",
     "@plantswap/uikit": "0.1.8",

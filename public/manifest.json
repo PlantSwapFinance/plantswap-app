@@ -1,8 +1,8 @@
 {
-  "short_name": "PancakeSwap",
-  "name": "PancakeSwap",
-  "description": "Farm CAKE with Pancake LP Tokens",
-  "homepage_url": "https://pancakeswap.finance",
+  "short_name": "PlantSwap",
+  "name": "PlantSwap — Farm $PLANT and help plant trees",
+  "description": "PlantSwap is a DeFi platform on Binance Smart Chain where you can farm $PLANT, stake in gardens, and support environmental causes like tree planting and rainforest protection.",
+  "homepage_url": "https://plantswap.finance",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#1FC7D4",
@@ -15,9 +15,16 @@
       "sizes": "256x256"
     },
     {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
       "src": "logo.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ]
 }

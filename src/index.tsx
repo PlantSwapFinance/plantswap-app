@@ -1,5 +1,9 @@
 import React, { useMemo, ReactNode } from 'react'
 import ReactDOM from 'react-dom'
+// Self-host the Kanit font used across the app — avoids the
+// render-blocking CSS fetch from fonts.googleapis.com.
+import '@fontsource/kanit/400.css'
+import '@fontsource/kanit/600.css'
 import useActiveWeb3React from './hooks/useActiveWeb3React'
 import { BLOCKED_ADDRESSES } from './config/constants'
 import ApplicationUpdater from './state/application/updater'

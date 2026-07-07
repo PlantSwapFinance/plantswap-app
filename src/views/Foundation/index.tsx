@@ -7,7 +7,6 @@ import { proposeSectionData, donateSectionData } from './components/SalesSection
 import SalesSection from './components/SalesSection'
 import PlantDataRow from './components/PlantDataRow'
 import { WedgeTopLeft, InnerWedgeWrapper, OuterWedgeWrapper } from './components/WedgeSvgs'
-import { Proposals } from './components/Proposals'
 import DevelopmentFund from './components/DevelopmentFund'
 
 const StyledHeroSection = styled(PageSection)`
@@ -16,11 +15,6 @@ const StyledHeroSection = styled(PageSection)`
   ${({ theme }) => theme.mediaQueries.md} {
     padding-top: 48px;
   }
-`
-
-const Content = styled.div`
-  flex: 1;
-  height: 100%;
 `
 
 const Foundation: React.FC = () => {
@@ -100,17 +94,6 @@ const Foundation: React.FC = () => {
         index={2}
         hasCurvedDivider={false}
       >
-        <Content>
-          <Proposals />
-        </Content>
-      </PageSection>
-      
-      <PageSection
-        innerProps={{ style: { margin: '0', width: '100%' } }}
-        index={2}
-        hasCurvedDivider={false}
-      >
-        
         <DevelopmentFund />
       </PageSection>
     </>

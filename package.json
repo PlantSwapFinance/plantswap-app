@@ -96,7 +96,7 @@
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
     "@pancakeswap/eslint-config-pancake": "^1.1.0",
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^30.0.0",
     "@types/react-datepicker": "^3.1.8",
     "@types/react-transition-group": "^4.4.1",
     "@types/simplemde": "^1.11.7",

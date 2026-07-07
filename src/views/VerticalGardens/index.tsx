@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import { Heading, Flex, Text, EndPage } from '@plantswap/uikit'
+import { Heading, Flex, Text, EndPage, IconButton, CogIcon, useModal } from '@plantswap/uikit'
 import orderBy from 'lodash/orderBy'
 import partition from 'lodash/partition'
 import { useTranslation } from 'contexts/Localization'
@@ -21,7 +21,9 @@ import PoolCard from './components/VerticalGardenCard'
 import PoolTabButtons from './components/VerticalGardenTabButtons'
 import VerticalGardensTable from './components/VerticalGardensTable/VerticalGardensTable'
 import { ViewMode } from './components/ToggleView/ToggleView'
+import ManageVerticalGardensModal from './components/ManageVerticalGardensModal'
 import useActiveWeb3React from '../../hooks/useActiveWeb3React'
+import useMasterGardenerOwner from '../../hooks/useMasterGardenerOwner'
 // import { getAprData, getPlantVaultEarnings } from './helpers'
 
 const CardLayout = styled(FlexLayout)`
@@ -85,6 +87,8 @@ const Pools: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortOption, setSortOption] = useState('hot')
   const chosenPoolsLength = useRef(0)
+  const { isOwner: isMasterGardenerOwner } = useMasterGardenerOwner()
+  const [onManageVerticalGardensModal] = useModal(<ManageVerticalGardensModal />)
 
   // TODO aren't arrays in dep array checked just by reference, i.e. it will rerender every time reference changes?
   const [finishedPools, openPools] = useMemo(
@@ -278,6 +282,15 @@ const Pools: React.FC = () => {
               </Text>
               <SearchInput onChange={handleChangeSearchQuery} placeholder="Search Vertical Gardens" />
             </LabelWrapper>
+            {account && isMasterGardenerOwner && (
+              <LabelWrapper>
+                <Flex paddingTop="6px" paddingLeft="12px">
+                  <IconButton variant="secondary" onClick={onManageVerticalGardensModal}>
+                    <CogIcon color="primary" width="14px" />
+                  </IconButton>
+                </Flex>
+              </LabelWrapper>
+            )}
           </FilterContainer>
         </PoolControls>
         {showFinishedPools && (

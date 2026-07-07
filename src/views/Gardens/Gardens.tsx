@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import { Route, useRouteMatch, useLocation, NavLink } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import { Heading, RowType, Toggle, Text, Button, ArrowForwardIcon, Flex, EndPage } from '@plantswap/uikit'
+import { Heading, RowType, Toggle, Text, Button, ArrowForwardIcon, Flex, EndPage, IconButton, CogIcon, useModal } from '@plantswap/uikit'
 import { ChainId } from '@pancakeswap/sdk'
 import styled from 'styled-components'
 import FlexLayout from 'components/Layout/Flex'
@@ -25,7 +25,9 @@ import GardenCard, { GardenWithStakedValue } from './components/GardenCard/Garde
 import Table from './components/GardenTable/GardenTable'
 import { RowProps } from './components/GardenTable/Row'
 import { DesktopColumnSchema } from './components/types'
+import ManageFarmsModal from '../Farms/components/ManageFarmsModal'
 import useActiveWeb3React from '../../hooks/useActiveWeb3React'
+import useMasterGardenerOwner from '../../hooks/useMasterGardenerOwner'
 
 export interface GardensProps {
   tokenMode?: boolean
@@ -98,6 +100,12 @@ const ViewControls = styled.div`
   }
 `
 
+const IconButtonWrapper = styled.div`
+  display: flex;
+  padding-top: 6px;
+  padding-left: 12px;
+`
+
 const NUMBER_OF_FARMS_VISIBLE = 12
 
 const getDisplayApr = (plantRewardsApr?: number, lpRewardsApr?: number) => {
@@ -123,6 +131,8 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
   const [sortOption, setSortOption] = useState('hot')
   const chosenGardensLength = useRef(0)
   const { tokenMode } = gardensProps
+  const { isOwner: isMasterGardenerOwner } = useMasterGardenerOwner()
+  const [onManageGardensModal] = useModal(<ManageFarmsModal tokenMode />)
 
   const isArchived = pathname.includes('archived')
   const isInactive = pathname.includes('history')
@@ -470,6 +480,15 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
               <Text textTransform="uppercase">{t('Search')}</Text>
               <SearchInput onChange={handleChangeQuery} placeholder="Search Gardens" />
             </LabelWrapper>
+            {account && isMasterGardenerOwner && (
+              <LabelWrapper>
+                <IconButtonWrapper>
+                  <IconButton variant="secondary" onClick={onManageGardensModal}>
+                    <CogIcon color="primary" width="14px" />
+                  </IconButton>
+                </IconButtonWrapper>
+              </LabelWrapper>
+            )}
           </FilterContainer>
         </ControlContainer>
         {renderContent()}

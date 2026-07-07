@@ -20,7 +20,6 @@ import {
   getPointsRewardSchoolNftAddress,
   getSharePlantswapLoveSchooldNftAddress,
   getMulticallAddress,
-  getPointCenterIfoAddress,
 } from 'utils/addressHelpers'
 
 // ABI
@@ -53,7 +52,6 @@ import erc721Abi from 'config/abi/erc721.json'
 import lpTokenAbi from 'config/abi/lpToken.json'
 
   // Multicall, sous variants, and point center
-import pointCenterIfo from 'config/abi/pointCenterIfo.json'
 import sousChefV2 from 'config/abi/sousChefV2.json'
 import sousChefBnb from 'config/abi/sousChefBnb.json'
 import MultiCallAbi from 'config/abi/Multicall.json'
@@ -163,7 +161,4 @@ export const hasSufficientAllowance = async (
 export const getSouschefV2Contract = (id: number, signer?: ethers.Signer | ethers.providers.Provider) => {
   const config = poolsConfig.find((pool) => pool.sousId === id)
   return getContract(sousChefV2, getAddress(config.contractAddress), signer)
-}
-export const getPointCenterIfoContract = (signer?: ethers.Signer | ethers.providers.Provider) => {
-  return getContract(pointCenterIfo, getPointCenterIfoAddress(), signer)
 }

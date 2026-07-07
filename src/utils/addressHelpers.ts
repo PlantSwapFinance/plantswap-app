@@ -64,9 +64,6 @@ export const getWbnbAddress = () => {
 
 
  // Not used anymore
-export const getPointCenterIfoAddress = () => {
-  return getAddress(addresses.pointCenterIfo)
-}
 export const getPlantVaultAddress = () => {
   return getAddress(addresses.plantVault)
 }

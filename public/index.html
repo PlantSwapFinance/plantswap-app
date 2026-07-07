@@ -6,26 +6,73 @@
     <link rel="preconnect" href="%REACT_APP_NODE_1%" />
     <link rel="preconnect" href="%REACT_APP_NODE_2%" />
     <link rel="preconnect" href="%REACT_APP_NODE_3%" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <!-- Meta -->
-    <title>Plantswap.finance 🌱</title>
-    <meta name="description" content="Stake and Farm $PLANT token in our farms and gardens.🌱" />
-    <meta name="keywords" content="plantswap,defi,plant" />
+    <title>PlantSwap.finance — Farm $PLANT and help plant trees</title>
+    <meta
+      name="description"
+      content="PlantSwap is a DeFi platform on Binance Smart Chain where you can farm $PLANT, stake in gardens, swap tokens, and support environmental causes like planting trees and protecting rainforests."
+    />
+    <meta
+      name="keywords"
+      content="plantswap, plant token, $PLANT, BSC, DeFi, yield farming, gardens, AMM, environmental DeFi, rainforest, tree planting"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1" />
     <meta name="theme-color" content="#1FC7D4" />
-    
-    <meta name="twitter:image" content="https://plantswap.finance/images/plantswap.jpg" />
-    <meta name="twitter:domain" content="PlantSwap.finance" />
-    <meta name="twitter:description" content="Stake and Farm $PLANT token in our farms and gardens.🌱" />
-    <meta name="twitter:title" content="PlantSwap.Finance - Farm $PLANT with us and save the planet🌱" />
-    <meta property="og:title" content="PlantSwap.Finance - Farm $PLANT with us and save the planet🌱" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="PlantSwap.finance — Farm $PLANT and help plant trees" />
+    <meta property="og:description" content="Farm $PLANT, stake in gardens, and help plant trees. PlantSwap is the DeFi platform on BSC that puts the planet first." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PlantSwap" />
     <meta property="og:url" content="https://plantswap.finance/" />
     <meta property="og:image" content="https://plantswap.finance/images/plantswap.jpg" />
-    <meta property="og:description" content="Stake and Farm $PLANT token in our farms and gardens.🌱" /><!-- GTAG -->
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="PlantSwap — DeFi that helps the planet" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PlantSwap.finance — Farm $PLANT and save the planet" />
+    <meta name="twitter:description" content="Stake and farm $PLANT in our farms and gardens, and support tree planting on every transaction." />
+    <meta name="twitter:image" content="https://plantswap.finance/images/plantswap.jpg" />
+    <meta name="twitter:image:alt" content="PlantSwap — DeFi that helps the planet" />
+    <meta name="twitter:domain" content="PlantSwap.finance" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "PlantSwap",
+        "alternateName": "PlantSwap.finance",
+        "url": "https://plantswap.finance/",
+        "description": "DeFi platform on Binance Smart Chain for farming $PLANT and supporting environmental causes like tree planting and rainforest protection.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://plantswap.finance/?search={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "PlantSwap",
+        "url": "https://plantswap.finance/",
+        "logo": "https://plantswap.finance/logo.png",
+        "description": "PlantSwap is a DeFi platform on Binance Smart Chain where users farm $PLANT and the Development Fund donates to environmental non-profits.",
+        "sameAs": [
+          "https://twitter.com/plantswap",
+          "https://github.com/PlantSwapFinance"
+        ]
+      }
+    </script>
+
+    <!-- GTAG -->
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=%REACT_APP_GTAG%"></script>
     <script>

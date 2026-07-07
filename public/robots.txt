@@ -1,3 +1,15 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /market/
+Disallow: /swap/
+Disallow: /add
+Disallow: /remove
+Disallow: /create
+Disallow: /find
+Disallow: /liquidity
+Disallow: /send
+
+Sitemap: https://plantswap.finance/sitemap.xml

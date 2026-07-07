@@ -16,23 +16,19 @@ const Vote = () => {
               {t('Vote')}
             </Heading>
             <Heading scale="lg" color="text">
-              {t('Vote on proposals to chose the future of PlantSwap')}<br />
+              {t('Vote on proposals to chose the future of PlantSwap')}
+              <br />
               {t('when you hold PLANT in your walle')}
             </Heading>
           </Flex>
           <Flex flex="1" height="fit-content" justifyContent="center" alignItems="center" mt={['24px', null, '0']}>
-            <img src="/images/roadmap.svg" alt="Gardens" width={600} height={315} />
+            <img src="/images/roadmap.svg" alt="Gardens" width={600} height={315} loading="lazy" decoding="async" />
           </Flex>
         </Flex>
       </PageHeader>
-        <iframe 
-          title="Snapshot Voting" 
-          src="https://snapshot.org/#/plantswap.eth" 
-          width="100%" 
-          height="900px"
-        />
-        <Divider />
-        <EndPage />
+      <iframe title="Snapshot Voting" src="https://snapshot.org/#/plantswap.eth" width="100%" height="900px" />
+      <Divider />
+      <EndPage />
     </>
   )
 }

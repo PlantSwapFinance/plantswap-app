@@ -15,23 +15,17 @@ const TeamHeader = () => {
     <>
       {showProfileCallout && <NoProfileCard />}
       <HeaderWrapper>
-          <Hero>
-            <div>
+        <Hero>
+          <div>
             <Heading as="h1" scale="xxl" color="secondary">
               {t('Teams & Profiles')}
             </Heading>
-            <Text bold>
-              {t('Have a look at the different Gardeners Teams')}
-            </Text>
-            <Text bold>
-              {t('Each month we donate funds to ecological')}
-            </Text>
-            <Text bold>
-              {t('foundations in line with these teams names & descriptions.')}
-            </Text>
-            </div>
-            <img src="/images/teams.svg" alt="Plantswap Teams" width={400} height={210} />
-          </Hero>
+            <Text bold>{t('Have a look at the different Gardeners Teams')}</Text>
+            <Text bold>{t('Each month we donate funds to ecological')}</Text>
+            <Text bold>{t('foundations in line with these teams names & descriptions.')}</Text>
+          </div>
+          <img src="/images/teams.svg" alt="Plantswap Teams" width={400} height={210} loading="lazy" decoding="async" />
+        </Hero>
       </HeaderWrapper>
     </>
   )

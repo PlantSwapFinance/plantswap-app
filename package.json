@@ -5,12 +5,13 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
+    "build": "react-scripts --openssl-legacy-provider build && yarn sitemap:generate",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
     "format:write": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "sitemap:generate": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/generateSitemap.ts",
     "updateLPsAPR": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/updateLPsAPR.ts"
   },
   "browserslist": {

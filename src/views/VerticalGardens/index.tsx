@@ -222,7 +222,14 @@ const Pools: React.FC = () => {
             </Heading>
           </Flex>
           <Flex flex="1" height="fit-content" justifyContent="center" alignItems="center" mt={['24px', null, '0']}>
-            <img src="/images/verticalGardens.svg" alt="Gardens" width={600} height={315} />
+            <img
+              src="/images/verticalGardens.svg"
+              alt="Gardens"
+              width={600}
+              height={315}
+              loading="lazy"
+              decoding="async"
+            />
           </Flex>
         </Flex>
       </PageHeader>

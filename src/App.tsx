@@ -13,6 +13,7 @@ import { MASTERGARDENERDEVADDRESS } from 'config'
 import GlobalStyle from './style/Global'
 import Menu from './components/Menu'
 import MenuDev from './components/MenuDev'
+import PageMeta from './components/Layout/PageMeta'
 import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import { ToastListener } from './contexts/ToastsContext'
 import PageLoader from './components/Loader/PageLoader'
@@ -141,6 +142,7 @@ const App: React.FC = () => {
 
   return (
     <Router history={history}>
+      <PageMeta />
       <ResetCSS />
       <GlobalStyle />
       {account && account === MASTERGARDENERDEVADDRESS ? (

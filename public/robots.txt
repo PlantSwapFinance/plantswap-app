@@ -11,5 +11,7 @@ Disallow: /create
 Disallow: /find
 Disallow: /liquidity
 Disallow: /send
+Disallow: /vote
+Disallow: /documentation
 
 Sitemap: https://plantswap.finance/sitemap.xml

@@ -1,8 +1,7 @@
 import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import { Route, useRouteMatch, useLocation } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import { MASTERGARDENERDEVADDRESS } from 'config'
-import { Heading, RowType, Toggle, Text, Flex, EndPage, IconButton, AddIcon, useModal } from '@plantswap/uikit'
+import { Heading, RowType, Toggle, Text, Flex, EndPage, IconButton, CogIcon, useModal } from '@plantswap/uikit'
 import { ChainId } from '@pancakeswap/sdk'
 import styled from 'styled-components'
 import FlexLayout from 'components/Layout/Flex'
@@ -26,8 +25,9 @@ import FarmCard, { FarmWithStakedValue } from './components/FarmCard/FarmCard'
 import Table from './components/FarmTable/FarmTable'
 import { RowProps } from './components/FarmTable/Row'
 import { DesktopColumnSchema } from './components/types'
-import AddFarmsModal from './components/AddFarmsModal'
+import AddFarmsModal from './components/ManageFarmsModal'
 import useActiveWeb3React from '../../hooks/useActiveWeb3React'
+import useMasterGardenerOwner from '../../hooks/useMasterGardenerOwner'
 
 export interface FarmsProps {
   tokenMode?: boolean
@@ -398,7 +398,8 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
     setSortOption(option.value)
   }
 
-  const [onAddFarmModal] = useModal(<AddFarmsModal account={account} />)
+  const [onAddFarmModal] = useModal(<AddFarmsModal tokenMode={false} />)
+  const { isOwner: isMasterGardenerOwner } = useMasterGardenerOwner()
 
   return (
     <>
@@ -464,11 +465,11 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
               <Text textTransform="uppercase">{t('Search')}</Text>
               <SearchInput onChange={handleChangeQuery} placeholder="Search Farms" />
             </LabelWrapper>
-            {account === MASTERGARDENERDEVADDRESS && (
+            {account && isMasterGardenerOwner && (
               <LabelWrapper>
                 <IconButtonWrapper>
                   <IconButton variant="secondary" onClick={onAddFarmModal}>
-                    <AddIcon color="primary" width="14px" />
+                    <CogIcon color="primary" width="14px" />
                   </IconButton>
                 </IconButtonWrapper>
               </LabelWrapper>

@@ -5,6 +5,7 @@ import Page from 'components/Layout/Page'
 import PageLoader from 'components/Loader/PageLoader'
 import { useProfile } from 'state/profile/hooks'
 import { useFetchAchievements } from 'state/achievements/hooks'
+import { useFetchTasks } from 'state/tasks/hooks'
 import ProfileCreation from './ProfileCreation'
 import Header from './components/Header'
 import TaskCenter from './TaskCenter'
@@ -16,6 +17,7 @@ const Profile = () => {
   const { account } = useActiveWeb3React()
 
   useFetchAchievements()
+  useFetchTasks()
 
   if (!isInitialized || isLoading) {
     return <PageLoader />

@@ -375,9 +375,6 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
       path,
     )
   }
-  if (path === '/lottery') {
-    return withMetaPath(buildMeta(path, t('Lottery'), 'PlantSwap lottery — win $PLANT and other prizes.'), path)
-  }
 
   return null
 }
@@ -427,7 +424,6 @@ export const KNOWN_ROUTES: Set<string> = new Set([
   '/profile/tasks',
   '/competition',
   '/prediction',
-  '/lottery',
 ])
 
 export const KNOWN_ROUTE_PATTERNS: RegExp[] = [

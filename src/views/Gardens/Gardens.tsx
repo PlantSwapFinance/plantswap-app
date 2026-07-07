@@ -422,7 +422,7 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
               {t('Rewards are calculated per block.')}
               <br />
               {t('If you still have tokens in ')}
-              <NavLink exact activeClassName="active" to="/pools" id="lottery-pot-banner">
+              <NavLink exact activeClassName="active" to="/pools" id="garden-v1-link">
                 <Button p="0" variant="text">
                   <ArrowForwardIcon color="primary" />
                   <Text color="primary" bold fontSize="16px" mr="4px">

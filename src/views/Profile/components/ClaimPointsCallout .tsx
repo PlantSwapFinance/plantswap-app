@@ -1,68 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { sumBy } from 'lodash'
-import { Card, CardBody, CardHeader, Flex, Heading, PrizeIcon } from '@plantswap/uikit'
-import { useProfile } from 'state/profile/hooks'
-import { Achievement } from 'state/types'
-import { addPoints } from 'state/profile/store'
-import { addAchievement } from 'state/achievements/store'
-import { useTranslation } from 'contexts/Localization'
-import { getClaimableIfoData } from 'utils/achievements'
-import AchievementRow from './AchievementRow'
-import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
-
-const ClaimPointsCallout = () => {
-  const [claimableAchievements, setClaimableAchievement] = useState<Achievement[]>([])
-  const { t } = useTranslation()
-  const { profile } = useProfile()
-  const { account } = useActiveWeb3React()
-
-  useEffect(() => {
-    const fetchIfoClaims = async () => {
-      const ifoData = await getClaimableIfoData(account)
-      setClaimableAchievement(ifoData)
-    }
-
-    if (account) {
-      fetchIfoClaims()
-    }
-  }, [account, setClaimableAchievement])
-
-  const handleCollectSuccess = (achievement: Achievement) => {
-    addAchievement(achievement)
-    addPoints(achievement.points)
-
-    setClaimableAchievement((prevClaimableAchievements) =>
-      prevClaimableAchievements.filter((prevClaimableAchievement) => prevClaimableAchievement.id !== achievement.id),
-    )
-  }
-
-  if (!profile?.isActive) {
-    return null
-  }
-
-  if (claimableAchievements.length === 0) {
-    return null
-  }
-
-  const totalPointsToCollect = sumBy(claimableAchievements, 'points')
-
-  return (
-    <Card isActive mb="32px">
-      <CardHeader>
-        <Flex flexDirection={['column', null, 'row']} justifyContent={['start', null, 'space-between']}>
-          <Flex alignItems="center" mb={['16px', null, 0]}>
-            <PrizeIcon width="32px" mr="8px" />
-            <Heading scale="lg">{t('%num% Points to Collect', { num: totalPointsToCollect })}</Heading>
-          </Flex>
-        </Flex>
-      </CardHeader>
-      <CardBody>
-        {claimableAchievements.map((achievement) => (
-          <AchievementRow key={achievement.address} achievement={achievement} onCollectSuccess={handleCollectSuccess} />
-        ))}
-      </CardBody>
-    </Card>
-  )
-}
+// The IFO point-claim flow that lived here was removed when PlantSwap dropped
+// the IFO feature. The component is preserved as a no-op stub so that
+// `src/views/Profile/TaskCenter.tsx` can keep mounting it without changing its
+// layout. Delete this file (and the corresponding import/JSX in TaskCenter) if
+// a non-IFO claim flow is ever added.
+const ClaimPointsCallout = () => null
 
 export default ClaimPointsCallout

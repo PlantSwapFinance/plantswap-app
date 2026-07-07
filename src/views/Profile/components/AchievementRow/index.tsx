@@ -1,10 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { AutoRenewIcon, Button, Flex } from '@plantswap/uikit'
+import { Flex } from '@plantswap/uikit'
 import { Achievement } from 'state/types'
-import useToast from 'hooks/useToast'
-import { useTranslation } from 'contexts/Localization'
-import { usePointCenterIfoContract } from 'hooks/useContract'
 import ActionColumn from '../ActionColumn'
 import PointsLabel from './PointsLabel'
 import AchievementTitle from '../AchievementTitle'
@@ -37,26 +34,12 @@ const Body = styled(Flex)`
   }
 `
 
-const AchievementRow: React.FC<AchievementRowProps> = ({ achievement, onCollectSuccess }) => {
-  const [isCollecting, setIsCollecting] = useState(false)
-  const { t } = useTranslation()
-  const pointCenterContract = usePointCenterIfoContract()
-  const { toastError, toastSuccess } = useToast()
-
-  const handleCollectPoints = async () => {
-    const tx = await pointCenterContract.getPoints(achievement.address)
-    setIsCollecting(true)
-    const receipt = await tx.wait()
-    if (receipt.status) {
-      setIsCollecting(false)
-      onCollectSuccess(achievement)
-      toastSuccess(t('Points Collected!'))
-    } else {
-      toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
-      setIsCollecting(false)
-    }
-  }
-
+// Render-only row. The previous "Collect" button called
+// `usePointCenterIfoContract().getPoints(...)` to claim IFO participation
+// points; that contract wiring was removed when PlantSwap dropped the IFO
+// feature, so the action is gone. The component remains so future achievement
+// types that need an on-collect action can hook in without re-creating the row.
+const AchievementRow: React.FC<AchievementRowProps> = ({ achievement }) => {
   return (
     <StyledAchievementRow>
       <AchievementAvatar badge={achievement.badge} />
@@ -66,17 +49,7 @@ const AchievementRow: React.FC<AchievementRowProps> = ({ achievement, onCollectS
           <AchievementDescription description={achievement.description} />
         </Details>
         <PointsLabel points={achievement.points} px={[0, null, null, '32px']} mb={['16px', null, null, 0]} />
-        <ActionColumn>
-          <Button
-            onClick={handleCollectPoints}
-            isLoading={isCollecting}
-            endIcon={isCollecting ? <AutoRenewIcon spin color="currentColor" /> : null}
-            disabled={isCollecting}
-            variant="secondary"
-          >
-            {t('Collect')}
-          </Button>
-        </ActionColumn>
+        <ActionColumn />
       </Body>
     </StyledAchievementRow>
   )

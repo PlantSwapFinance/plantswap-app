@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { Heading, Flex, Text, EndPage } from '@plantswap/uikit'
 import orderBy from 'lodash/orderBy'
 import partition from 'lodash/partition'
@@ -23,6 +22,7 @@ import PoolCard from './components/PoolCard'
 import PoolTabButtons from './components/PoolTabButtons'
 import HelpButton from './components/HelpButton'
 import PoolsTable from './components/PoolsTable/PoolsTable'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
 const CardLayout = styled(FlexLayout)`
   justify-content: center;
@@ -75,7 +75,7 @@ const NUMBER_OF_POOLS_VISIBLE = 12
 const Pools: React.FC = () => {
   const location = useLocation()
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { pools, userDataLoaded } = usePools(account)
   const [stakedOnly, setStakedOnly] = usePersistState(false, { localStorageKey: 'plant_pool_staked' })
   const [numberOfPoolsVisible, setNumberOfPoolsVisible] = useState(NUMBER_OF_POOLS_VISIBLE)
@@ -144,11 +144,7 @@ const Pools: React.FC = () => {
     switch (sortOption) {
       case 'apr':
         // Keep pools without APR (like MIX) at the bottom, then rank by APR value.
-        return orderBy(
-          poolsToSort,
-          (pool: Pool) => (pool.apr ? pool.apr : 0),
-          'desc',
-        )
+        return orderBy(poolsToSort, (pool: Pool) => (pool.apr ? pool.apr : 0), 'desc')
       case 'earned':
         return orderBy(
           poolsToSort,
@@ -161,11 +157,7 @@ const Pools: React.FC = () => {
           'desc',
         )
       case 'totalStaked':
-        return orderBy(
-          poolsToSort,
-          (pool: Pool) => (pool.totalStaked.toNumber()),
-          'desc',
-        )
+        return orderBy(poolsToSort, (pool: Pool) => pool.totalStaked.toNumber(), 'desc')
       default:
         return poolsToSort
     }
@@ -191,9 +183,8 @@ const Pools: React.FC = () => {
   const cardLayout = (
     <CardLayout>
       {chosenPools.map((pool) => (
-          <PoolCard key={pool.sousId} pool={pool} account={account} />
-        ),
-      )}
+        <PoolCard key={pool.sousId} pool={pool} account={account} />
+      ))}
     </CardLayout>
   )
 

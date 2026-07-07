@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { Button, useModal, IconButton, AddIcon, MinusIcon, Skeleton, Flex, Text } from '@plantswap/uikit'
 import ConnectWalletButton from 'components/ConnectWalletButton'
-import { useWeb3React } from '@web3-react/core'
 import { VerticalGarden } from 'state/types'
 import Balance from 'components/Balance'
 import { useTranslation } from 'contexts/Localization'
@@ -16,6 +15,7 @@ import { ActionContainer, ActionTitles, ActionContent } from './styles'
 import NotEnoughTokensModal from '../../VerticalGardenCard/Modals/NotEnoughTokensModal'
 import StakeModal from '../../VerticalGardenCard/Modals/StakeModal'
 import { useApproveVerticalGarden } from '../../../hooks/useApprove'
+import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React'
 
 const IconButtonWrapper = styled.div`
   display: flex;
@@ -27,24 +27,14 @@ interface StackedActionProps {
 }
 
 const Staked: React.FunctionComponent<StackedActionProps> = ({ verticalGarden, userDataLoaded }) => {
-  const {
-    vgId,
-    stakingToken,
-    isFinished,
-    verticalGardenCategory,
-    userData,
-    stakingTokenPrice,
-    isAutoVault,
-  } = verticalGarden
+  const { vgId, stakingToken, isFinished, verticalGardenCategory, userData, stakingTokenPrice, isAutoVault } =
+    verticalGarden
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   const stakingTokenContract = useERC20(stakingToken.address ? getAddress(stakingToken.address) : '')
-  const { handleApprove: handleVerticalGardenApprove, requestedApproval: requestedVerticalGardenApproval } = useApproveVerticalGarden(
-    stakingTokenContract,
-    vgId,
-  )
-
+  const { handleApprove: handleVerticalGardenApprove, requestedApproval: requestedVerticalGardenApproval } =
+    useApproveVerticalGarden(stakingTokenContract, vgId)
 
   const handleApprove = handleVerticalGardenApprove
   const requestedApproval = requestedVerticalGardenApproval
@@ -153,13 +143,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ verticalGarden, u
         </ActionTitles>
         <ActionContent>
           <Flex flex="1" pt="16px" flexDirection="column" alignSelf="flex-start">
-            <Balance
-              lineHeight="1"
-              bold
-              fontSize="20px"
-              decimals={5}
-              value={stakedTokenBalance}
-            />
+            <Balance lineHeight="1" bold fontSize="20px" decimals={5} value={stakedTokenBalance} />
             <Balance
               fontSize="12px"
               display="inline"
@@ -174,13 +158,13 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ verticalGarden, u
             <IconButton variant="secondary" onClick={onUnstake} mr="6px">
               <MinusIcon color="primary" width="14px" />
             </IconButton>
-              <IconButton
-                variant="secondary"
-                onClick={stakingTokenBalance.gt(0) ? onStake : onPresentTokenRequired}
-                disabled={isFinished}
-              >
-                <AddIcon color="primary" width="14px" />
-              </IconButton>
+            <IconButton
+              variant="secondary"
+              onClick={stakingTokenBalance.gt(0) ? onStake : onPresentTokenRequired}
+              disabled={isFinished}
+            >
+              <AddIcon color="primary" width="14px" />
+            </IconButton>
           </IconButtonWrapper>
         </ActionContent>
       </ActionContainer>

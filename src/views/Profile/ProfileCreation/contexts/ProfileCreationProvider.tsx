@@ -1,10 +1,10 @@
 import React, { createContext, useEffect, useMemo, useReducer } from 'react'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { getGardeningSchoolNftContract } from 'utils/contractHelpers'
 import { DEFAULT_TOKEN_DECIMAL } from 'config'
 import { MINT_COST, REGISTER_COST, ALLOWANCE_MULTIPLIER } from '../config'
 import { Actions, State, ContextType } from './types'
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 const totalCost = MINT_COST + REGISTER_COST
 const allowance = totalCost * ALLOWANCE_MULTIPLIER
@@ -62,7 +62,7 @@ export const ProfileCreationContext = createContext<ContextType>(null)
 
 const ProfileCreationProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   // Initial checks
   useEffect(() => {

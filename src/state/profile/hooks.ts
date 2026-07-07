@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { ProfileState } from '../types'
 import { fetchProfile, useProfileStore } from './store'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
 export const useFetchProfile = () => {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   useEffect(() => {
     fetchProfile(account)

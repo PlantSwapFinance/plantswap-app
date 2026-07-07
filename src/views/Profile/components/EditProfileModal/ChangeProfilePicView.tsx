@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Button, InjectedModalProps, Skeleton, Text } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { useGetCollectibles } from 'state/hooks'
 import { useProfile } from 'state/profile/hooks'
 import { useTranslation } from 'contexts/Localization'
@@ -12,6 +11,7 @@ import { useProfile as useProfileContract, usePlantswapGardeners } from 'hooks/u
 import { getPlantProfileAddress } from 'utils/addressHelpers'
 import SelectionCard from '../SelectionCard'
 import ApproveConfirmButtons from '../ApproveConfirmButtons'
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 type ChangeProfilePicPageProps = InjectedModalProps
 
@@ -25,7 +25,7 @@ const ChangeProfilePicPage: React.FC<ChangeProfilePicPageProps> = ({ onDismiss }
   const { profile } = useProfile()
   const profileContract = useProfileContract()
   const plantswapGardenersContract = usePlantswapGardeners()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { toastSuccess } = useToast()
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({

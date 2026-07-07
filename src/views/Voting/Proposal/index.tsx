@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { ArrowBackIcon, Box, Button, Flex, Heading } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { Link, useParams } from 'react-router-dom'
 import { useAppDispatch } from 'state'
 import { ProposalState, VotingStateLoadingStatus } from 'state/types'
@@ -22,12 +21,13 @@ import Details from './Details'
 import Results from './Results'
 import Vote from './Vote'
 import Votes from './Votes'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const Proposal = () => {
   const { id }: { id: string } = useParams()
   const proposal = useGetProposal(id)
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const votes = useGetVotes(id)
   const voteLoadingStatus = useGetVotingStateLoadingStatus()

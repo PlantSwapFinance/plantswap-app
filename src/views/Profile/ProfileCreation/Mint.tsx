@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { Card, CardBody, Heading, Text } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
 import { DEFAULT_TOKEN_DECIMAL } from 'config'
@@ -15,6 +14,7 @@ import NextStepButton from '../components/NextStepButton'
 import ApproveConfirmButtons from '../components/ApproveConfirmButtons'
 import useProfileCreation from './contexts/hook'
 import { MINT_COST, STARTER_BUNNY_IDENTIFIERS } from './config'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const nfts = nftList.filter((nft) => STARTER_BUNNY_IDENTIFIERS.includes(nft.identifier))
 const minimumPlantBalanceToMint = new BigNumber(MINT_COST).multipliedBy(DEFAULT_TOKEN_DECIMAL)
@@ -23,7 +23,7 @@ const Mint: React.FC = () => {
   const [variationId, setVariationId] = useState<Nft['variationId']>(null)
   const { actions, minimumPlantRequired, allowance } = useProfileCreation()
 
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const plantContract = usePlant()
   const gardeningSchoolContract = useGardeningSchoolNftContract()
   const { t } = useTranslation()

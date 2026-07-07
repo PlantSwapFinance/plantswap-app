@@ -1,26 +1,26 @@
 import React from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
-import { 
-  useMatchBreakpoints, 
-  Button, 
+import {
+  useMatchBreakpoints,
+  Button,
   HarvestIcon,
-  AuctionIcon, 
-  MegaphoneIcon, 
-  SchoolIcon, 
-  SuperMarketIcon, 
+  AuctionIcon,
+  MegaphoneIcon,
+  SchoolIcon,
+  SuperMarketIcon,
   SyncAltIcon,
-  BidIcon, 
-  useModal, 
-  Text 
+  BidIcon,
+  useModal,
+  Text,
 } from '@plantswap/uikit'
 // To filter dev features
 import { MASTERGARDENERDEVADDRESS } from 'config'
-import { useWeb3React } from '@web3-react/core'
-// 
+//
 import { useTranslation } from 'contexts/Localization'
 import TransferNftModal from '../TransferNftModal'
 import ClaimNftModal from '../ClaimNftModal'
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 export interface ActionProps {
   nft: any
@@ -31,7 +31,7 @@ export interface ActionProps {
 }
 
 const DisplayAction = styled.span`
-  color: ${({ theme }) => (theme.colors.text)};
+  color: ${({ theme }) => theme.colors.text};
   padding-left: 16px;
   display: flex;
   align-items: center;
@@ -53,7 +53,7 @@ const ButtonRow = styled.tr`
 `
 const Action: React.FunctionComponent<ActionProps> = ({ nft, canClaim = false, tokenIds = [], onClaim, refresh }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   const { isXl } = useMatchBreakpoints()
   const isMobile = !isXl
@@ -63,45 +63,48 @@ const Action: React.FunctionComponent<ActionProps> = ({ nft, canClaim = false, t
     refresh()
   }
 
-  const [onPresentTransferModal] = useModal(<TransferNftModal nft={nft} tokenIds={tokenIds} onSuccess={handleSuccess} />)
+  const [onPresentTransferModal] = useModal(
+    <TransferNftModal nft={nft} tokenIds={tokenIds} onSuccess={handleSuccess} />,
+  )
   const [onPresentClaimModal] = useModal(<ClaimNftModal nft={nft} onSuccess={handleSuccess} onClaim={onClaim} />)
 
   return (
-   <DisplayAction>
+    <DisplayAction>
       <ButtonTable>
         <ButtonRow>
           {canClaim ? (
             <PaddedButton>
               <Button width="100%" mt="24px" onClick={onPresentClaimModal} startIcon={<SchoolIcon />}>
-                  {t('Claim this NFT')}
+                {t('Claim this NFT')}
               </Button>
             </PaddedButton>
-          ) : (tokenIds[nft.identifier] ? (
+          ) : tokenIds[nft.identifier] ? (
             <>
-            {/* Still in development:1 */}
-            {account === MASTERGARDENERDEVADDRESS && (
-              <>
-              {/* Place for sell */}
-              <PaddedButton>
-                <a href={`/market/sellNft/${variationId}`} target="_blank" rel="noopener noreferrer">
-                  <Button width="100%" variant="secondary" mt="24px" startIcon={<SuperMarketIcon />}>
-                    {t('Place for sale')}
-                  </Button>
-                </a>
-              </PaddedButton>
-              {/* Place for buy */}
-              <PaddedButton>
-                <a href={`/market/createAuction/${variationId}`} target="_blank" rel="noopener noreferrer">
-                  <Button width="100%" variant="secondary" mt="24px" startIcon={<MegaphoneIcon />}>
-                    {t('Place for auction')}
-                  </Button>
-                </a>
-              </PaddedButton>
-              </>
+              {/* Still in development:1 */}
+              {account === MASTERGARDENERDEVADDRESS && (
+                <>
+                  {/* Place for sell */}
+                  <PaddedButton>
+                    <a href={`/market/sellNft/${variationId}`} target="_blank" rel="noopener noreferrer">
+                      <Button width="100%" variant="secondary" mt="24px" startIcon={<SuperMarketIcon />}>
+                        {t('Place for sale')}
+                      </Button>
+                    </a>
+                  </PaddedButton>
+                  {/* Place for buy */}
+                  <PaddedButton>
+                    <a href={`/market/createAuction/${variationId}`} target="_blank" rel="noopener noreferrer">
+                      <Button width="100%" variant="secondary" mt="24px" startIcon={<MegaphoneIcon />}>
+                        {t('Place for auction')}
+                      </Button>
+                    </a>
+                  </PaddedButton>
+                </>
               )}
               {/* End of 1st dev filter */}
             </>
-          ) : (<Text>{t(`You can't claim more of this token serie`)}</Text>)
+          ) : (
+            <Text>{t(`You can't claim more of this token serie`)}</Text>
           )}
         </ButtonRow>
         {isMobile ? (
@@ -129,7 +132,7 @@ const Action: React.FunctionComponent<ActionProps> = ({ nft, canClaim = false, t
                       </a>
                     </PaddedButton>
                   </>
-                  )}
+                )}
                 {/* End of 2nd dev filter */}
               </>
             </ButtonRow>
@@ -147,8 +150,14 @@ const Action: React.FunctionComponent<ActionProps> = ({ nft, canClaim = false, t
               {/* End of 3rd dev filter */}
               {tokenIds[nft.identifier] && (
                 <PaddedButton>
-                {/* variant="secondary" */}
-                  <Button width="100%" variant="secondary" mt="24px" onClick={onPresentTransferModal} startIcon={<SyncAltIcon />}>
+                  {/* variant="secondary" */}
+                  <Button
+                    width="100%"
+                    variant="secondary"
+                    mt="24px"
+                    onClick={onPresentTransferModal}
+                    startIcon={<SyncAltIcon />}
+                  >
                     {t('Transfer')}
                   </Button>
                 </PaddedButton>
@@ -163,7 +172,7 @@ const Action: React.FunctionComponent<ActionProps> = ({ nft, canClaim = false, t
                 <>
                   {/* Buy, bid place buy order */}
                   <PaddedButton>
-                  {/* variant="" */}
+                    {/* variant="" */}
                     <a href={`/market/makeOffer/${variationId}`} target="_blank" rel="noopener noreferrer">
                       <Button width="100%" variant="tertiary" mt="24px" onClick={null} startIcon={<HarvestIcon />}>
                         {t('Buy from %countSellOffer% sell offer', { countSellOffer: 7 })}
@@ -171,7 +180,7 @@ const Action: React.FunctionComponent<ActionProps> = ({ nft, canClaim = false, t
                     </a>
                   </PaddedButton>
                   <PaddedButton>
-                  {/* variant="success" */}
+                    {/* variant="success" */}
                     <a href={`/market/makeOffer/${variationId}`} target="_blank" rel="noopener noreferrer">
                       <Button width="100%" variant="tertiary" mt="24px" onClick={null} startIcon={<AuctionIcon />}>
                         {t('Bid on %countAuction% auction', { countAuction: 8 })}
@@ -190,7 +199,13 @@ const Action: React.FunctionComponent<ActionProps> = ({ nft, canClaim = false, t
               {/* End of 4th dev filter */}
               {tokenIds[nft.identifier] && (
                 <PaddedButton>
-                  <Button width="100%" variant="secondary" mt="24px" onClick={onPresentTransferModal} startIcon={<SyncAltIcon />}>
+                  <Button
+                    width="100%"
+                    variant="secondary"
+                    mt="24px"
+                    onClick={onPresentTransferModal}
+                    startIcon={<SyncAltIcon />}
+                  >
                     {t('Transfer')}
                   </Button>
                 </PaddedButton>

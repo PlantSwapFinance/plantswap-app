@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Text } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
 import { useAppDispatch } from 'state'
 import { useGetCollectibles } from 'state/hooks'
@@ -13,6 +12,7 @@ import { DescriptionProps } from './Description'
 import { MoreProps } from './More'
 import Action from './Action'
 import MasterGardeningSchoolAction from './MasterGardeningSchoolAction'
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 export interface ExtraProps {
   image: ImageProps
@@ -31,7 +31,7 @@ const nftComponents = {
 }
 
 const DisplayDetails = styled.span`
-  color: ${({ theme }) => (theme.colors.text)};
+  color: ${({ theme }) => theme.colors.text};
   padding-left: 16px;
   display: flex;
   align-items: center;
@@ -64,7 +64,7 @@ const ActionCell = styled.tr`
 
 const Extra: React.FunctionComponent<ExtraProps> = (props) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const { tokenIds } = useGetCollectibles()
   const { name, description } = props
@@ -79,24 +79,24 @@ const Extra: React.FunctionComponent<ExtraProps> = (props) => {
     <DisplayDetails>
       <ExtraTable>
         <tr>
-          {description.requirement ? ( 
+          {description.requirement ? (
             <>
-            <RequirementTitleCell>
-              <Text>{t('Requirement')}</Text>
-            </RequirementTitleCell>
-            <RequirementCell>
-              <Text>{description.requirement}</Text>
-            </RequirementCell>
+              <RequirementTitleCell>
+                <Text>{t('Requirement')}</Text>
+              </RequirementTitleCell>
+              <RequirementCell>
+                <Text>{description.requirement}</Text>
+              </RequirementCell>
             </>
           ) : null}
         </tr>
         <tr>
           <ActionCell>
-          {account ? (
-            <ActionBox nft={nft} tokenIds={tokenIds} refresh={handleRefresh} />
-          ) : (
-            <ConnectWalletButton width="100%" />
-          )}
+            {account ? (
+              <ActionBox nft={nft} tokenIds={tokenIds} refresh={handleRefresh} />
+            ) : (
+              <ConnectWalletButton width="100%" />
+            )}
           </ActionCell>
         </tr>
       </ExtraTable>

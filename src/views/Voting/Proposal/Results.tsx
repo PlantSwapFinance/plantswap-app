@@ -12,13 +12,13 @@ import {
   Tag,
   CheckmarkCircleIcon,
 } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import times from 'lodash/times'
 import { Vote, VotingStateLoadingStatus } from 'state/types'
 import { useGetVotingStateLoadingStatus } from 'state/voting/hooks'
 import { useTranslation } from 'contexts/Localization'
 import { calculateVoteResults, getTotalFromVotes } from '../helpers'
 import TextEllipsis from '../components/TextEllipsis'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 interface ResultsProps {
   choices: string[]
@@ -29,7 +29,7 @@ const Results: React.FC<ResultsProps> = ({ choices, votes }) => {
   const { t } = useTranslation()
   const results = calculateVoteResults(votes)
   const votingStatus = useGetVotingStateLoadingStatus()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const totalVotes = getTotalFromVotes(votes)
 
   return (

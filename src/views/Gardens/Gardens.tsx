@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import { Route, useRouteMatch, useLocation, NavLink } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { Heading, RowType, Toggle, Text, Button, ArrowForwardIcon, Flex, EndPage } from '@plantswap/uikit'
 import { ChainId } from '@pancakeswap/sdk'
 import styled from 'styled-components'
@@ -26,8 +25,9 @@ import GardenCard, { GardenWithStakedValue } from './components/GardenCard/Garde
 import Table from './components/GardenTable/GardenTable'
 import { RowProps } from './components/GardenTable/Row'
 import { DesktopColumnSchema } from './components/types'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
-export interface GardensProps{
+export interface GardensProps {
   tokenMode?: boolean
 }
 
@@ -119,10 +119,10 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
   const priceCake = usePriceCakeBusd()
   const [query, setQuery] = useState('')
   const [viewMode, setViewMode] = usePersistState(ViewMode.TABLE, { localStorageKey: 'plant_garden_view' })
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const [sortOption, setSortOption] = useState('hot')
   const chosenGardensLength = useRef(0)
-  const {tokenMode} = gardensProps;
+  const { tokenMode } = gardensProps
 
   const isArchived = pathname.includes('archived')
   const isInactive = pathname.includes('history')
@@ -139,9 +139,15 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
     setStakedOnly(!isActive)
   }, [isActive])
 
-  const activeGardens = gardensLP.filter((garden) =>  !!garden.isTokenOnly === !!tokenMode && garden.multiplier !== '0X' && !isArchivedPid(garden.pid))
-  const inactiveGardens = gardensLP.filter((garden) =>  !!garden.isTokenOnly === !!tokenMode && garden.multiplier === '0X' && !isArchivedPid(garden.pid))
-  const archivedGardens = gardensLP.filter((garden) =>  !!garden.isTokenOnly === !!tokenMode && isArchivedPid(garden.pid))
+  const activeGardens = gardensLP.filter(
+    (garden) => !!garden.isTokenOnly === !!tokenMode && garden.multiplier !== '0X' && !isArchivedPid(garden.pid),
+  )
+  const inactiveGardens = gardensLP.filter(
+    (garden) => !!garden.isTokenOnly === !!tokenMode && garden.multiplier === '0X' && !isArchivedPid(garden.pid),
+  )
+  const archivedGardens = gardensLP.filter(
+    (garden) => !!garden.isTokenOnly === !!tokenMode && isArchivedPid(garden.pid),
+  )
 
   const stakedOnlyGardens = activeGardens.filter(
     (garden) => garden.userData && new BigNumber(garden.userData.stakedBalance).isGreaterThan(0),
@@ -158,16 +164,21 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
   const gardensList = useCallback(
     (gardensToDisplay: Farm[]): GardenWithStakedValue[] => {
       let gardensToDisplayWithAPR: GardenWithStakedValue[] = gardensToDisplay.map((garden) => {
-       // if (!garden.lpTotalInQuoteToken || !garden.quoteToken.busdPrice) {
-       //   return garden
-       // }
-      
-      let totalLiquidity = new BigNumber(garden.lpTotalInQuoteToken).times(garden.quoteToken.busdPrice)
-      if(priceCake && garden.lpSymbol === 'CAKE') {
-        totalLiquidity = new BigNumber(garden.lpTotalInQuoteToken).times(priceCake)
-      }
+        // if (!garden.lpTotalInQuoteToken || !garden.quoteToken.busdPrice) {
+        //   return garden
+        // }
+
+        let totalLiquidity = new BigNumber(garden.lpTotalInQuoteToken).times(garden.quoteToken.busdPrice)
+        if (priceCake && garden.lpSymbol === 'CAKE') {
+          totalLiquidity = new BigNumber(garden.lpTotalInQuoteToken).times(priceCake)
+        }
         const { plantRewardsApr, lpRewardsApr } = isActive
-          ? getFarmApr(new BigNumber(garden.poolWeight), plantPrice, totalLiquidity, garden.lpAddresses[ChainId.MAINNET])
+          ? getFarmApr(
+              new BigNumber(garden.poolWeight),
+              plantPrice,
+              totalLiquidity,
+              garden.lpAddresses[ChainId.MAINNET],
+            )
           : { plantRewardsApr: 0, lpRewardsApr: 0 }
 
         return { ...garden, apr: plantRewardsApr, lpRewardsApr, liquidity: totalLiquidity }
@@ -394,10 +405,13 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
               {t('Garden')}
             </Heading>
             <Heading scale="lg" color="text">
-              {t('Stake PLANT to earn new tokens.')}<br />
-              {t('You can unstake at any time.')}<br />
-              {t('Rewards are calculated per block.')}<br />
-              {t('If you still have tokens in ')} 
+              {t('Stake PLANT to earn new tokens.')}
+              <br />
+              {t('You can unstake at any time.')}
+              <br />
+              {t('Rewards are calculated per block.')}
+              <br />
+              {t('If you still have tokens in ')}
               <NavLink exact activeClassName="active" to="/pools" id="lottery-pot-banner">
                 <Button p="0" variant="text">
                   <ArrowForwardIcon color="primary" />

@@ -7,12 +7,12 @@ import {
   Heading,
   Tag,
   HarvestIcon,
-  AuctionIcon, 
-  MegaphoneIcon, 
-  SchoolIcon, 
-  SuperMarketIcon, 
+  AuctionIcon,
+  MegaphoneIcon,
+  SchoolIcon,
+  SuperMarketIcon,
   SyncAltIcon,
-  BidIcon, 
+  BidIcon,
   Button,
   ChevronUpIcon,
   ChevronDownIcon,
@@ -25,12 +25,12 @@ import { useTranslation } from 'contexts/Localization'
 import { Nft } from 'config/constants/types'
 // To filter dev features
 import { MASTERGARDENERDEVADDRESS } from 'config'
-import { useWeb3React } from '@web3-react/core'
-// 
+//
 import InfoRow from '../InfoRow'
 import TransferNftModal from '../TransferNftModal'
 import ClaimNftModal from '../ClaimNftModal'
 import Preview from './Preview'
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 export interface NftCardProps {
   nft: Nft
@@ -65,7 +65,7 @@ const NftCard: React.FC<NftCardProps> = ({ nft, canClaim = false, tokenIds = [],
   const [isOpen, setIsOpen] = useState(false)
   const { t } = useTranslation()
   const { profile } = useProfile()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { identifier, variationId, name, description, requirement } = nft
   const walletOwnsNft = tokenIds.length > 0
   const Icon = isOpen ? ChevronUpIcon : ChevronDownIcon
@@ -78,7 +78,9 @@ const NftCard: React.FC<NftCardProps> = ({ nft, canClaim = false, tokenIds = [],
     refresh()
   }
 
-  const [onPresentTransferModal] = useModal(<TransferNftModal nft={nft} tokenIds={tokenIds} onSuccess={handleSuccess} />)
+  const [onPresentTransferModal] = useModal(
+    <TransferNftModal nft={nft} tokenIds={tokenIds} onSuccess={handleSuccess} />,
+  )
   const [onPresentClaimModal] = useModal(<ClaimNftModal nft={nft} onSuccess={handleSuccess} onClaim={onClaim} />)
 
   return (
@@ -154,7 +156,7 @@ const NftCard: React.FC<NftCardProps> = ({ nft, canClaim = false, tokenIds = [],
             {/* End of 2nd dev filter */}
 
             {/* Buy, bid place buy order */}
-            
+
             {/* Still in development:3 */}
             {account === MASTERGARDENERDEVADDRESS && (
               <>
@@ -179,7 +181,13 @@ const NftCard: React.FC<NftCardProps> = ({ nft, canClaim = false, tokenIds = [],
             )}
             {/* End of 3rd dev filter */}
             {walletOwnsNft && (
-              <Button width="100%" variant="tertiary" mt="24px" onClick={onPresentTransferModal} startIcon={<SyncAltIcon />}>
+              <Button
+                width="100%"
+                variant="tertiary"
+                mt="24px"
+                onClick={onPresentTransferModal}
+                startIcon={<SyncAltIcon />}
+              >
                 {t('Transfer')}
               </Button>
             )}

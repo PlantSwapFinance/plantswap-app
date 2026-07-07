@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { sumBy } from 'lodash'
-import { useWeb3React } from '@web3-react/core'
 import { Card, CardBody, CardHeader, Flex, Heading, PrizeIcon } from '@plantswap/uikit'
 import { useProfile } from 'state/profile/hooks'
 import { Achievement } from 'state/types'
@@ -9,12 +8,13 @@ import { addAchievement } from 'state/achievements/store'
 import { useTranslation } from 'contexts/Localization'
 import { getClaimableIfoData } from 'utils/achievements'
 import AchievementRow from './AchievementRow'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const ClaimPointsCallout = () => {
   const [claimableAchievements, setClaimableAchievement] = useState<Achievement[]>([])
   const { t } = useTranslation()
   const { profile } = useProfile()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   useEffect(() => {
     const fetchIfoClaims = async () => {

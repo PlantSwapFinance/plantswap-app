@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch } from 'state'
 import { updateUserBalance, updateUserPendingReward } from 'state/actions'
 import { harvestFarm } from 'utils/calls'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { useMasterchef, useSousChef } from 'hooks/useContract'
 import { DEFAULT_GAS_LIMIT } from 'config'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT,
@@ -25,7 +25,7 @@ const harvestPoolBnb = async (sousChefContract) => {
 
 const useHarvestPool = (sousId, isUsingBnb = false) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const sousChefContract = useSousChef(sousId)
   const masterGardenerContract = useMasterchef()
 

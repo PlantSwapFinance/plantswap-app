@@ -2,11 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import { Button, Flex, Heading, Skeleton, Text, useModal } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { Token } from 'config/constants/types'
 import { getBalanceNumber } from 'utils/formatBalance'
 import { useTranslation } from 'contexts/Localization'
 import Balance from 'components/Balance'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
 // NOTE: ActionContainer / ActionTitles / ActionContent are intentionally redefined here
 // (byte-identical to views/Pools/components/PoolsTable/ActionPanel/styles.ts) so this
@@ -72,7 +72,7 @@ const StakingHarvestActionPanel: React.FC<StakingHarvestActionPanelProps> = ({
   wrapInContainer = true,
 }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   const earningsTokenBalance = getBalanceNumber(earnings, earningsToken.decimals)
   const earningsTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(earningsTokenPrice), earningsToken.decimals)

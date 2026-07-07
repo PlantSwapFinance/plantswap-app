@@ -1,13 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { Card, CardBody, Grid, Box, Modal, Text, Image, InjectedModalProps, Button, AutoRenewIcon } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
+import {
+  Card,
+  CardBody,
+  Grid,
+  Box,
+  Modal,
+  Text,
+  Image,
+  InjectedModalProps,
+  Button,
+  AutoRenewIcon,
+} from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import nfts from 'config/constants/nfts'
 import useToast from 'hooks/useToast'
 import { usePlant, usePointsRewardSchoolNftContract } from 'hooks/useContract'
 import { getPointsRewardSchoolNftAddress } from 'utils/addressHelpers'
 import { getPlantContract, getPointsRewardSchoolNftContract } from 'utils/contractHelpers'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 interface ClaimGiftProps extends InjectedModalProps {
   onSuccess: () => void
@@ -16,7 +27,7 @@ interface ClaimGiftProps extends InjectedModalProps {
 export const useCanClaim = () => {
   const [canClaim, setCanClaim] = useState(false)
   const [refresh, setRefresh] = useState(1)
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const pointsRewardSchoolNftContract = usePointsRewardSchoolNftContract()
 
   const checkClaimStatus = useCallback(() => {
@@ -26,7 +37,7 @@ export const useCanClaim = () => {
   useEffect(() => {
     const fetchClaimStatus = async () => {
       const walletCanClaim = await pointsRewardSchoolNftContract.canClaim(account)
-      if(walletCanClaim) {
+      if (walletCanClaim) {
         setCanClaim(true)
       }
     }
@@ -44,7 +55,7 @@ const ClaimGift: React.FC<ClaimGiftProps> = ({ onSuccess, onDismiss }) => {
   const { canClaim } = useCanClaim()
   const plantTokenContract = usePlant()
   const pointsRewardSchoolNftContract = usePointsRewardSchoolNftContract()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const pointsRewardSchoolNftAddress = getPointsRewardSchoolNftAddress()
   const maxNftCost = new BigNumber(1250000000000000000)
   const [nextPointsMinimum, setNextPointsMinimum] = useState(25)
@@ -62,28 +73,28 @@ const ClaimGift: React.FC<ClaimGiftProps> = ({ onSuccess, onDismiss }) => {
 
       setNextPointsMinimum(userNextChallenge.toNumber())
       setNextGardenerId(userNextGardenerId)
-      if(userNextGardenerId === 91 || userNextGardenerId === 92) {
+      if (userNextGardenerId === 91 || userNextGardenerId === 92) {
         setNftCost(new BigNumber(250000000000000000))
       }
-      if(userNextGardenerId === 93 || userNextGardenerId === 94) {
+      if (userNextGardenerId === 93 || userNextGardenerId === 94) {
         setNftCost(new BigNumber(500000000000000000))
       }
-      if(userNextGardenerId === 95 || userNextGardenerId === 96) {
+      if (userNextGardenerId === 95 || userNextGardenerId === 96) {
         setNftCost(new BigNumber(750000000000000000))
       }
-      if(userNextGardenerId === 97 || userNextGardenerId === 98) {
+      if (userNextGardenerId === 97 || userNextGardenerId === 98) {
         setNftCost(new BigNumber(1000000000000000000))
       }
-      if(userNextGardenerId === 99) {
+      if (userNextGardenerId === 99) {
         setNftCost(new BigNumber(1250000000000000000))
       }
     }
-    
+
     if (account) {
       fetchClaimStatus()
     }
   }, [account, setNextPointsMinimum, setNextGardenerId])
-  
+
   useEffect(() => {
     const fetchPlantAllowance = async () => {
       const plantContract = getPlantContract()
@@ -92,11 +103,9 @@ const ClaimGift: React.FC<ClaimGiftProps> = ({ onSuccess, onDismiss }) => {
       const userPlantAllowanceFormated = userPlantAllowance.toJSON()
       const userPlantBalanceFormated = userPlantBalance.toJSON()
 
-      if(userPlantAllowanceFormated >= nftCost)
-      {
+      if (userPlantAllowanceFormated >= nftCost) {
         setPlantAllowanceRequired(false)
-        if(userPlantBalanceFormated >= nftCost)
-        {
+        if (userPlantBalanceFormated >= nftCost) {
           setPlantBalanceRequired(false)
         }
       }
@@ -104,9 +113,15 @@ const ClaimGift: React.FC<ClaimGiftProps> = ({ onSuccess, onDismiss }) => {
     if (account) {
       fetchPlantAllowance()
     }
-    
-  }, [account, plantTokenContract, pointsRewardSchoolNftAddress, nftCost, setPlantAllowanceRequired, setPlantBalanceRequired])
-  
+  }, [
+    account,
+    plantTokenContract,
+    pointsRewardSchoolNftAddress,
+    nftCost,
+    setPlantAllowanceRequired,
+    setPlantBalanceRequired,
+  ])
+
   const handleApprove = async () => {
     setIsApproving(true)
     await plantTokenContract.approve(pointsRewardSchoolNftAddress, maxNftCost.toJSON())
@@ -126,30 +141,39 @@ const ClaimGift: React.FC<ClaimGiftProps> = ({ onSuccess, onDismiss }) => {
     }
     return response
   }
-  const pointsRewardGardenersIds = nfts.filter((nft) => nft.variationId && nextGardenerId && nextGardenerId === nft.variationId)
+  const pointsRewardGardenersIds = nfts.filter(
+    (nft) => nft.variationId && nextGardenerId && nextGardenerId === nft.variationId,
+  )
   const nftCostFormated = nftCost.div(1000000000000000000).toFixed(2)
 
   return (
     <Modal title={t('Claim your Points Reward!')} onDismiss={onDismiss}>
       <div style={{ maxWidth: '640px' }}>
         {pointsRewardGardenersIds.map((nft) => (
-          <Grid
-          justifyItems="center"
-          alignContent="center"
-          gridTemplateColumns="1fr 1fr"
-          gridColumnGap="16px"
-        >
+          <Grid justifyItems="center" alignContent="center" gridTemplateColumns="1fr 1fr" gridColumnGap="16px">
             <Box>
               <Text as="p">{t('Thank you for being a active user of Plantswap!')}</Text>
-              <Text as="p" mb="8px">{t('For reaching %nextPointsChallenge% points we wanted to give you a new collectibles.', { nextPointsChallenge: nextPointsMinimum })}</Text>
-              <Text as="p" mb="8px">{t('We hope you enjoy and take care of it.')}</Text>
-              <Text as="p" mb="24px">{t('Once you claim this NFT, you can use it as profile picture, trade it or placing it in the collectibles farms.')}</Text>
+              <Text as="p" mb="8px">
+                {t('For reaching %nextPointsChallenge% points we wanted to give you a new collectibles.', {
+                  nextPointsChallenge: nextPointsMinimum,
+                })}
+              </Text>
+              <Text as="p" mb="8px">
+                {t('We hope you enjoy and take care of it.')}
+              </Text>
+              <Text as="p" mb="24px">
+                {t(
+                  'Once you claim this NFT, you can use it as profile picture, trade it or placing it in the collectibles farms.',
+                )}
+              </Text>
             </Box>
             <Box>
               <Card>
                 <CardBody>
                   <Image src={nft.images.ipfs} alt="Plantswap" width={150} height={150} />
-                  <Text color="warning">{t('Minting cost: %displayNftCost% PLANT', { displayNftCost: nftCostFormated })}</Text>
+                  <Text color="warning">
+                    {t('Minting cost: %displayNftCost% PLANT', { displayNftCost: nftCostFormated })}
+                  </Text>
                 </CardBody>
               </Card>
               {plantAllowanceRequired ? (
@@ -173,7 +197,7 @@ const ClaimGift: React.FC<ClaimGiftProps> = ({ onSuccess, onDismiss }) => {
               )}
               {plantAllowanceRequired}
               {plantBalanceRequired && (
-                <Text color="warning">You need PLANT first before minting this Collectibles.</Text> 
+                <Text color="warning">You need PLANT first before minting this Collectibles.</Text>
               )}
             </Box>
           </Grid>

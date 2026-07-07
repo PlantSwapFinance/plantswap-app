@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useMemo, useReducer } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
 export type Actions =
-  { type: 'set_selected_nft'; nftAddress: string; tokenId: number }
+  | { type: 'set_selected_nft'; nftAddress: string; tokenId: number }
   | { type: 'initialize'; step: number }
 
 export interface State {
@@ -26,7 +26,6 @@ const initialState: State = {
     tokenId: null,
   },
 }
-
 
 const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
@@ -52,7 +51,7 @@ export const NftSelectionContext = createContext<ContextType>(null)
 
 const NftSelectionProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   // Initial checks
   useEffect(() => {

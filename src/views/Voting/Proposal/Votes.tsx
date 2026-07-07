@@ -10,7 +10,6 @@ import {
   ChevronUpIcon,
   Text,
 } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import orderBy from 'lodash/orderBy'
 import { useTranslation } from 'contexts/Localization'
 import { Vote, VotingStateLoadingStatus } from 'state/types'
@@ -18,6 +17,7 @@ import { useGetVotingStateLoadingStatus } from 'state/voting/hooks'
 import VotesLoading from '../components/Proposal/VotesLoading'
 import VoteRow from '../components/Proposal/VoteRow'
 import Row, { AddressColumn, ChoiceColumn, VotingPowerColumn } from '../components/Proposal/Row'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const VOTES_PER_VIEW = 20
 
@@ -32,7 +32,7 @@ const parseVotePower = (incomingVote: Vote) => {
 const Votes: React.FC<VotesProps> = ({ votes }) => {
   const [showAll, setShowAll] = useState(false)
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const orderedVotes = orderBy(votes, [parseVotePower, 'created'], ['desc', 'desc'])
   const displayVotes = showAll ? orderedVotes : orderedVotes.slice(0, VOTES_PER_VIEW)
   const voteStatus = useGetVotingStateLoadingStatus()

@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { Button, useModal, IconButton, AddIcon, MinusIcon, Skeleton, useTooltip, Flex, Text } from '@plantswap/uikit'
 import ConnectWalletButton from 'components/ConnectWalletButton'
-import { useWeb3React } from '@web3-react/core'
 import { Pool } from 'state/types'
 import Balance from 'components/Balance'
 import { useTranslation } from 'contexts/Localization'
@@ -16,6 +15,7 @@ import { ActionContainer, ActionTitles, ActionContent } from './styles'
 import NotEnoughTokensModal from '../../PoolCard/Modals/NotEnoughTokensModal'
 import StakeModal from '../../PoolCard/Modals/StakeModal'
 import { useApprovePool } from '../../../hooks/useApprove'
+import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React'
 
 const IconButtonWrapper = styled.div`
   display: flex;
@@ -39,7 +39,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ pool, userDataLoa
     isAutoVault,
   } = pool
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   const stakingTokenContract = useERC20(stakingToken.address ? getAddress(stakingToken.address) : '')
   const { handleApprove: handlePoolApprove, requestedApproval: requestedPoolApproval } = useApprovePool(
@@ -47,7 +47,6 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ pool, userDataLoa
     sousId,
     earningToken.symbol,
   )
-
 
   const handleApprove = handlePoolApprove
   const requestedApproval = requestedPoolApproval
@@ -164,13 +163,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ pool, userDataLoa
         </ActionTitles>
         <ActionContent>
           <Flex flex="1" pt="16px" flexDirection="column" alignSelf="flex-start">
-            <Balance
-              lineHeight="1"
-              bold
-              fontSize="20px"
-              decimals={5}
-              value={stakedTokenBalance}
-            />
+            <Balance lineHeight="1" bold fontSize="20px" decimals={5} value={stakedTokenBalance} />
             <Balance
               fontSize="12px"
               display="inline"

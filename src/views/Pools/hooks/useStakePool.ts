@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch } from 'state'
 import { updateUserStakedBalance, updateUserBalance } from 'state/actions'
 import { stakeFarm } from 'utils/calls'
@@ -7,6 +6,7 @@ import BigNumber from 'bignumber.js'
 import { DEFAULT_TOKEN_DECIMAL, DEFAULT_GAS_LIMIT } from 'config'
 import { BIG_TEN } from 'utils/bigNumber'
 import { useMasterchef, useSousChef } from 'hooks/useContract'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT,
@@ -26,7 +26,7 @@ const sousStakeBnb = async (sousChefContract, amount) => {
 
 const useStakePool = (sousId: number, isUsingBnb = false) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const masterGardenerContract = useMasterchef()
   const sousChefContract = useSousChef(sousId)
 

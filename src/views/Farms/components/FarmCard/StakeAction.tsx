@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { Button, Flex, Heading, IconButton, AddIcon, MinusIcon, useModal } from '@plantswap/uikit'
@@ -13,6 +12,7 @@ import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'utils
 import { PoolDepositModal as DepositModal, PoolWithdrawModal as WithdrawModal } from 'components/PoolModals'
 import useStakePool from 'hooks/useStakePool'
 import useUnstakePool from 'hooks/useUnstakePool'
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 interface FarmCardActionsProps {
   stakedBalance?: BigNumber
@@ -43,7 +43,7 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   const { onUnstake } = useUnstakePool(pid)
   const location = useLocation()
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const lpPrice = useLpTokenPrice(tokenName)
 
   const handleStake = async (amount: string) => {
@@ -68,7 +68,13 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   }, [stakedBalance])
 
   const [onPresentDeposit] = useModal(
-    <DepositModal max={tokenBalance} onConfirm={handleStake} tokenName={tokenName} addLiquidityUrl={addLiquidityUrl} depositFee={depositFee} />,
+    <DepositModal
+      max={tokenBalance}
+      onConfirm={handleStake}
+      tokenName={tokenName}
+      addLiquidityUrl={addLiquidityUrl}
+      depositFee={depositFee}
+    />,
   )
   const [onPresentWithdraw] = useModal(
     <WithdrawModal max={stakedBalance} onConfirm={handleUnstake} tokenName={tokenName} />,

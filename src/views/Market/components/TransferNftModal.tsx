@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
 import { Button, Input, Modal, Text } from '@plantswap/uikit'
 import { getAddressByType } from 'utils/collectibles'
 import { Nft } from 'config/constants/types'
@@ -9,6 +8,7 @@ import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
 import { useERC721 } from 'hooks/useContract'
 import InfoRow from './InfoRow'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 interface TransferNftModalProps {
   nft: Nft
@@ -43,7 +43,7 @@ const TransferNftModal: React.FC<TransferNftModalProps> = ({ nft, tokenIds, onSu
   const [value, setValue] = useState('')
   const [error, setError] = useState(null)
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const contract = useERC721(getAddressByType(nft.type))
   const { toastSuccess } = useToast()
 

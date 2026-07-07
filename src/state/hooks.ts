@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import Nfts from 'config/constants/nfts'
 import { fetchWalletNfts, useCollectiblesStore } from './collectibles/store'
+import useActiveWeb3React from '../hooks/useActiveWeb3React'
 
 // Collectibles
 export const useGetCollectibles = () => {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { isInitialized, isLoading, data } = useCollectiblesStore((state) => ({
     isInitialized: state.isInitialized,
     isLoading: state.isLoading,

@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom'
 import { BigNumber } from 'bignumber.js'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import Balance from 'components/Balance'
-import { useWeb3React } from '@web3-react/core'
 import { useFarmUser, useLpTokenPrice } from 'state/farms/hooks'
 import { fetchFarmUserDataAsync } from 'state/farms'
 import { FarmWithStakedValue } from 'views/Farms/components/FarmCard/FarmCard'
@@ -21,6 +20,7 @@ import useApprovePool from 'hooks/useApprovePool'
 import useStakePool from 'hooks/useStakePool'
 import useUnstakePool from 'hooks/useUnstakePool'
 import { ActionContainer, ActionTitles, ActionContent } from './styles'
+import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React'
 
 const IconButtonWrapper = styled.div`
   display: flex;
@@ -40,7 +40,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   userDataReady,
 }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const [requestedApproval, setRequestedApproval] = useState(false)
   const { allowance, tokenBalance, stakedBalance } = useFarmUser(pid)
   const { onStake } = useStakePool(pid)
@@ -79,7 +79,13 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   }, [stakedBalance])
 
   const [onPresentDeposit] = useModal(
-    <DepositModal max={tokenBalance} onConfirm={handleStake} tokenName={lpSymbol} addLiquidityUrl={addLiquidityUrl} depositFee={depositFee} />,
+    <DepositModal
+      max={tokenBalance}
+      onConfirm={handleStake}
+      tokenName={lpSymbol}
+      addLiquidityUrl={addLiquidityUrl}
+      depositFee={depositFee}
+    />,
   )
   const [onPresentWithdraw] = useModal(
     <WithdrawModal max={stakedBalance} onConfirm={handleUnstake} tokenName={lpSymbol} />,

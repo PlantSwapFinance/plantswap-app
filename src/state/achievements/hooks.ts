@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { Achievement } from '../types'
 import { fetchAchievements, useAchievementsStore } from './store'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
 export const useFetchAchievements = () => {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   useEffect(() => {
     if (account) {

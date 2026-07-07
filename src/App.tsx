@@ -5,7 +5,6 @@ import BigNumber from 'bignumber.js'
 import Cookies from 'js-cookie'
 import useEagerConnect from 'hooks/useEagerConnect'
 import visitorsApi from 'utils/calls/visitors'
-import { useWeb3React } from '@web3-react/core'
 import { usePollBlockNumber } from 'state/block/hooks'
 import { usePollCoreFarmData } from 'state/farms/hooks'
 import { useFetchProfile } from 'state/profile/hooks'
@@ -29,6 +28,7 @@ import {
 } from './views/AddLiquidity/redirects'
 import RedirectOldRemoveLiquidityPathStructure from './views/RemoveLiquidity/redirects'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './views/Swap/redirects'
+import useActiveWeb3React from './hooks/useActiveWeb3React'
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -81,32 +81,29 @@ const App: React.FC = () => {
   const [userId, setUserId] = useState('0x0')
   const [userIdLoaded, setUserIdLoaded] = useState(false)
   const [userIdCreated, setUserIdCreated] = useState(false)
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const [visitorExist, setVisitorExist] = useState(false)
   const visitorSearchedRef = useRef(false)
 
   if (userId && userId !== '0x0') {
     Cookies.set('userId', userId, { path: '/' })
-  }
-  else if (!userIdLoaded) {
+  } else if (!userIdLoaded) {
     const getUserId = Cookies.get('userId')
     if (getUserId) {
       setUserId(getUserId)
       setUserIdLoaded(true)
-    }
-    else if (!userIdLoaded) {
+    } else if (!userIdLoaded) {
       const localUserId = localStorage.getItem('userId')
       if (localUserId) {
         setUserId(localUserId)
         setUserIdLoaded(true)
-      }
-      else if (!userIdCreated) {
+      } else if (!userIdCreated) {
         setUserId('0x0')
         setUserIdCreated(true)
       }
     }
   }
-  
+
   // Visitor lookup runs after `account` changes. Side effects (network calls)
   // must not run in the render body — StrictMode would double-fire them and
   // any re-render before the response resolves would queue an extra request.
@@ -123,11 +120,12 @@ const App: React.FC = () => {
           dateAdded: new Date(),
         }
         if (!visitorExist) {
-          visitorsApi.createVisitors(newVisitor).then(() =>
-            setVisitorExist(true)
-          ).catch((err) => {
-            console.error(err)
-          })
+          visitorsApi
+            .createVisitors(newVisitor)
+            .then(() => setVisitorExist(true))
+            .catch((err) => {
+              console.error(err)
+            })
         }
       }
     })
@@ -155,10 +153,10 @@ const App: React.FC = () => {
               <Route path="/farms">
                 <Farms />
               </Route>
-            {/* DASHBOARD */}
-            <Route path="/dashboard">
-              <Dashboard userId={userId} />
-            </Route>
+              {/* DASHBOARD */}
+              <Route path="/dashboard">
+                <Dashboard userId={userId} />
+              </Route>
               <Route exact path="/market">
                 <Market />
               </Route>

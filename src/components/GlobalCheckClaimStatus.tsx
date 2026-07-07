@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useWeb3React } from '@web3-react/core'
 import { useModal } from '@plantswap/uikit'
 import { useProfile } from 'state/profile/hooks'
 import { useMasterGardeningSchoolNftContract } from 'hooks/useContract'
+import useActiveWeb3React from '../hooks/useActiveWeb3React'
 
 interface GlobalCheckClaimStatusProps {
   excludeLocations: string[]
@@ -27,7 +27,7 @@ const GlobalCheckClaimStatus: React.FC<GlobalCheckClaimStatusProps> = ({ exclude
   const [onPresentGiftModal] = useModal(claimModal)
   const easterNftContract = useMasterGardeningSchoolNftContract()
   const { profile } = useProfile()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { pathname } = useLocation()
 
   // Check claim status. setState is stable so it does not need to be in deps;

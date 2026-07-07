@@ -1,11 +1,11 @@
 import React from 'react'
 import { NoProfileAvatarIcon, Flex, Heading, Skeleton, Text } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 import { useProfile } from 'state/profile/hooks'
 import ProfileAvatar from 'views/Profile/components/ProfileAvatar'
 import { useTranslation } from 'contexts/Localization'
 import truncateWalletAddress from 'utils/truncateWalletAddress'
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 const Desktop = styled(Flex)`
   align-items: center;
@@ -44,7 +44,7 @@ const StyledNoProfileAvatarIcon = styled(NoProfileAvatarIcon)`
 const UserDetail = () => {
   const { profile, isLoading } = useProfile()
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const truncatedAddress = truncateWalletAddress(account)
 
   const getDesktopHeading = () => {

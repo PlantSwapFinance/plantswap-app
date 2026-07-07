@@ -238,4 +238,6 @@ export type PageMeta = {
   title: string
   description?: string
   image?: string
+  path?: string
+  noindex?: boolean
 }

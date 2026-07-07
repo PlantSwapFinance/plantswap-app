@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { getBalanceAmount } from 'utils/formatBalance'
@@ -9,6 +8,7 @@ import { nanoid } from 'nanoid'
 import unchainedDatas from 'utils/calls/unchainedDatas'
 import { fetchFarmUserData, fetchFarmsPublicData, nonArchivedFarms, useFarmsStore } from './store'
 import { Farm, FarmsState } from '../types'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
 interface UnchainedData {
   dataType: string
@@ -24,7 +24,7 @@ interface UnchainedLogData extends UnchainedData {
 
 export const usePollFarmsData = (includeArchive = false) => {
   const { slowRefresh } = useRefresh()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   useEffect(() => {
     const farmsToFetch = includeArchive ? farmsConfig : nonArchivedFarms

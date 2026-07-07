@@ -4,9 +4,9 @@ import { Flex, Heading, Text, Link } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import Container from 'components/Layout/Container'
-import { useWeb3React } from '@web3-react/core'
 import SunburstSvg from './SunburstSvg'
 import CompositeImage from './CompositeImage'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const BgWrapper = styled.div`
   overflow: hidden;
@@ -83,7 +83,7 @@ const bottomRightImage = {
 
 const Footer = () => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   return (
     <>

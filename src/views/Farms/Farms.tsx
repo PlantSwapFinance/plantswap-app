@@ -2,7 +2,6 @@ import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import { Route, useRouteMatch, useLocation } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { MASTERGARDENERDEVADDRESS } from 'config'
-import { useWeb3React } from '@web3-react/core'
 import { Heading, RowType, Toggle, Text, Flex, EndPage, IconButton, AddIcon, useModal } from '@plantswap/uikit'
 import { ChainId } from '@pancakeswap/sdk'
 import styled from 'styled-components'
@@ -28,8 +27,9 @@ import Table from './components/FarmTable/FarmTable'
 import { RowProps } from './components/FarmTable/Row'
 import { DesktopColumnSchema } from './components/types'
 import AddFarmsModal from './components/AddFarmsModal'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
-export interface FarmsProps{
+export interface FarmsProps {
   tokenMode?: boolean
 }
 
@@ -127,10 +127,10 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
   const priceCake = usePriceCakeBusd()
   const [query, setQuery] = useState('')
   const [viewMode, setViewMode] = usePersistState(ViewMode.TABLE, { localStorageKey: 'plant_farm_view' })
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const [sortOption, setSortOption] = useState('hot')
   const chosenFarmsLength = useRef(0)
-  const {tokenMode} = farmsProps;
+  const { tokenMode } = farmsProps
 
   const isArchived = pathname.includes('archived')
   const isInactive = pathname.includes('history')
@@ -147,8 +147,12 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
     setStakedOnly(!isActive)
   }, [isActive])
 
-  const activeFarms = farmsLP.filter((farm) => !!farm.isTokenOnly === !!tokenMode && farm.multiplier !== '0X' && !isArchivedPid(farm.pid))
-  const inactiveFarms = farmsLP.filter((farm) => !!farm.isTokenOnly === !!tokenMode && farm.multiplier === '0X' && !isArchivedPid(farm.pid))
+  const activeFarms = farmsLP.filter(
+    (farm) => !!farm.isTokenOnly === !!tokenMode && farm.multiplier !== '0X' && !isArchivedPid(farm.pid),
+  )
+  const inactiveFarms = farmsLP.filter(
+    (farm) => !!farm.isTokenOnly === !!tokenMode && farm.multiplier === '0X' && !isArchivedPid(farm.pid),
+  )
   const archivedFarms = farmsLP.filter((farm) => !!farm.isTokenOnly === !!tokenMode && isArchivedPid(farm.pid))
 
   const stakedOnlyFarms = activeFarms.filter(
@@ -171,7 +175,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         }
 
         let totalLiquidity = new BigNumber(farm.lpTotalInQuoteToken).times(farm.quoteToken.busdPrice)
-        if(priceCake && farm.quoteToken.symbol === 'CAKE') {
+        if (priceCake && farm.quoteToken.symbol === 'CAKE') {
           totalLiquidity = new BigNumber(farm.lpTotalInQuoteToken).times(priceCake)
         }
 
@@ -394,11 +398,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
     setSortOption(option.value)
   }
 
-  const [onAddFarmModal] = useModal(
-    <AddFarmsModal
-      account={account}
-    />,
-  )
+  const [onAddFarmModal] = useModal(<AddFarmsModal account={account} />)
 
   return (
     <>
@@ -409,8 +409,10 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
               {t('Farms')}
             </Heading>
             <Heading scale="lg" color="text">
-              {t('Stake PLANT LP\'s token to earn new tokens.')}<br />
-              {t('You can unstake at any time.')}<br />
+              {t("Stake PLANT LP's token to earn new tokens.")}
+              <br />
+              {t('You can unstake at any time.')}
+              <br />
               {t('Rewards are calculated per block.')}
             </Heading>
           </Flex>
@@ -463,16 +465,13 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
               <SearchInput onChange={handleChangeQuery} placeholder="Search Farms" />
             </LabelWrapper>
             {account === MASTERGARDENERDEVADDRESS && (
-            <LabelWrapper>
-              <IconButtonWrapper>
-                <IconButton
-                  variant="secondary"
-                  onClick={onAddFarmModal}
-                >
-                  <AddIcon color="primary" width="14px" />
-                </IconButton>
-              </IconButtonWrapper>
-            </LabelWrapper>
+              <LabelWrapper>
+                <IconButtonWrapper>
+                  <IconButton variant="secondary" onClick={onAddFarmModal}>
+                    <AddIcon color="primary" width="14px" />
+                  </IconButton>
+                </IconButtonWrapper>
+              </LabelWrapper>
             )}
           </FilterContainer>
         </ControlContainer>

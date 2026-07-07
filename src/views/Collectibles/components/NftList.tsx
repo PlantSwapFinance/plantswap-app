@@ -3,7 +3,6 @@ import { Route, useLocation, useRouteMatch } from 'react-router-dom'
 import orderBy from 'lodash/orderBy'
 import styled from 'styled-components'
 import { Flex, RowType } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import nfts from 'config/constants/nfts'
 import usePersistState from 'hooks/usePersistState'
 import Loading from 'components/Loading'
@@ -25,6 +24,7 @@ import { RowProps } from './NftTable/Row'
 import NftGrid from './NftGrid'
 import { DesktopColumnSchema } from './types'
 import MasterGardeningSchoolNftCard from './NftCard/MasterGardeningSchoolNftCard'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 /**
  * A map of bunnyIds to special campaigns (NFT distribution)
@@ -48,7 +48,6 @@ const StyledToggleView = styled(ToggleView)`
   }
 `
 
-
 const NUMBER_OF_COLLECTIBLES_VISIBLE = 8
 
 const NftList = () => {
@@ -57,7 +56,7 @@ const NftList = () => {
   const { t } = useTranslation()
   const { tokenIds } = useGetCollectibles()
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { profile } = useProfile()
   // const { team } = profile ?? {}
   // const masterGardeningSchoolNftContract = useMasterGardeningSchoolNftContract()
@@ -67,7 +66,7 @@ const NftList = () => {
   // eslint-disable-next-line
   const [sortOption, setSortOption] = useState('new')
   const chosenCollectiblesLength = useRef(0)
-  const userDataReady = !account || (!!account)
+  const userDataReady = !account || !!account
 
   const isArchived = pathname.includes('archived')
   const isInactive = pathname.includes('history')
@@ -75,28 +74,28 @@ const NftList = () => {
 
   const [walletOnly, setWalletOnly] = useState(!isActive)
 
-
   const allCollectibles = nfts
   const claimableCollectibles = nfts
 
-
   let walletOnlyCollectibles = allCollectibles
   let walletInactiveCollectibles = claimableCollectibles
-  
-  if(tokenIds) {
-    walletOnlyCollectibles = allCollectibles.filter((nft) => nft.identifier && (tokenIds[nft.identifier] || profile?.nft?.identifier === nft.identifier))
-    walletInactiveCollectibles = claimableCollectibles.filter((nft) => nft.identifier && (tokenIds[nft.identifier] || profile?.nft?.identifier === nft.identifier))
+
+  if (tokenIds) {
+    walletOnlyCollectibles = allCollectibles.filter(
+      (nft) => nft.identifier && (tokenIds[nft.identifier] || profile?.nft?.identifier === nft.identifier),
+    )
+    walletInactiveCollectibles = claimableCollectibles.filter(
+      (nft) => nft.identifier && (tokenIds[nft.identifier] || profile?.nft?.identifier === nft.identifier),
+    )
   }
 
   const handleRefresh = () => {
     dispatch(fetchWalletNfts(account))
   }
-  
+
   const collectiblesList = useCallback(
     (collectiblesToDisplay) => {
       let collectiblesToDisplayWithAPR = collectiblesToDisplay.map((nft) => {
-      
-
         return { ...nft }
       })
 
@@ -115,7 +114,6 @@ const NftList = () => {
     setQuery(event.target.value)
   }
 
-  
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
   const [numberOfCollectiblesVisible, setNumberOfCollectiblesVisible] = useState(NUMBER_OF_COLLECTIBLES_VISIBLE)
@@ -143,9 +141,10 @@ const NftList = () => {
       chosenCollectibles = walletOnly ? collectiblesList(walletOnlyCollectibles) : collectiblesList(allCollectibles)
     }
     if (isInactive) {
-      chosenCollectibles = walletOnly ? collectiblesList(walletInactiveCollectibles) : collectiblesList(claimableCollectibles)
+      chosenCollectibles = walletOnly
+        ? collectiblesList(walletInactiveCollectibles)
+        : collectiblesList(claimableCollectibles)
     }
-
 
     return sortCollectibles(chosenCollectibles).slice(0, numberOfCollectiblesVisible)
   }, [
@@ -183,11 +182,10 @@ const NftList = () => {
       })
       loadMoreObserver.observe(loadMoreRef.current)
       setObserverIsSet(true)
-    } 
+    }
   }, [chosenCollectiblesMemoized, observerIsSet])
-  
-  const rowData = chosenCollectiblesMemoized.map((nft) => {
 
+  const rowData = chosenCollectiblesMemoized.map((nft) => {
     const row: RowProps = {
       image: {
         images: nft.images.lg,
@@ -262,19 +260,19 @@ const NftList = () => {
       <NftGrid>
         <Route exact path={`${path}`}>
           {chosenCollectiblesMemoized.map((nft) => {
-              const Card = nftComponents[nft.identifier] || NftCard
-      
-              return (
-                <div key={nft.name}>
-                  <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
-                </div>
-              )
-            })}
+            const Card = nftComponents[nft.identifier] || NftCard
+
+            return (
+              <div key={nft.name}>
+                <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
+              </div>
+            )
+          })}
         </Route>
         <Route exact path={`${path}/claimable`}>
           {orderBy(nfts, 'sortOrder').map((nft) => {
             const Card = nftComponents[nft.identifier] || NftCard
-    
+
             return (
               <div key={nft.name}>
                 <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
@@ -285,7 +283,7 @@ const NftList = () => {
         <Route exact path={`${path}/archived`}>
           {orderBy(nfts, 'sortOrder').map((nft) => {
             const Card = nftComponents[nft.identifier] || NftCard
-    
+
             return (
               <div key={nft.name}>
                 <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
@@ -303,30 +301,32 @@ const NftList = () => {
 
   return (
     <>
-    <NftListControls
-      viewToggle={<StyledToggleView id="clickPool" viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />}
-      toggles={[
-        {
-          label: t('In Wallet'),
-          checked: walletOnly,
-          onChange: () => setWalletOnly(!walletOnly),
-        },
-      ]}
-      sortOptions={[
-        { label: t('Hot'), value: 'hot' },
-        { label: t('Name'), value: 'name' },
-        { label: t('GardenerId'), value: 'variantId' },
-        { label: t('Identifier'), value: 'idenditifier' },
-      ]}
-      onSortChange={handleSortOptionChange}
-      searchPlaceholder={t('Search Collectibles')}
-      onSearchChange={handleChangeQuery}
-    />
-        {renderContent()}
-        <Flex justifyContent="center">
-          <Loading />
-        </Flex>
-        <div ref={loadMoreRef} />
+      <NftListControls
+        viewToggle={
+          <StyledToggleView id="clickPool" viewMode={viewMode} onToggle={(mode: ViewMode) => setViewMode(mode)} />
+        }
+        toggles={[
+          {
+            label: t('In Wallet'),
+            checked: walletOnly,
+            onChange: () => setWalletOnly(!walletOnly),
+          },
+        ]}
+        sortOptions={[
+          { label: t('Hot'), value: 'hot' },
+          { label: t('Name'), value: 'name' },
+          { label: t('GardenerId'), value: 'variantId' },
+          { label: t('Identifier'), value: 'idenditifier' },
+        ]}
+        onSortChange={handleSortOptionChange}
+        searchPlaceholder={t('Search Collectibles')}
+        onSearchChange={handleChangeQuery}
+      />
+      {renderContent()}
+      <Flex justifyContent="center">
+        <Loading />
+      </Flex>
+      <div ref={loadMoreRef} />
     </>
   )
 }

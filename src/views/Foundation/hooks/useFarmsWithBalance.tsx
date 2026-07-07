@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import multicall from 'utils/multicall'
 import { getMasterGardenerAddress } from 'utils/addressHelpers'
 import masterGardenerABI from 'config/abi/masterchef.json'
@@ -8,6 +7,7 @@ import { farmsConfig } from 'config/constants'
 import { FarmConfig } from 'config/constants/types'
 import useRefresh from 'hooks/useRefresh'
 import { DEFAULT_TOKEN_DECIMAL } from 'config'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 export interface FarmWithBalance extends FarmConfig {
   balance: BigNumber
@@ -16,7 +16,7 @@ export interface FarmWithBalance extends FarmConfig {
 const useFarmsWithBalance = () => {
   const [farmsWithStakedBalance, setFarmsWithStakedBalance] = useState<FarmWithBalance[]>([])
   const [earningsSum, setEarningsSum] = useState<number>(null)
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { fastRefresh } = useRefresh()
 
   useEffect(() => {

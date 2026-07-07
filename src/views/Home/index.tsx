@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import PageSection from 'components/PageSection'
-import { useWeb3React } from '@web3-react/core'
 import useTheme from 'hooks/useTheme'
 import Container from 'components/Layout/Container'
 import Hero from './components/Hero'
@@ -11,6 +10,7 @@ import PlantDataRow from './components/PlantDataRow'
 import UserBanner from './components/UserBanner'
 import { WedgeTopLeft, InnerWedgeWrapper, OuterWedgeWrapper } from './components/WedgeSvgs'
 import DevelopmentFund from './components/DevelopmentFund'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
 const StyledHeroSection = styled(PageSection)`
   padding-top: 16px;
@@ -38,7 +38,7 @@ const UserBannerWrapper = styled(Container)`
 
 const Home: React.FC = () => {
   const { theme } = useTheme()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   const HomeSectionContainerStyles = { margin: '0', width: '100%', maxWidth: '968px' }
 
@@ -74,17 +74,17 @@ const Home: React.FC = () => {
         innerProps={{ style: { margin: '0', width: '100%' } }}
         background={
           theme.isDark
-          ? 'radial-gradient(103.12% 50% at 10% 50%, #183224 0%, #2D221F 100%)'
-          : 'linear-gradient(139.73deg, #FFFFFF 0%, #71BE63 100%)'
+            ? 'radial-gradient(103.12% 50% at 10% 50%, #183224 0%, #2D221F 100%)'
+            : 'linear-gradient(139.73deg, #FFFFFF 0%, #71BE63 100%)'
         }
         index={2}
         hasCurvedDivider={false}
       >
-      <OuterWedgeWrapper>
-        <InnerWedgeWrapper top fill={theme.isDark ? '#183224' : '#D3FDB2'}>
-          <WedgeTopLeft />
-        </InnerWedgeWrapper>
-      </OuterWedgeWrapper>
+        <OuterWedgeWrapper>
+          <InnerWedgeWrapper top fill={theme.isDark ? '#183224' : '#D3FDB2'}>
+            <WedgeTopLeft />
+          </InnerWedgeWrapper>
+        </OuterWedgeWrapper>
         <DevelopmentFund />
       </PageSection>
     </>

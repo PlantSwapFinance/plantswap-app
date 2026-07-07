@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, Button, Flex, InjectedModalProps, LinkExternal, Message, Text } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import useTokenBalance, { useGetBnbBalance } from 'hooks/useTokenBalance'
 import { getPlantAddress } from 'utils/addressHelpers'
 import useAuth from 'hooks/useAuth'
@@ -8,6 +7,7 @@ import { useTranslation } from 'contexts/Localization'
 import { getBscScanLink } from 'utils'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import CopyAddress from './CopyAddress'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 interface WalletInfoProps {
   hasLowBnbBalance: boolean
@@ -16,7 +16,7 @@ interface WalletInfoProps {
 
 const WalletInfo: React.FC<WalletInfoProps> = ({ hasLowBnbBalance, onDismiss }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { balance } = useGetBnbBalance()
   const { balance: plantBalance } = useTokenBalance(getPlantAddress())
   const { logout } = useAuth()

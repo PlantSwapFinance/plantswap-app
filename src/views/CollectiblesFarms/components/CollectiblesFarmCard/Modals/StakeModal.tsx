@@ -12,12 +12,12 @@ import { useGetCollectibles } from 'state/hooks'
 import { CollectiblesFarm } from 'state/types'
 // import { fetchUserTokens } from 'state/collectiblesFarms/fetchCollectiblesFarmsUser'
 // import { getNftByTokenId } from 'utils/collectibles'
-import { useWeb3React } from '@web3-react/core'
 import { getAddress } from 'utils/addressHelpers'
 import { usePlantswapGardeners } from 'hooks/useContract'
 import SelectionCard from './SelectionCard'
 import useStakeCollectiblesFarm from '../../../hooks/useStakeCollectiblesFarm'
 import useUnstakeCollectiblesFarm from '../../../hooks/useUnstakeCollectiblesFarm'
+import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React'
 
 interface StakeModalProps {
   collectiblesFarm: CollectiblesFarm
@@ -40,11 +40,7 @@ interface NftStaked {
   variationId: number
 }
 
-const StakeModal: React.FC<StakeModalProps> = ({
-  collectiblesFarm,
-  isRemovingStake = false,
-  onDismiss,
-}) => {
+const StakeModal: React.FC<StakeModalProps> = ({ collectiblesFarm, isRemovingStake = false, onDismiss }) => {
   const { cfId, variantIdStart, variantIdEnd, stakingRewardToken, collectiblesFarmingPoolContract } = collectiblesFarm
   const { t } = useTranslation()
   const [isApproved, setIsApproved] = useState(false)
@@ -53,7 +49,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
   const [variationId, setvariationId] = useState<number>()
   const { isLoading, nftsInWallet, tokenIds } = useGetCollectibles()
   const { theme } = useTheme()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { onStake } = useStakeCollectiblesFarm(cfId)
   const { onUnstake } = useUnstakeCollectiblesFarm(cfId)
   const plantswapGardenersContract = usePlantswapGardeners()
@@ -66,7 +62,6 @@ const StakeModal: React.FC<StakeModalProps> = ({
   const [stakedTokenCreated, setStakedTokenCreated] = useState(false)
 
   const handleApprove = async () => {
-
     collectiblesFarmsBagsApi.createCollectiblesFarmsBags({
       cfId: collectiblesFarm.cfId.toString(),
       address: account,
@@ -125,7 +120,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
           if (bags.length > 0) {
             collectiblesFarmsBagsApi.deleteCollectiblesFarmsBags(bags[0].id)
           }
-        }) 
+        })
       } catch (e) {
         toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
         setPendingTx(false)
@@ -134,11 +129,11 @@ const StakeModal: React.FC<StakeModalProps> = ({
       try {
         // staking
         await onStake(selectedNftTokenId)
-        
+
         toastSuccess(
           `${t('Staked')}!`,
           t('Your %symbol% have been staked in the collectibles farm!', {
-            symbol: "Nft",
+            symbol: 'Nft',
           }),
         )
         setPendingTx(false)
@@ -197,25 +192,29 @@ const StakeModal: React.FC<StakeModalProps> = ({
                 nftsInWallet.map((walletNft) => {
                   const [firstTokenId] = tokenIds[walletNft.identifier]
 
-                  if(!variantIdEnd || variantIdEnd < 1 || (walletNft.variationId >= variantIdStart && walletNft.variationId <= variantIdEnd)) {
-                      return (
-                        <SelectionCard
-                          name="collectiblesFarmStaking"
-                          key={walletNft.identifier}
-                          value={firstTokenId}
-                          image={`/images/nfts/${walletNft.images.md}`}
-                          isChecked={firstTokenId === selectedNftTokenId}
-                          onChange={(value: string) => { 
-                            setSelectedNftTokenId(parseInt(value, 10))
-                            setvariationId(walletNft.variationId)
-                          }}
-                        >
-                          <Text bold>{walletNft.name}</Text>
-                        </SelectionCard>
-                      )
+                  if (
+                    !variantIdEnd ||
+                    variantIdEnd < 1 ||
+                    (walletNft.variationId >= variantIdStart && walletNft.variationId <= variantIdEnd)
+                  ) {
+                    return (
+                      <SelectionCard
+                        name="collectiblesFarmStaking"
+                        key={walletNft.identifier}
+                        value={firstTokenId}
+                        image={`/images/nfts/${walletNft.images.md}`}
+                        isChecked={firstTokenId === selectedNftTokenId}
+                        onChange={(value: string) => {
+                          setSelectedNftTokenId(parseInt(value, 10))
+                          setvariationId(walletNft.variationId)
+                        }}
+                      >
+                        <Text bold>{walletNft.name}</Text>
+                      </SelectionCard>
+                    )
                   }
                   return null
-                  })
+                })
               )}
             </NftWrapper>
             <Text as="p" color="textSubtle" mb="16px">
@@ -249,58 +248,58 @@ const StakeModal: React.FC<StakeModalProps> = ({
                 </Button>
               </StyledLink>
             )}
-            </>
-          ) : (
-            <>
-              <Text as="p" color="textSubtle">
-                {t('Choose collectibles (NFT) to unstake.')}
-              </Text>
-              <NftWrapper> 
-                {Nfts.length > 0 && (
-                  <>
+          </>
+        ) : (
+          <>
+            <Text as="p" color="textSubtle">
+              {t('Choose collectibles (NFT) to unstake.')}
+            </Text>
+            <NftWrapper>
+              {Nfts.length > 0 && (
+                <>
                   {/* Map and filter nft with stakedToken  */}
-                    {Nfts.map((nft) => {
-                      if (stakedToken.length > 0) {
-                        if (stakedToken.find((staked) => staked.variationId === nft.variationId)) {
-                          const { tokenId } = stakedToken.find((staked) => staked.variationId === nft.variationId)
-                          return (
-                            <SelectionCard
-                              name="collectiblesFarmStaking"
-                              key={nft.identifier}
-                              value={tokenId}
-                              image={`/images/nfts/${nft.images.md}`}
-                              isChecked={tokenId === selectedNftTokenId}
-                              onChange={(value: string) => setSelectedNftTokenId(parseInt(value, 10))}
-                            >
-                              <Text bold>{nft.name}</Text>
-                            </SelectionCard>
-                          )
-                        }
+                  {Nfts.map((nft) => {
+                    if (stakedToken.length > 0) {
+                      if (stakedToken.find((staked) => staked.variationId === nft.variationId)) {
+                        const { tokenId } = stakedToken.find((staked) => staked.variationId === nft.variationId)
+                        return (
+                          <SelectionCard
+                            name="collectiblesFarmStaking"
+                            key={nft.identifier}
+                            value={tokenId}
+                            image={`/images/nfts/${nft.images.md}`}
+                            isChecked={tokenId === selectedNftTokenId}
+                            onChange={(value: string) => setSelectedNftTokenId(parseInt(value, 10))}
+                          >
+                            <Text bold>{nft.name}</Text>
+                          </SelectionCard>
+                        )
                       }
-                      return null
-                    })}
-                  </>
-                )}
-              </NftWrapper>
-  
-              <Button
-                isLoading={pendingTx}
-                endIcon={pendingTx ? <AutoRenewIcon spin color="currentColor" /> : null}
-                onClick={handleConfirmClick}
-                disabled={selectedNftTokenId === 0}
-                mt="24px"
-              >
-                {pendingTx ? t('Confirming') : t('Confirm')}
-              </Button>
-              {!isRemovingStake && (
-                <StyledLink external href="/collectibles">
-                  <Button width="100%" mt="8px" variant="secondary">
-                    {t('Get more collectibles')}
-                  </Button>
-                </StyledLink>
+                    }
+                    return null
+                  })}
+                </>
               )}
-              </>
+            </NftWrapper>
+
+            <Button
+              isLoading={pendingTx}
+              endIcon={pendingTx ? <AutoRenewIcon spin color="currentColor" /> : null}
+              onClick={handleConfirmClick}
+              disabled={selectedNftTokenId === 0}
+              mt="24px"
+            >
+              {pendingTx ? t('Confirming') : t('Confirm')}
+            </Button>
+            {!isRemovingStake && (
+              <StyledLink external href="/collectibles">
+                <Button width="100%" mt="8px" variant="secondary">
+                  {t('Get more collectibles')}
+                </Button>
+              </StyledLink>
             )}
+          </>
+        )}
       </ModalBody>
     </Modal>
   )

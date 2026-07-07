@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { Button, Flex, Text, InjectedModalProps } from '@plantswap/uikit'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import { getPlantProfileAddress } from 'utils/addressHelpers'
@@ -12,6 +11,7 @@ import useHasPlantBalance from 'hooks/useHasPlantBalance'
 import { useProfile } from 'state/profile/hooks'
 import { UseEditProfileResponse } from './reducer'
 import ProfileAvatar from '../ProfileAvatar'
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 interface StartPageProps extends InjectedModalProps {
   goToChange: UseEditProfileResponse['goToChange']
@@ -47,7 +47,7 @@ const StartPage: React.FC<StartPageProps> = ({ goToApprove, goToChange, goToRemo
   const minimumPlantRequired = profile.isActive ? numberPlantToUpdate : numberPlantToReactivate
   const hasMinimumPlantRequired = useHasPlantBalance(minimumPlantRequired)
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const plantContract = usePlant()
   const cost = profile.isActive ? numberPlantToUpdate : numberPlantToReactivate
 
@@ -79,7 +79,9 @@ const StartPage: React.FC<StartPageProps> = ({ goToApprove, goToChange, goToRemo
       <Flex alignItems="center" style={{ height: '48px' }} justifyContent="center">
         <Text as="p" color="failure">
           {!hasMinimumPlantRequired &&
-            t('%minimum% PLANT required to change profile pic', { minimum: getFullDisplayBalance(minimumPlantRequired) })}
+            t('%minimum% PLANT required to change profile pic', {
+              minimum: getFullDisplayBalance(minimumPlantRequired),
+            })}
         </Text>
       </Flex>
       {profile.isActive ? (

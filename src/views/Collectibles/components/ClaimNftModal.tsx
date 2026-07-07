@@ -2,7 +2,6 @@ import React from 'react'
 import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
 import { Button, InjectedModalProps, Modal, Text, Flex } from '@plantswap/uikit'
 import { Nft } from 'config/constants/types'
@@ -13,6 +12,7 @@ import { getMasterGardeningSchoolNftAddress } from 'utils/addressHelpers'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
 import ApproveConfirmButtons from './ApproveConfirmButtons'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 interface ClaimNftModalProps extends InjectedModalProps {
   nft: Nft
@@ -32,7 +32,7 @@ const Actions = styled.div`
 
 const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const plantContract = usePlant()
   const masterGardeningSchoolNftContract = useMasterGardeningSchoolNftContract()
   const masterGardeningSchoolNftContractAddress = getMasterGardeningSchoolNftAddress()
@@ -40,7 +40,7 @@ const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss
 
   const nftCost = new BigNumber(1000000000000000000)
   const nftApproval = new BigNumber(5).times(nftCost)
-  
+
   const nftCostDisplay = nftCost.div(1000000000000000000)
 
   const hasMinimumPlantRequired = useHasPlantBalance(nftCost)
@@ -48,12 +48,7 @@ const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({
       onRequiresApproval: async () => {
-        return hasSufficientAllowance(
-          plantContract,
-          account,
-          masterGardeningSchoolNftContractAddress,
-          nftApproval,
-        )
+        return hasSufficientAllowance(plantContract, account, masterGardeningSchoolNftContractAddress, nftApproval)
       },
       onApprove: () => {
         return plantContract.approve(masterGardeningSchoolNftContractAddress, nftApproval.toJSON())
@@ -78,9 +73,13 @@ const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss
         </Flex>
         <Flex alignItems="center" mb="8px" justifyContent="space-between">
           {!hasMinimumPlantRequired ? (
-            <Text small color="warning">{t('Minimum plant required: %nftCost% PLANT', { nftCost: nftCostDisplay.toNumber() })}</Text>
+            <Text small color="warning">
+              {t('Minimum plant required: %nftCost% PLANT', { nftCost: nftCostDisplay.toNumber() })}
+            </Text>
           ) : (
-            <Text small color="textSubtle">{t('Minting cost: %nftCost% PLANT', { nftCost: nftCostDisplay.toNumber() })} </Text>
+            <Text small color="textSubtle">
+              {t('Minting cost: %nftCost% PLANT', { nftCost: nftCostDisplay.toNumber() })}{' '}
+            </Text>
           )}
         </Flex>
       </ModalContent>
@@ -89,13 +88,13 @@ const ClaimNftModal: React.FC<ClaimNftModalProps> = ({ nft, onSuccess, onDismiss
           {t('Cancel')}
         </Button>
         <ApproveConfirmButtons
-            isApproveDisabled={nft.variationId === null || isConfirmed || isConfirming || isApproved}
-            isApproving={isApproving}
-            isConfirmDisabled={!isApproved || isConfirmed || !hasMinimumPlantRequired}
-            isConfirming={isConfirming}
-            onApprove={handleApprove}
-            onConfirm={handleConfirm}
-          />
+          isApproveDisabled={nft.variationId === null || isConfirmed || isConfirming || isApproved}
+          isApproving={isApproving}
+          isConfirmDisabled={!isApproved || isConfirmed || !hasMinimumPlantRequired}
+          isConfirming={isConfirming}
+          onApprove={handleApprove}
+          onConfirm={handleConfirm}
+        />
       </Actions>
     </Modal>
   )

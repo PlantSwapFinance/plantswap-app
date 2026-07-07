@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useWeb3React } from '@web3-react/core'
 import { useModal } from '@plantswap/uikit'
 import { useProfile } from 'state/profile/hooks'
 import { useMasterGardeningSchoolNftContract } from 'hooks/useContract'
 import NftMasterGardeningSchoolModal from './NftMasterGardeningSchoolModal'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 interface MasterGardeningSchoolCheckClaimStatusProps {
   excludeLocations: string[]
@@ -16,13 +16,15 @@ interface MasterGardeningSchoolCheckClaimStatusProps {
  *
  * TODO: Put global checks in redux or make a generic area to house global checks
  */
-const MasterGardeningSchoolCheckClaimStatus: React.FC<MasterGardeningSchoolCheckClaimStatusProps> = ({ excludeLocations }) => {
+const MasterGardeningSchoolCheckClaimStatus: React.FC<MasterGardeningSchoolCheckClaimStatusProps> = ({
+  excludeLocations,
+}) => {
   const hasDisplayedModal = useRef(false)
   const [isClaimable, setIsClaimable] = useState(false)
   const [onPresentGiftModal] = useModal(<NftMasterGardeningSchoolModal />)
   const masterGardeningSchoolNftContract = useMasterGardeningSchoolNftContract()
   const { profile } = useProfile()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { pathname } = useLocation()
 
   const variationId = 100
@@ -30,7 +32,7 @@ const MasterGardeningSchoolCheckClaimStatus: React.FC<MasterGardeningSchoolCheck
   // Check claim status
   useEffect(() => {
     const fetchClaimStatus = async () => {
-     // const canClaim = await masterGardeningSchoolNftContract.canClaimSingle(100, account)
+      // const canClaim = await masterGardeningSchoolNftContract.canClaimSingle(100, account)
       const canClaim = false
       setIsClaimable(canClaim)
     }

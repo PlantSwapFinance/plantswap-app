@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Heading, Skeleton, Text } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { GardenWithStakedValue } from 'views/Gardens/components/GardenCard/GardenCard'
 import Balance from 'components/Balance'
 import { BIG_ZERO } from 'utils/bigNumber'
@@ -14,6 +13,7 @@ import { useTranslation } from 'contexts/Localization'
 import useHarvestPool from 'hooks/useHarvestPool'
 
 import { ActionContainer, ActionTitles, ActionContent } from './styles'
+import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React'
 
 interface HarvestActionProps extends GardenWithStakedValue {
   userDataReady: boolean
@@ -38,7 +38,7 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({ pid, userD
   const { onReward } = useHarvestPool(pid)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   return (
     <ActionContainer>

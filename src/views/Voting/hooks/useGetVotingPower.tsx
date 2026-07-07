@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { getActivePools } from 'utils/calls'
 import { getAddress } from 'utils/addressHelpers'
 import { simpleRpcProvider } from 'utils/providers'
 import BigNumber from 'bignumber.js'
 import { getVotingPower } from '../helpers'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 interface State {
   verificationHash: string
@@ -28,7 +28,7 @@ const initialState: State = {
 }
 
 const useGetVotingPower = (block?: number, isActive = true): State & { isLoading: boolean } => {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const [votingPower, setVotingPower] = useState(initialState)
   const [isLoading, setIsLoading] = useState(!!account)
 

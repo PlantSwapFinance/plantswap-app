@@ -1,12 +1,12 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import { Flex, Heading, Link, Button } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import useTheme from 'hooks/useTheme'
 import { SlideSvgDark, SlideSvgLight } from './SlideSvg'
 import { getSrcSet } from './CompositeImage'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const flyingAnim = () => keyframes`
   from {
@@ -46,7 +46,7 @@ const imageSrc = 'planet'
 
 const Hero = () => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { theme } = useTheme()
 
   return (
@@ -65,7 +65,9 @@ const Hero = () => {
             {t('Decentralize ecological foundation')}
           </Heading>
           <Heading scale="md" mb="24px">
-            {t('First, creating an open list of ecological foundations, that every Gardener can help complete or validate the trustworthiness of the participant.')}
+            {t(
+              'First, creating an open list of ecological foundations, that every Gardener can help complete or validate the trustworthiness of the participant.',
+            )}
           </Heading>
           <Flex>
             {!account && <ConnectWalletButton mr="8px" />}
@@ -82,7 +84,11 @@ const Hero = () => {
           position="relative"
         >
           <BunnyWrapper>
-            <img src={`${imagePath}${imageSrc}.png`} srcSet={getSrcSet(imagePath, imageSrc)} alt={t('Help the Planet')} />
+            <img
+              src={`${imagePath}${imageSrc}.png`}
+              srcSet={getSrcSet(imagePath, imageSrc)}
+              alt={t('Help the Planet')}
+            />
           </BunnyWrapper>
         </Flex>
       </Flex>

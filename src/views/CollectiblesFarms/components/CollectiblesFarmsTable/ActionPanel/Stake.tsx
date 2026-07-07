@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { Button, useModal, IconButton, AddIcon, MinusIcon, Skeleton, Flex, Text } from '@plantswap/uikit'
 import ConnectWalletButton from 'components/ConnectWalletButton'
-import { useWeb3React } from '@web3-react/core'
 import { CollectiblesFarm } from 'state/types'
 import Balance from 'components/Balance'
 import { useTranslation } from 'contexts/Localization'
@@ -12,6 +11,7 @@ import { BIG_ZERO } from 'utils/bigNumber'
 import { ActionContainer, ActionTitles, ActionContent } from './styles'
 import NotEnoughTokensModal from '../../CollectiblesFarmCard/Modals/NotEnoughTokensModal'
 import StakeModal from '../../CollectiblesFarmCard/Modals/StakeModal'
+import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React'
 
 const IconButtonWrapper = styled.div`
   display: flex;
@@ -23,13 +23,9 @@ interface StackedActionProps {
 }
 
 const Staked: React.FunctionComponent<StackedActionProps> = ({ collectiblesFarm, userDataLoaded }) => {
-  const {
-    isFinished,
-    userData,
-    stakingTokenPrice
-  } = collectiblesFarm
+  const { isFinished, userData, stakingTokenPrice } = collectiblesFarm
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   const stakedBalance = userData?.collectiblesBalance ? new BigNumber(userData.collectiblesBalance) : BIG_ZERO
   const isNotVaultAndHasStake = stakedBalance.gt(0)
@@ -39,18 +35,11 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ collectiblesFarm,
   const [onPresentTokenRequired] = useModal(<NotEnoughTokensModal tokenSymbol="Nft" />)
 
   const [onPresentStake] = useModal(
-    <StakeModal
-      collectiblesFarm={collectiblesFarm}
-      stakingTokenPrice={stakingTokenPrice}
-    />,
+    <StakeModal collectiblesFarm={collectiblesFarm} stakingTokenPrice={stakingTokenPrice} />,
   )
 
   const [onPresentUnstake] = useModal(
-    <StakeModal
-      collectiblesFarm={collectiblesFarm}
-      stakingTokenPrice={stakingTokenPrice}
-      isRemovingStake
-    />,
+    <StakeModal collectiblesFarm={collectiblesFarm} stakingTokenPrice={stakingTokenPrice} isRemovingStake />,
   )
 
   const onStake = () => {
@@ -105,26 +94,20 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ collectiblesFarm,
         </ActionTitles>
         <ActionContent>
           <Flex flex="1" pt="16px" flexDirection="column" alignSelf="flex-start">
-            <Balance
-              lineHeight="1"
-              bold
-              fontSize="20px"
-              decimals={5}
-              value={1}
-            />
+            <Balance lineHeight="1" bold fontSize="20px" decimals={5} value={1} />
           </Flex>
           <IconButtonWrapper>
             <IconButton variant="secondary" onClick={onUnstake} mr="6px">
               <MinusIcon color="primary" width="14px" />
             </IconButton>
 
-              <IconButton
-                variant="secondary"
-                onClick={nftsInWallet.length > 0 ? onStake : onPresentTokenRequired}
-                disabled={isFinished}
-              >
-                <AddIcon color="primary" width="14px" />
-              </IconButton>
+            <IconButton
+              variant="secondary"
+              onClick={nftsInWallet.length > 0 ? onStake : onPresentTokenRequired}
+              disabled={isFinished}
+            >
+              <AddIcon color="primary" width="14px" />
+            </IconButton>
           </IconButtonWrapper>
         </ActionContent>
       </ActionContainer>

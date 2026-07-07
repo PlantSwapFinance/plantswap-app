@@ -1,7 +1,6 @@
 import React from 'react'
 import { Text } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { CollectiblesFarmCategory } from 'config/constants/types'
 import { formatNumber, getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalance'
 import { useTranslation } from 'contexts/Localization'
@@ -11,6 +10,7 @@ import StakingHarvestActionPanel from 'components/StakingHarvestActionPanel'
 import { CollectiblesFarm } from 'state/types'
 
 import CollectModal from '../../CollectiblesFarmCard/Modals/CollectModal'
+import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React'
 
 interface HarvestActionProps extends CollectiblesFarm {
   userDataLoaded: boolean
@@ -44,7 +44,7 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({
   stakingExtraRewardTokenPrice,
 }) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   // const { collectiblesList } = useCollectiblesFarmsTokenList(account, cfId, getAddress(collectiblesFarmingPoolContract), totalStaked)
 
   const earnings = new BigNumber(0)

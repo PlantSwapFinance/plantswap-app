@@ -6,8 +6,8 @@ import { useGetCollectibles } from 'state/hooks'
 import { useProfile } from 'state/profile/hooks'
 // To filter dev features
 import { MASTERGARDENERDEVADDRESS } from 'config'
-import { useWeb3React } from '@web3-react/core'
-// 
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
+//
 
 export interface MoreProps {
   identifier: string
@@ -27,33 +27,34 @@ const More: React.FunctionComponent<MoreProps> = ({ identifier }) => {
   const { t } = useTranslation()
   const { tokenIds } = useGetCollectibles()
   const { profile } = useProfile()
-  const { account } = useWeb3React()
-  
+  const { account } = useActiveWeb3React()
+
   return (
     <Amount earned={0}>
-        {tokenIds[identifier] && (
-          <PaddedTag outline variant="secondary">
-            {t('In Wallet')}
+      {tokenIds[identifier] && (
+        <PaddedTag outline variant="secondary">
+          {t('In Wallet')}
+        </PaddedTag>
+      )}
+      {profile?.nft?.identifier === identifier && (
+        <PaddedTag outline variant="success">
+          {t('Profile Pic')}
+        </PaddedTag>
+      )}
+      {/* Still in development:1 */}
+      {account === MASTERGARDENERDEVADDRESS && profile && (
+        <>
+          <PaddedTag outline variant="success" startIcon={<AuctionIcon />}>
+            {t('Auction in progress')}
           </PaddedTag>
-        )}
-        {profile?.nft?.identifier === identifier && (
-          <PaddedTag outline variant="success">
-            {t('Profile Pic')}
+          <br />
+          &nbsp;
+          <PaddedTag outline variant="success" startIcon={<HarvestIcon />}>
+            {t('Available to buy')}
           </PaddedTag>
-        )}
-        {/* Still in development:1 */}
-        {account === MASTERGARDENERDEVADDRESS && profile && (
-          <>
-            <PaddedTag outline variant="success" startIcon={<AuctionIcon />}>
-              {t('Auction in progress')}
-            </PaddedTag>
-            <br />&nbsp;
-            <PaddedTag outline variant="success" startIcon={<HarvestIcon />}>
-              {t('Available to buy')}
-            </PaddedTag>
-          </>
-        )}
-        {/* End of 1st dev filter */}
+        </>
+      )}
+      {/* End of 1st dev filter */}
     </Amount>
   )
 }

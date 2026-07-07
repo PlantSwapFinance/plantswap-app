@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { Heading, Flex, Text, EndPage } from '@plantswap/uikit'
 import orderBy from 'lodash/orderBy'
 import partition from 'lodash/partition'
@@ -22,6 +21,7 @@ import PoolCard from './components/VerticalGardenCard'
 import PoolTabButtons from './components/VerticalGardenTabButtons'
 import VerticalGardensTable from './components/VerticalGardensTable/VerticalGardensTable'
 import { ViewMode } from './components/ToggleView/ToggleView'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 // import { getAprData, getPlantVaultEarnings } from './helpers'
 
 const CardLayout = styled(FlexLayout)`
@@ -75,7 +75,7 @@ const NUMBER_OF_POOLS_VISIBLE = 12
 const Pools: React.FC = () => {
   const location = useLocation()
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { verticalGardens, userDataLoaded } = useVerticalGardens(account)
   const [stakedOnly, setStakedOnly] = usePersistState(false, { localStorageKey: 'plant_pool_staked' })
   const [numberOfPoolsVisible, setNumberOfPoolsVisible] = useState(NUMBER_OF_POOLS_VISIBLE)
@@ -87,7 +87,10 @@ const Pools: React.FC = () => {
   const chosenPoolsLength = useRef(0)
 
   // TODO aren't arrays in dep array checked just by reference, i.e. it will rerender every time reference changes?
-  const [finishedPools, openPools] = useMemo(() => partition(verticalGardens, (verticalGarden) => verticalGarden.isFinished), [verticalGardens])
+  const [finishedPools, openPools] = useMemo(
+    () => partition(verticalGardens, (verticalGarden) => verticalGarden.isFinished),
+    [verticalGardens],
+  )
   const stakedOnlyFinishedPools = useMemo(
     () =>
       finishedPools.filter((verticalGarden) => {
@@ -144,11 +147,7 @@ const Pools: React.FC = () => {
     switch (sortOption) {
       case 'apr':
         // Ternary is needed to prevent verticalGardens without APR (like MIX) getting top spot
-        return orderBy(
-          poolsToSort,
-          (verticalGarden: VerticalGarden) => (verticalGarden.apr ? 1 : 0),
-          'desc',
-        )
+        return orderBy(poolsToSort, (verticalGarden: VerticalGarden) => (verticalGarden.apr ? 1 : 0), 'desc')
       case 'earned':
         return orderBy(
           poolsToSort,
@@ -193,35 +192,40 @@ const Pools: React.FC = () => {
   const cardLayout = (
     <CardLayout>
       {chosenPools.map((verticalGarden) => (
-          <PoolCard key={verticalGarden.vgId} verticalGarden={verticalGarden} account={account} />
-        ),
-      )}
+        <PoolCard key={verticalGarden.vgId} verticalGarden={verticalGarden} account={account} />
+      ))}
     </CardLayout>
   )
 
-  const tableLayout = <VerticalGardensTable verticalGardens={chosenPools} account={account} userDataLoaded={userDataLoaded} />
+  const tableLayout = (
+    <VerticalGardensTable verticalGardens={chosenPools} account={account} userDataLoaded={userDataLoaded} />
+  )
 
   return (
     <>
-    <PageHeader>
-      <Flex justifyContent="space-between" flexDirection={['column', null, null, 'row']}>
-        <Flex flex="1" flexDirection="column" mr={['8px', 0]}>
-          <Heading as="h1" scale="xxl" color="secondary" mb="24px">
-            {t('Vertical Gardens')}
-          </Heading>
-          <Heading scale="md" color="text">
-            {t('Stake PLANT, LPs or other token and earn PLANT and other Token.')}<br />
-            {t('You can unstake at any time.')}<br />
-            {t('Rewards are calculated per block, some of it go')}<br />
-            {t('toward buying PLANT token on the market and burning them')}<br />
-            {t('and the remaining go toward the PlantSwap Development Fund')}
-          </Heading>
+      <PageHeader>
+        <Flex justifyContent="space-between" flexDirection={['column', null, null, 'row']}>
+          <Flex flex="1" flexDirection="column" mr={['8px', 0]}>
+            <Heading as="h1" scale="xxl" color="secondary" mb="24px">
+              {t('Vertical Gardens')}
+            </Heading>
+            <Heading scale="md" color="text">
+              {t('Stake PLANT, LPs or other token and earn PLANT and other Token.')}
+              <br />
+              {t('You can unstake at any time.')}
+              <br />
+              {t('Rewards are calculated per block, some of it go')}
+              <br />
+              {t('toward buying PLANT token on the market and burning them')}
+              <br />
+              {t('and the remaining go toward the PlantSwap Development Fund')}
+            </Heading>
+          </Flex>
+          <Flex flex="1" height="fit-content" justifyContent="center" alignItems="center" mt={['24px', null, '0']}>
+            <img src="/images/verticalGardens.svg" alt="Gardens" width={600} height={315} />
+          </Flex>
         </Flex>
-        <Flex flex="1" height="fit-content" justifyContent="center" alignItems="center" mt={['24px', null, '0']}>
-          <img src="/images/verticalGardens.svg" alt="Gardens" width={600} height={315} />
-        </Flex>
-      </Flex>
-    </PageHeader>
+      </PageHeader>
 
       <Page>
         <PoolControls>
@@ -281,7 +285,7 @@ const Pools: React.FC = () => {
         )}
         {viewMode === ViewMode.CARD ? cardLayout : tableLayout}
         <div ref={loadMoreRef} />
-      <EndPage />
+        <EndPage />
       </Page>
     </>
   )

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Box, Modal } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
 import { SnapshotCommand } from 'state/types'
 import { signMessage } from 'utils/web3React'
@@ -17,7 +16,7 @@ const CastVoteModal: React.FC<CastVoteModalProps> = ({ onSuccess, proposalId, vo
   const [view, setView] = useState<ConfirmVoteView>(ConfirmVoteView.MAIN)
   const [modalIsOpen, setModalIsOpen] = useState(true)
   const [isPending, setIsPending] = useState(false)
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { t } = useTranslation()
   const { toastError } = useToast()
   const { library } = useWeb3Provider()

@@ -1,18 +1,18 @@
 import { useCallback, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { ethers, Contract } from 'ethers'
 import { useAppDispatch } from 'state'
 import { updateUserAllowance } from 'state/actions'
 import { useTranslation } from 'contexts/Localization'
 import { useSousChef } from 'hooks/useContract'
 import useToast from 'hooks/useToast'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 export const useApprovePool = (lpContract: Contract, sousId, earningTokenSymbol) => {
   const [requestedApproval, setRequestedApproval] = useState(false)
   const { toastSuccess, toastError } = useToast()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const sousChefContract = useSousChef(sousId)
 
   const handleApprove = useCallback(async () => {

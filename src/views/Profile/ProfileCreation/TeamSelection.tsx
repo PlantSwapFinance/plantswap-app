@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
 import { Card, CardBody, CommunityIcon, Flex, Heading, Text, Button, useModal } from '@plantswap/uikit'
-import { useWeb3React } from '@web3-react/core'
 import shuffle from 'lodash/shuffle'
 import { useTeams } from 'state/teams/hooks'
 import { useTranslation } from 'contexts/Localization'
@@ -8,11 +7,19 @@ import SelectionCard from '../components/SelectionCard'
 import ConfirmProfileCreationModal from '../components/ConfirmProfileCreationModal'
 // import NextStepButton from '../components/NextStepButton'
 import useProfileCreation from './contexts/hook'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const Team: React.FC = () => {
-  const { teamId: currentTeamId, userName, selectedNft, minimumPlantRequired, allowance, actions } = useProfileCreation()
+  const {
+    teamId: currentTeamId,
+    userName,
+    selectedNft,
+    minimumPlantRequired,
+    allowance,
+    actions,
+  } = useProfileCreation()
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { teams } = useTeams()
   const handleTeamSelection = (value: string) => actions.setTeamId(parseInt(value, 10))
   const teamValues = useMemo(() => shuffle(Object.values(teams)), [teams])
@@ -72,12 +79,8 @@ const Team: React.FC = () => {
             })}
         </CardBody>
       </Card>
-      
-      <Button
-        onClick={onPresentConfirmProfileCreation}
-        disabled={!currentTeamId}
-        id="completeProfileCreation"
-      >
+
+      <Button onClick={onPresentConfirmProfileCreation} disabled={!currentTeamId} id="completeProfileCreation">
         {t('Complete Profile')}
       </Button>
     </>

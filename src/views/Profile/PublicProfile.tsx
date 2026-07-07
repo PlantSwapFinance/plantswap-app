@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
 import {
   Card,
   CardBody,
@@ -27,6 +26,7 @@ import WalletNotConnected from './components/WalletNotConnected'
 import StatBox from './components/StatBox'
 import EditProfileAvatar from './components/EditProfileAvatar'
 import AchievementsList from './components/AchievementsList'
+import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
 const Content = styled.div`
   flex: 1;
@@ -82,7 +82,7 @@ const Section = styled.div`
 `
 
 const PublicProfile = () => {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { profile } = useProfile()
   const [usernameVisibilityToggled, setUsernameVisibility] = usePersistState(false, {
     localStorageKey: 'username_visibility_toggled',

@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
 import { updateUserStakedBalance, updateUserBalance, updateUserPendingReward } from 'state/actions'
 import { unstakeFarm } from 'utils/calls'
 import { useMasterchef, useSousChef } from 'hooks/useContract'
 import { BIG_TEN } from 'utils/bigNumber'
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const sousUnstake = async (sousChefContract, amount, decimals) => {
   const tx = await sousChefContract.withdraw(new BigNumber(amount).times(BIG_TEN.pow(decimals)).toString())
@@ -21,7 +21,7 @@ const sousEmergencyUnstake = async (sousChefContract) => {
 
 const useUnstakePool = (sousId, enableEmergencyWithdraw = false) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const masterGardenerContract = useMasterchef()
   const sousChefContract = useSousChef(sousId)
 

@@ -1,21 +1,16 @@
 import { useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { getBalanceAmount } from 'utils/formatBalance'
 import { farmsConfig } from 'config/constants'
 import useRefresh from 'hooks/useRefresh'
-import {
-  fetchFarmUserData,
-  fetchFarmsPublicData,
-  nonArchivedFarms,
-  useBarnPancakeswapFarmsStore,
-} from './store'
+import { fetchFarmUserData, fetchFarmsPublicData, nonArchivedFarms, useBarnPancakeswapFarmsStore } from './store'
 import { BarnPancakeswapFarm, BarnPancakeswapFarmsState } from '../../../types'
+import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 export const usePollFarmsData = (includeArchive = false) => {
   const { slowRefresh } = useRefresh()
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   useEffect(() => {
     const farmsToFetch = includeArchive ? farmsConfig : nonArchivedFarms

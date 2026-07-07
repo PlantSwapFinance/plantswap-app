@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
 import { useProfile } from 'state/profile/hooks'
 import { useMasterGardeningSchoolNftContract } from './useContract'
+import useActiveWeb3React from './useActiveWeb3React'
 
 /**
  * Reads `canClaimSingle(account, variationId)` from the MasterGardeningSchool
@@ -16,7 +16,7 @@ import { useMasterGardeningSchoolNftContract } from './useContract'
 const useMasterGardeningSchoolClaimStatus = (variationId: number | null) => {
   const [isClaimable, setIsClaimable] = useState(false)
   const [refreshIndex, setRefreshIndex] = useState(0)
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { profile } = useProfile()
   const { team } = profile ?? {}
   const masterGardeningSchoolNftContract = useMasterGardeningSchoolNftContract()

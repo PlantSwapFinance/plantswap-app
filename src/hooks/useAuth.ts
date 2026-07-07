@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { UnsupportedChainIdError } from '@web3-react/core'
 // import { NoBscProviderError } from '@binance-chain/bsc-connector'
 import {
   NoEthereumProviderError,
@@ -15,10 +15,11 @@ import { setupNetwork } from 'utils/wallet'
 import useToast from 'hooks/useToast'
 import { profileClear } from 'state/profile/store'
 import { useTranslation } from 'contexts/Localization'
+import useActiveWeb3React from './useActiveWeb3React'
 
 const useAuth = () => {
   const { t } = useTranslation()
-  const { activate, deactivate } = useWeb3React()
+  const { activate, deactivate } = useActiveWeb3React()
   const { toastError } = useToast()
 
   const login = useCallback(

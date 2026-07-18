@@ -35,7 +35,7 @@
     "@plantswap/uikit": "0.1.8",
     "@react-three/cannon": "^6.0.0",
     "@react-three/drei": "^7.3.1",
-    "@react-three/fiber": "^7.0.6",
+    "@react-three/fiber": "^9.0.0",
     "@react-three/flex": "^1.0.0",
     "@react-three/postprocessing": "^3.0.0",
     "@types/multicodec": "^1.0.0",

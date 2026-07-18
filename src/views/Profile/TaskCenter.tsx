@@ -3,7 +3,6 @@ import { Card, CardBody, CardHeader, Flex, Heading, Text } from '@plantswap/uiki
 import { useTranslation } from 'contexts/Localization'
 import AchievementsList from './components/AchievementsList'
 import TasksList from './components/TasksList'
-import ComingSoon from './components/ComingSoon'
 import Menu from './components/Menu'
 
 const TaskCenter = () => {
@@ -40,7 +39,6 @@ const TaskCenter = () => {
           </Flex>
         </CardHeader>
         <CardBody>
-          <ComingSoon />
           <TasksList />
         </CardBody>
       </Card>

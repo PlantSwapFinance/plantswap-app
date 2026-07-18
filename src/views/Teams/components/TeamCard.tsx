@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Card, CardHeader, CardBody, CommunityIcon, Heading, PrizeIcon, Text } from '@plantswap/uikit'
+import { Card, CardHeader, CardBody, CommunityIcon, Heading, Text } from '@plantswap/uikit'
 import { Team } from 'config/constants/types'
 import { useTranslation } from 'contexts/Localization'
-import ComingSoon from 'views/Profile/components/ComingSoon'
 import StatBox from 'views/Profile/components/StatBox'
 
 interface TeamCardProps {
@@ -60,19 +59,6 @@ const TeamName = styled(Heading).attrs({ as: 'h2' })`
   }
 `
 
-const StatRow = styled.div`
-  display: grid;
-  grid-gap: 16px;
-  grid-template-columns: 1fr;
-  margin-bottom: 16px;
-
-  ${({ theme }) => theme.mediaQueries.md} {
-    grid-gap: 32px;
-    grid-template-columns: repeat(2, 1fr);
-    margin-bottom: 32px;
-  }
-`
-
 const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const { t } = useTranslation()
 
@@ -89,12 +75,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
           </Text>
         </StyledCardHeader>
         <CardBody>
-          <StatRow>
-            <StatBox icon={CommunityIcon} title={team.users} subtitle={t('Active Members')} />
-            <StatBox icon={PrizeIcon} title={t('Coming Soon')} subtitle={t('Team Points')} isDisabled />
-          </StatRow>
-          <Heading as="h3">{t('Team Achievements')}</Heading>
-          <ComingSoon />
+          <StatBox icon={CommunityIcon} title={team.users} subtitle={t('Active Members')} />
         </CardBody>
       </StyledCard>
     </Wrapper>

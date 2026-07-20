@@ -2233,9 +2233,9 @@
   integrity sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==
 
 "@fontsource/kanit@^5.2.8":
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/@fontsource/kanit/-/kanit-5.2.8.tgz#4ddd85eaed7f0735889868d6428b64cd1fc628e9"
-  integrity sha512-vISPW1kRoy+BTqplYCymdYRJcNFGmlPxWXqo178eGPe7P+lMX24JiQOxWdI4HLWR+0ROUzaFneXy/v1I9u99yg==
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/kanit/-/kanit-5.3.0.tgz#5515e1d7fbad5754874bea9efc73524e4777d533"
+  integrity sha512-XrVxf5NWb8QLAEbQS2GYir3AY0WbOLr5Q80fWurnoFWXyc7CWvioGNPC2dxRGZKocMUXbwGhuK+sJqWkRLAWNA==
 
 "@hapi/address@2.x.x":
   version "2.1.4"

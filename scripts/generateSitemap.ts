@@ -12,6 +12,10 @@
 
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const SITE_URL = 'https://plantswap.finance'
 const OUTPUT = path.join(__dirname, '..', 'build', 'sitemap.xml')

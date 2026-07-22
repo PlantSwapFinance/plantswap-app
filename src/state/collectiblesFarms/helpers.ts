@@ -1,4 +1,4 @@
-const collectiblesApiUrl = process.env.REACT_APP_COLLECTIBLES_API_URL
+const collectiblesApiUrl = import.meta.env.REACT_APP_COLLECTIBLES_API_URL
 
 export const getOwnerToken = async (address: string): Promise<number[]> => {
     try {

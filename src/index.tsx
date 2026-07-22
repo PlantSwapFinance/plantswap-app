@@ -1,5 +1,5 @@
 import React, { useMemo, ReactNode } from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 // Self-host the Kanit font used across the app — avoids the
 // render-blocking CSS fetch from fonts.googleapis.com.
 import '@fontsource/kanit/400.css'
@@ -33,7 +33,9 @@ function Blocklist({ children }: { children: ReactNode }) {
   return <>{children}</>
 }
 
-ReactDOM.render(
+const container = document.getElementById('root')
+const root = createRoot(container as HTMLElement)
+root.render(
   <React.StrictMode>
     <Blocklist>
       <Providers>
@@ -42,5 +44,4 @@ ReactDOM.render(
       </Providers>
     </Blocklist>
   </React.StrictMode>,
-  document.getElementById('root'),
 )

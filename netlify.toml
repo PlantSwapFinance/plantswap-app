@@ -3,10 +3,10 @@
   functions = "functions"
   publish = "build"
 
-# Long cache for CRA-emitted hashed assets — filenames already include content
+# Long cache for Vite-emitted hashed assets — filenames already include content
 # hashes, so `immutable` is safe and lets the browser skip revalidation.
 [[headers]]
-  for = "/static/*"
+  for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 

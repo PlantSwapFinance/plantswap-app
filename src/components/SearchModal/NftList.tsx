@@ -1,8 +1,8 @@
-import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import React, { CSSProperties, MutableRefObject, useMemo } from 'react'
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@pancakeswap/sdk'
 import { Text } from '@plantswap/uikit'
 import styled from 'styled-components'
-import { FixedSizeList } from 'react-window'
+import { List, type ListImperativeAPI, type RowComponentProps } from 'react-window'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
@@ -98,6 +98,63 @@ function CurrencyRow({
   )
 }
 
+type RowProps = {
+  itemData: (Currency | undefined)[]
+  selectedCurrency?: Currency | null
+  otherCurrency?: Currency | null
+  onCurrencySelect: (currency: Currency) => void
+  breakIndex: number | undefined
+  showImportView: () => void
+  setImportNft: (token: Token) => void
+  chainId: number
+  inactiveTokens: { [address: string]: Token }
+  t: (key: string, options?: Record<string, unknown>) => string
+}
+
+function NftListRow({ index, style, ...rowProps }: RowComponentProps<RowProps>) {
+  const { itemData, selectedCurrency, otherCurrency, onCurrencySelect, breakIndex, showImportView, setImportNft, chainId, inactiveTokens, t } =
+    rowProps
+  const currency: Currency = itemData[index]
+  const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
+  const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
+  const handleSelect = () => onCurrencySelect(currency)
+
+  const token = wrappedCurrency(currency, chainId)
+
+  const showImport = inactiveTokens && token && Object.keys(inactiveTokens).includes(token.address)
+
+  if (index === breakIndex || !itemData) {
+    return (
+      <FixedContentRow style={style}>
+        <LightGreyCard padding="8px 12px" borderRadius="8px">
+          <RowBetween>
+            <Text small>{t('Expanded results from inactive Nft Lists')}</Text>
+            <QuestionHelper
+              text={t(
+                "Nft contract from inactive lists. Import specific Nft contract below or click 'Manage' to activate more lists.",
+              )}
+              ml="4px"
+            />
+          </RowBetween>
+        </LightGreyCard>
+      </FixedContentRow>
+    )
+  }
+
+  if (showImport && token) {
+    return null
+  }
+  return (
+    <CurrencyRow
+      style={style}
+      currency={currency}
+      isSelected={isSelected}
+      onSelect={handleSelect}
+      otherSelected={otherSelected}
+    />
+  )
+}
+
 export default function NftList({
   height,
   currencies,
@@ -115,7 +172,7 @@ export default function NftList({
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
   otherCurrency?: Currency | null
-  fixedListRef?: MutableRefObject<FixedSizeList | undefined>
+  fixedListRef?: MutableRefObject<ListImperativeAPI | undefined>
   showETH: boolean
   showImportView: () => void
   setImportNft: (token: Token) => void
@@ -137,76 +194,28 @@ export default function NftList({
     [address: string]: Token
   } = useAllInactiveTokens()
 
-  const Row = useCallback(
-    ({ data, index, style }) => {
-      const currency: Currency = data[index]
-      const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
-      const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
-      const handleSelect = () => onCurrencySelect(currency)
-
-      const token = wrappedCurrency(currency, chainId)
-
-      const showImport = inactiveTokens && token && Object.keys(inactiveTokens).includes(token.address)
-
-      if (index === breakIndex || !data) {
-        return (
-          <FixedContentRow style={style}>
-            <LightGreyCard padding="8px 12px" borderRadius="8px">
-              <RowBetween>
-                <Text small>{t('Expanded results from inactive Nft Lists')}</Text>
-                <QuestionHelper
-                  text={t(
-                    "Nft contract from inactive lists. Import specific Nft contract below or click 'Manage' to activate more lists.",
-                  )}
-                  ml="4px"
-                />
-              </RowBetween>
-            </LightGreyCard>
-          </FixedContentRow>
-        )
-      }
-
-      if (showImport && token) {
-        return (
-          null
-        )
-      }
-      return (
-        <CurrencyRow
-          style={style}
-          currency={currency}
-          isSelected={isSelected}
-          onSelect={handleSelect}
-          otherSelected={otherSelected}
-        />
-      )
-    },
-    [
-      chainId,
-      inactiveTokens,
-      onCurrencySelect,
-      otherCurrency,
-      selectedCurrency,
-      setImportNft,
-      showImportView,
-      breakIndex,
-      t,
-    ],
-  )
-
-  const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])
+  const rowKey = useMemo(() => (index: number, data: RowProps) => currencyKey(data.itemData[index]), [])
 
   return (
-    <FixedSizeList
-      height={height}
-      ref={fixedListRef as any}
-      width="100%"
-      itemData={itemData}
-      itemCount={itemData.length}
-      itemSize={56}
-      itemKey={itemKey}
-    >
-      {Row}
-    </FixedSizeList>
+    <List
+      listRef={fixedListRef}
+      style={{ height, width: '100%' }}
+      rowComponent={NftListRow}
+      rowCount={itemData.length}
+      rowHeight={56}
+      rowKey={rowKey}
+      rowProps={{
+        itemData,
+        selectedCurrency,
+        otherCurrency,
+        onCurrencySelect,
+        breakIndex,
+        showImportView,
+        setImportNft,
+        chainId,
+        inactiveTokens,
+        t,
+      }}
+    />
   )
 }

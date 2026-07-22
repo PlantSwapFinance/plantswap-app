@@ -34,7 +34,7 @@ enum ExistingUserState {
   NEW = 'new', // username has not been created
 }
 
-const profileApiUrl = process.env.REACT_APP_API_PROFILE
+const profileApiUrl = import.meta.env.REACT_APP_API_PROFILE
 const minimumPlantToRegister = new BigNumber(REGISTER_COST).multipliedBy(DEFAULT_TOKEN_DECIMAL)
 
 const InputWrap = styled.div`

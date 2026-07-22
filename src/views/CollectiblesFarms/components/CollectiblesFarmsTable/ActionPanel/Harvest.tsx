@@ -16,7 +16,7 @@ interface HarvestActionProps extends CollectiblesFarm {
   userDataLoaded: boolean
 }
 
-const collectiblesApiUrl = process.env.REACT_APP_COLLECTIBLES_API_URL
+const collectiblesApiUrl = import.meta.env.REACT_APP_COLLECTIBLES_API_URL
 
 const getOwnerToken = async (address: string, setUserToken): Promise<number[]> => {
   try {

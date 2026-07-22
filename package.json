@@ -81,7 +81,7 @@
     "react-helmet-async": "^3.0.0",
     "react-markdown": "^10.0.0",
     "react-player": "^3.0.0",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^7.0.0",
     "react-transition-group": "^4.4.1",
     "react-window": "^2.0.0",
     "remark-gfm": "^4.0.0",

@@ -20,7 +20,7 @@ interface FoundationRow {
 }
 
 const Proposal = () => {
-  const { id }: { id: string } = useParams()
+  const { id = '' } = useParams<{ id: string }>()
   const { t } = useTranslation()
   const { teams } = useTeams()
   const [list, setList] = useState<FoundationRow>({

@@ -5,7 +5,7 @@ import { Button, Text, ArrowDownIcon, Box, useModal } from '@plantswap/uikit'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/UnsupportedCurrencyFooter'
 import ProgressSteps from 'components/ProgressSteps'
-import { RouteComponentProps } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'contexts/Localization'
 import SwapWarningTokens from 'config/constants/swapWarningTokens'
 import { getAddress } from 'utils/addressHelpers'
@@ -50,7 +50,8 @@ const Label = styled(Text)`
   color: ${({ theme }) => theme.colors.secondary};
 `
 
-export default function Swap({ history }: RouteComponentProps) {
+export default function Swap() {
+  const navigate = useNavigate()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   const { t } = useTranslation()
@@ -256,7 +257,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const swapIsUnsupported = useIsTransactionUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
   const [onPresentImportTokenWarningModal] = useModal(
-    <ImportTokenWarningModal tokens={importTokensNotInDefault} onCancel={() => history.push('/swap/')} />,
+    <ImportTokenWarningModal tokens={importTokensNotInDefault} onCancel={() => navigate('/swap/')} />,
   )
 
   useEffect(() => {

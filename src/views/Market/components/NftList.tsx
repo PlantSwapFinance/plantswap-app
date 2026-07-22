@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Route, useLocation, useRouteMatch } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import orderBy from 'lodash/orderBy'
 import { Flex, RowType } from '@plantswap/uikit'
 import nfts from 'config/constants/nfts'
@@ -40,7 +40,6 @@ const nftComponents = {
 const NUMBER_OF_COLLECTIBLES_VISIBLE = 8
 
 const NftList = () => {
-  const { path } = useRouteMatch()
   const { pathname } = useLocation()
   const { t } = useTranslation()
   const { tokenIds } = useGetCollectibles()
@@ -247,39 +246,44 @@ const NftList = () => {
 
     return (
       <NftGrid>
-        <Route exact path={`${path}`}>
-          {chosenCollectiblesMemoized.map((nft) => {
-            const Card = nftComponents[nft.identifier] || NftCard
+        <Routes>
+          <Route
+            index
+            element={chosenCollectiblesMemoized.map((nft) => {
+              const Card = nftComponents[nft.identifier] || NftCard
 
-            return (
-              <div key={nft.name}>
-                <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
-              </div>
-            )
-          })}
-        </Route>
-        <Route exact path={`${path}/claimable`}>
-          {orderBy(nfts, 'sortOrder').map((nft) => {
-            const Card = nftComponents[nft.identifier] || NftCard
+              return (
+                <div key={nft.name}>
+                  <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
+                </div>
+              )
+            })}
+          />
+          <Route
+            path="claimable"
+            element={orderBy(nfts, 'sortOrder').map((nft) => {
+              const Card = nftComponents[nft.identifier] || NftCard
 
-            return (
-              <div key={nft.name}>
-                <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
-              </div>
-            )
-          })}
-        </Route>
-        <Route exact path={`${path}/archived`}>
-          {orderBy(nfts, 'sortOrder').map((nft) => {
-            const Card = nftComponents[nft.identifier] || NftCard
+              return (
+                <div key={nft.name}>
+                  <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
+                </div>
+              )
+            })}
+          />
+          <Route
+            path="archived"
+            element={orderBy(nfts, 'sortOrder').map((nft) => {
+              const Card = nftComponents[nft.identifier] || NftCard
 
-            return (
-              <div key={nft.name}>
-                <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
-              </div>
-            )
-          })}
-        </Route>
+              return (
+                <div key={nft.name}>
+                  <Card nft={nft} tokenIds={tokenIds[nft.identifier]} refresh={handleRefresh} />
+                </div>
+              )
+            })}
+          />
+        </Routes>
       </NftGrid>
     )
   }

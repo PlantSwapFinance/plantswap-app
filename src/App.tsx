@@ -1,5 +1,5 @@
 import React, { lazy, useEffect, useRef, useState } from 'react'
-import { Router, Redirect, Route, Switch } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { ResetCSS } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
 import Cookies from 'js-cookie'
@@ -18,7 +18,6 @@ import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import { ToastListener } from './contexts/ToastsContext'
 import PageLoader from './components/Loader/PageLoader'
 import EasterEgg from './components/EasterEgg'
-import history from './routerHistory'
 // Views included in the main bundle
 import VerticalGardens from './views/VerticalGardens'
 import Swap from './views/Swap'
@@ -141,292 +140,144 @@ const App: React.FC = () => {
   usePollCoreFarmData()
 
   return (
-    <Router history={history}>
+    <>
       <PageMeta />
       <ResetCSS />
       <GlobalStyle />
       {account && account === MASTERGARDENERDEVADDRESS ? (
         <MenuDev>
           <SuspenseWithChunkError fallback={<PageLoader />}>
-            <Switch>
-              <Route path="/" exact>
-                <Home />
-              </Route>
-              <Route path="/farms">
-                <Farms />
-              </Route>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/farms/*" element={<Farms />} />
               {/* DASHBOARD */}
-              <Route path="/dashboard">
-                <Dashboard userId={userId} />
-              </Route>
-              <Route exact path="/market">
-                <Market />
-              </Route>
-              <Route exact path="/market/sellNft">
-                <MarketSellNft />
-              </Route>
-              <Route path="/market/sellNft/:id">
-                <MarketSellNft />
-              </Route>
-              <Route exact path="/market/buyNft">
-                <MarketBuyNft />
-              </Route>
-              <Route path="/market/buyNft/:id">
-                <MarketBuyNft />
-              </Route>
-              <Route exact path="/market/createAuction">
-                <MarketCreateAuction />
-              </Route>
-              <Route path="/market/createAuction/:id">
-                <MarketCreateAuction />
-              </Route>
-              <Route exact path="/market/makeOffer">
-                <MarketMakeOffer />
-              </Route>
-              <Route path="/market/makeOffer/:id">
-                <MarketMakeOffer />
-              </Route>
-              <Route path="/gardens">
-                <Gardens tokenMode />
-              </Route>
-              <Route path="/verticalGardens">
-                <VerticalGardens />
-              </Route>
-              <Route path="/collectiblesFarms">
-                <CollectiblesFarms />
-              </Route>
-              <Route exact path="/foundation">
-                <Foundation />
-              </Route>
-              <Route exact path="/foundation/proposal/create">
-                <FoundationCreateProposal />
-              </Route>
-              <Route exact path="/foundation/donate">
-                <Donate />
-              </Route>
-              <Route path="/foundation/nonprofit/:id">
-                <FoundationProposal />
-              </Route>
-              <Route path="/foundation/proposal/:id">
-                <FoundationProposal />
-              </Route>
-              <Route path="/pools">
-                <Pools />
-              </Route>
-              <Route path="/collectibles">
-                <Collectibles />
-              </Route>
-              <Route exact path="/teams">
-                <Teams />
-              </Route>
-              <Route path="/teams/:id">
-                <Team />
-              </Route>
-              <Route path="/profile">
-                <Profile />
-              </Route>
-              <Route path="/developmentFund">
-                <DevelopmentFund />
-              </Route>
-              <Route path="/project">
-                <Project />
-              </Route>
-              <Route path="/roadmap">
-                <Roadmap />
-              </Route>
-              <Route path="/tree">
-                <Tree />
-              </Route>
-              <Route path="/vote">
-                <Vote />
-              </Route>
-              <Route path="/contact-us">
-                <ContactUs />
-              </Route>
-              <Route path="/documentation">
-                <Documentation />
-              </Route>
+              <Route path="/dashboard/*" element={<Dashboard userId={userId} />} />
+              <Route path="/market/*" element={<Market />} />
+              <Route path="/market/sellNft" element={<MarketSellNft />} />
+              <Route path="/market/sellNft/:id" element={<MarketSellNft />} />
+              <Route path="/market/buyNft" element={<MarketBuyNft />} />
+              <Route path="/market/buyNft/:id" element={<MarketBuyNft />} />
+              <Route path="/market/createAuction" element={<MarketCreateAuction />} />
+              <Route path="/market/createAuction/:id" element={<MarketCreateAuction />} />
+              <Route path="/market/makeOffer" element={<MarketMakeOffer />} />
+              <Route path="/market/makeOffer/:id" element={<MarketMakeOffer />} />
+              <Route path="/gardens/*" element={<Gardens tokenMode />} />
+              <Route path="/verticalGardens/*" element={<VerticalGardens />} />
+              <Route path="/collectiblesFarms/*" element={<CollectiblesFarms />} />
+              <Route path="/foundation" element={<Foundation />} />
+              <Route path="/foundation/proposal/create" element={<FoundationCreateProposal />} />
+              <Route path="/foundation/donate" element={<Donate />} />
+              <Route path="/foundation/nonprofit/:id" element={<FoundationProposal />} />
+              <Route path="/foundation/proposal/:id" element={<FoundationProposal />} />
+              <Route path="/pools/*" element={<Pools />} />
+              <Route path="/collectibles/*" element={<Collectibles />} />
+              <Route path="/teams" element={<Teams />} />
+              <Route path="/teams/:id" element={<Team />} />
+              <Route path="/profile/*" element={<Profile />} />
+              <Route path="/developmentFund" element={<DevelopmentFund />} />
+              <Route path="/project" element={<Project />} />
+              <Route path="/roadmap" element={<Roadmap />} />
+              <Route path="/tree" element={<Tree />} />
+              <Route path="/vote" element={<Vote />} />
+              <Route path="/contact-us" element={<ContactUs />} />
+              <Route path="/documentation" element={<Documentation />} />
 
-              <Route exact path="/voting">
-                <Voting />
-              </Route>
-              <Route exact path="/voting/proposal/create">
-                <CreateProposal />
-              </Route>
-              <Route path="/voting/proposal/:id">
-                <Proposal />
-              </Route>
+              <Route path="/voting" element={<Voting />} />
+              <Route path="/voting/proposal/create" element={<CreateProposal />} />
+              <Route path="/voting/proposal/:id" element={<Proposal />} />
 
-              {/* Using this format because these components use routes injected props. We need to rework them with hooks */}
-              <Route exact strict path="/swap" component={Swap} />
-              <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-              <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-              <Route exact strict path="/find" component={PoolFinder} />
-              <Route exact strict path="/liquidity" component={Liquidity} />
-              <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-              <Route exact path="/add" component={AddLiquidity} />
-              <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact path="/create" component={AddLiquidity} />
-              <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
-              <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+              {/* These components read their route params/navigation via hooks */}
+              <Route path="/swap" element={<Swap />} />
+              <Route path="/swap/:outputCurrency" element={<RedirectToSwap />} />
+              <Route path="/send" element={<RedirectPathToSwapOnly />} />
+              <Route path="/find" element={<PoolFinder />} />
+              <Route path="/liquidity" element={<Liquidity />} />
+              <Route path="/create" element={<RedirectToAddLiquidity />} />
+              <Route path="/add" element={<AddLiquidity />} />
+              <Route path="/add/:currencyIdA" element={<RedirectOldAddLiquidityPathStructure />} />
+              <Route path="/add/:currencyIdA/:currencyIdB" element={<RedirectDuplicateTokenIds />} />
+              <Route path="/create/:currencyIdA" element={<RedirectOldAddLiquidityPathStructure />} />
+              <Route path="/create/:currencyIdA/:currencyIdB" element={<RedirectDuplicateTokenIds />} />
+              <Route path="/remove/:tokens" element={<RedirectOldRemoveLiquidityPathStructure />} />
+              <Route path="/remove/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
 
               {/* Redirect */}
-              <Route path="/pool">
-                <Redirect to="/liquidity" />
-              </Route>
-              <Route path="/staking">
-                <Redirect to="/pools" />
-              </Route>
-              <Route path="/syrup">
-                <Redirect to="/pools" />
-              </Route>
-              <Route path="/nft">
-                <Redirect to="/collectibles" />
-              </Route>
+              <Route path="/pool" element={<Navigate to="/liquidity" replace />} />
+              <Route path="/staking" element={<Navigate to="/pools" replace />} />
+              <Route path="/syrup" element={<Navigate to="/pools" replace />} />
+              <Route path="/nft" element={<Navigate to="/collectibles" replace />} />
 
               {/* 404 */}
-              <Route component={NotFound} />
-            </Switch>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </SuspenseWithChunkError>
         </MenuDev>
       ) : (
         <Menu>
           <SuspenseWithChunkError fallback={<PageLoader />}>
-            <Switch>
-              <Route path="/" exact>
-                <Home />
-              </Route>
-              <Route path="/farms">
-                <Farms />
-              </Route>
-              <Route path="/gardens">
-                <Gardens tokenMode />
-              </Route>
-              <Route path="/verticalGardens">
-                <VerticalGardens />
-              </Route>
-              <Route path="/collectiblesFarms">
-                <CollectiblesFarms />
-              </Route>
-              <Route exact path="/foundation">
-                <Foundation />
-              </Route>
-              <Route exact path="/foundation/proposal/create">
-                <FoundationCreateProposal />
-              </Route>
-              <Route exact path="/foundation/donate">
-                <Donate />
-              </Route>
-              <Route path="/foundation/nonprofit/:id">
-                <FoundationProposal />
-              </Route>
-              <Route path="/foundation/proposal/:id">
-                <FoundationProposal />
-              </Route>
-              <Route path="/pools">
-                <Pools />
-              </Route>
-              <Route path="/collectibles">
-                <Collectibles />
-              </Route>
-              <Route exact path="/market">
-                <Market />
-              </Route>
-              <Route exact path="/market/sellNft">
-                <MarketSellNft />
-              </Route>
-              <Route path="/market/sellNft/:id">
-                <MarketSellNft />
-              </Route>
-              <Route exact path="/market/buyNft">
-                <MarketBuyNft />
-              </Route>
-              <Route path="/market/buyNft/:id">
-                <MarketBuyNft />
-              </Route>
-              <Route exact path="/market/createAuction">
-                <MarketCreateAuction />
-              </Route>
-              <Route path="/market/createAuction/:id">
-                <MarketCreateAuction />
-              </Route>
-              <Route exact path="/market/makeOffer">
-                <MarketMakeOffer />
-              </Route>
-              <Route path="/market/makeOffer/:id">
-                <MarketMakeOffer />
-              </Route>
-              <Route exact path="/teams">
-                <Teams />
-              </Route>
-              <Route path="/teams/:id">
-                <Team />
-              </Route>
-              <Route path="/profile">
-                <Profile />
-              </Route>
-              <Route path="/developmentFund">
-                <DevelopmentFund />
-              </Route>
-              <Route path="/project">
-                <Project />
-              </Route>
-              <Route path="/roadmap">
-                <Roadmap />
-              </Route>
-              <Route path="/tree">
-                <Tree />
-              </Route>
-              <Route path="/vote">
-                <Vote />
-              </Route>
-              <Route path="/documentation">
-                <Documentation />
-              </Route>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/farms/*" element={<Farms />} />
+              <Route path="/gardens/*" element={<Gardens tokenMode />} />
+              <Route path="/verticalGardens/*" element={<VerticalGardens />} />
+              <Route path="/collectiblesFarms/*" element={<CollectiblesFarms />} />
+              <Route path="/foundation" element={<Foundation />} />
+              <Route path="/foundation/proposal/create" element={<FoundationCreateProposal />} />
+              <Route path="/foundation/donate" element={<Donate />} />
+              <Route path="/foundation/nonprofit/:id" element={<FoundationProposal />} />
+              <Route path="/foundation/proposal/:id" element={<FoundationProposal />} />
+              <Route path="/pools/*" element={<Pools />} />
+              <Route path="/collectibles/*" element={<Collectibles />} />
+              <Route path="/market/*" element={<Market />} />
+              <Route path="/market/sellNft" element={<MarketSellNft />} />
+              <Route path="/market/sellNft/:id" element={<MarketSellNft />} />
+              <Route path="/market/buyNft" element={<MarketBuyNft />} />
+              <Route path="/market/buyNft/:id" element={<MarketBuyNft />} />
+              <Route path="/market/createAuction" element={<MarketCreateAuction />} />
+              <Route path="/market/createAuction/:id" element={<MarketCreateAuction />} />
+              <Route path="/market/makeOffer" element={<MarketMakeOffer />} />
+              <Route path="/market/makeOffer/:id" element={<MarketMakeOffer />} />
+              <Route path="/teams" element={<Teams />} />
+              <Route path="/teams/:id" element={<Team />} />
+              <Route path="/profile/*" element={<Profile />} />
+              <Route path="/developmentFund" element={<DevelopmentFund />} />
+              <Route path="/project" element={<Project />} />
+              <Route path="/roadmap" element={<Roadmap />} />
+              <Route path="/tree" element={<Tree />} />
+              <Route path="/vote" element={<Vote />} />
+              <Route path="/documentation" element={<Documentation />} />
 
-              {/* Using this format because these components use routes injected props. We need to rework them with hooks */}
-              <Route exact strict path="/swap" component={Swap} />
-              <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-              <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-              <Route exact strict path="/find" component={PoolFinder} />
-              <Route exact strict path="/liquidity" component={Liquidity} />
-              <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-              <Route exact path="/add" component={AddLiquidity} />
-              <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact path="/create" component={AddLiquidity} />
-              <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
-              <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+              {/* These components read their route params/navigation via hooks */}
+              <Route path="/swap" element={<Swap />} />
+              <Route path="/swap/:outputCurrency" element={<RedirectToSwap />} />
+              <Route path="/send" element={<RedirectPathToSwapOnly />} />
+              <Route path="/find" element={<PoolFinder />} />
+              <Route path="/liquidity" element={<Liquidity />} />
+              <Route path="/create" element={<RedirectToAddLiquidity />} />
+              <Route path="/add" element={<AddLiquidity />} />
+              <Route path="/add/:currencyIdA" element={<RedirectOldAddLiquidityPathStructure />} />
+              <Route path="/add/:currencyIdA/:currencyIdB" element={<RedirectDuplicateTokenIds />} />
+              <Route path="/create/:currencyIdA" element={<RedirectOldAddLiquidityPathStructure />} />
+              <Route path="/create/:currencyIdA/:currencyIdB" element={<RedirectDuplicateTokenIds />} />
+              <Route path="/remove/:tokens" element={<RedirectOldRemoveLiquidityPathStructure />} />
+              <Route path="/remove/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
 
               {/* Redirect */}
-              <Route path="/pool">
-                <Redirect to="/liquidity" />
-              </Route>
-              <Route path="/staking">
-                <Redirect to="/pools" />
-              </Route>
-              <Route path="/syrup">
-                <Redirect to="/pools" />
-              </Route>
-              <Route path="/nft">
-                <Redirect to="/collectibles" />
-              </Route>
+              <Route path="/pool" element={<Navigate to="/liquidity" replace />} />
+              <Route path="/staking" element={<Navigate to="/pools" replace />} />
+              <Route path="/syrup" element={<Navigate to="/pools" replace />} />
+              <Route path="/nft" element={<Navigate to="/collectibles" replace />} />
 
               {/* 404 */}
-              <Route component={NotFound} />
-            </Switch>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </SuspenseWithChunkError>
         </Menu>
       )}
       <EasterEgg iterations={2} />
       <ToastListener />
       <DatePickerPortal />
-    </Router>
+    </>
   )
 }
 

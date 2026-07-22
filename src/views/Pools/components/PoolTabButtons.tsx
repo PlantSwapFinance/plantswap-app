@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRouteMatch, Link } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ButtonMenu, ButtonMenuItem, Toggle, Text, NotificationDot } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
@@ -61,7 +61,9 @@ const StyledToggleView = styled(ToggleView)`
 `
 
 const PoolTabButtons = ({ stakedOnly, setStakedOnly, hasStakeInFinishedPools, viewMode, setViewMode }) => {
-  const { url, isExact } = useRouteMatch()
+  const { pathname } = useLocation()
+  const url = pathname.replace(/\/(history|archived)$/, '')
+  const isExact = pathname === url
   const { t } = useTranslation()
 
   const viewModeToggle = (

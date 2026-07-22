@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import usersApi from 'utils/calls/users'
 
 import Page from 'components/Layout/Page'
@@ -74,23 +74,23 @@ const Dashboard = ({ userId }) => {
   const handleAddRoute = (route) => {
     /* Users */
     if (route === 'dashboard-users') {
-      buildRoutes.push(<Route path="/dashboard/users" component={UsersList} />) 
+      buildRoutes.push(<Route key="users" path="users" element={<UsersList />} />)
     }
     if (route === 'dashboard-usersAccess') {
-      buildRoutes.push(<Route path="/dashboard/usersAccess" component={UsersAccess} />) 
+      buildRoutes.push(<Route key="usersAccess" path="usersAccess" element={<UsersAccess />} />)
     }
     if (route === 'dashboard-usersType') {
-      buildRoutes.push(<Route path="/dashboard/usersType" component={UsersType} />) 
+      buildRoutes.push(<Route key="usersType" path="usersType" element={<UsersType />} />)
     }
     if (route === 'dashboard-usernames') {
-      buildRoutes.push(<Route path="/dashboard/usernames" component={UsernamesList} />) 
+      buildRoutes.push(<Route key="usernames" path="usernames" element={<UsernamesList />} />)
     }
     /* Pages */
     if (route === 'dashboard-pages') {
-      buildRoutes.push(<Route path="/dashboard/pages" component={PagesList} />) 
+      buildRoutes.push(<Route key="pages" path="pages" element={<PagesList />} />)
     }
     if (route === 'dashboard-pagesAccess') {
-      buildRoutes.push(<Route path="/dashboard/pagesAccess" component={PagesAccess} />) 
+      buildRoutes.push(<Route key="pagesAccess" path="pagesAccess" element={<PagesAccess />} />)
     }
   }
 
@@ -111,16 +111,13 @@ const Dashboard = ({ userId }) => {
   return (
     <Page>
       <Header />
-      <Route exact path="/dashboard">
-        <Main 
-          userId={userId}
-          userAccess={userAccess}
-          userTypeAccess={userTypeAccess}
+      <Routes>
+        <Route
+          index
+          element={<Main userId={userId} userAccess={userAccess} userTypeAccess={userTypeAccess} />}
         />
-      </Route>
-      {buildRoutes.length > 0 && buildRoutes.map((route) => {
-        return route
-      })}
+        {buildRoutes}
+      </Routes>
     </Page>
   )
 }

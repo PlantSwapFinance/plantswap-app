@@ -14,7 +14,7 @@ import {
   Text,
   useModal,
 } from '@plantswap/uikit'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import times from 'lodash/times'
 import isEmpty from 'lodash/isEmpty'
 import { useInitialBlock } from 'state/block/hooks'
@@ -57,7 +57,7 @@ const CreateProposal = () => {
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
   const initialBlock = useInitialBlock()
-  const { push } = useHistory()
+  const navigate = useNavigate()
   const { library } = useWeb3Provider()
   const { toastSuccess, toastError } = useToast()
   const [onPresentVoteDetailsModal] = useModal(<VoteDetailsModal block={state.snapshot} />)
@@ -97,7 +97,7 @@ const CreateProposal = () => {
         const data = await sendSnaphotData(msg)
 
         // Redirect user to newly created proposal page
-        push(`/voting/proposal/${data.ipfsHash}`)
+        navigate(`/voting/proposal/${data.ipfsHash}`)
 
         toastSuccess(t('Proposal created!'))
       } else {

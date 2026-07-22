@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { ethers, Contract } from 'ethers'
+import { Contract, MaxUint256 } from 'ethers'
 import { useAppDispatch } from 'state'
 import { updateUserAllowance } from 'state/actions'
 import { useTranslation } from 'contexts/Localization'
@@ -18,7 +18,7 @@ export const useApprovePool = (lpContract: Contract, sousId, earningTokenSymbol)
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)
-      const tx = await lpContract.approve(sousChefContract.address, ethers.constants.MaxUint256)
+      const tx = await lpContract.approve(sousChefContract.address, MaxUint256)
       const receipt = await tx.wait()
 
       dispatch(updateUserAllowance(sousId, account))

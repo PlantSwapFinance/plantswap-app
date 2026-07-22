@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers'
 import farms from 'config/constants/farms'
 import { Farm } from 'state/types'
 import { getBep20Contract, getLpContract } from 'utils/contractHelpers'
@@ -40,11 +39,11 @@ describe('Config farms', () => {
     const tokenContract = getBep20Contract(farm.token.address[56])
     const quoteTokenContract = getBep20Contract(farm.quoteToken.address[56])
 
-    const tokenAmount: BigNumber = await tokenContract.balanceOf(farm.lpAddresses[56])
-    const quoteTokenAmount: BigNumber = await quoteTokenContract.balanceOf(farm.lpAddresses[56])
+    const tokenAmount: bigint = await tokenContract.balanceOf(farm.lpAddresses[56])
+    const quoteTokenAmount: bigint = await quoteTokenContract.balanceOf(farm.lpAddresses[56])
 
-    expect(tokenAmount.gt(0)).toBeTruthy()
-    expect(quoteTokenAmount.gt(0)).toBeTruthy()
+    expect(tokenAmount > 0n).toBeTruthy()
+    expect(quoteTokenAmount > 0n).toBeTruthy()
   })
 
   // The first pid using the new factory

@@ -1,4 +1,4 @@
-import { TransactionResponse } from '@ethersproject/providers'
+import { TransactionResponse } from 'ethers'
 import { useCallback, useMemo } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { addTransaction, useTransactionsStore, TransactionDetails } from './store'

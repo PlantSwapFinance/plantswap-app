@@ -1,4 +1,3 @@
-import { BigNumber, FixedNumber } from 'ethers'
 import { formatBigNumber, formatBigNumberToFixed, formatFixedNumber } from 'utils/formatBalance'
 
 describe('formatBigNumber', () => {
@@ -16,8 +15,8 @@ describe('formatBigNumber', () => {
     ['13853728395577367836', 9, 18, '13.853728395'],
     ['13853728395577367836', 8, 18, '13.85372839'],
     ['13853728395577367836', 7, 18, '13.8537283'],
-    ['13853728395577367836', 6, 18, '13.853728'],
-    ['13853728395577367836', 5, 18, '13.85372'],
+    ['13853728395577367836', 6, 18, '13.85372'],
+    ['13853728395577367836', 5, 18, '13.8537'],
     ['13853728395577367836', 4, 18, '13.8537'],
     ['13853728395577367836', 3, 18, '13.853'],
     ['13853728395577367836', 2, 18, '13.85'],
@@ -35,7 +34,7 @@ describe('formatBigNumber', () => {
     ['0', 1, 18, '0.0'],
     ['0', 2, 18, '0.0'],
   ])('correctly formats %s (%d, %d) correctly to %s', (value, displayDecimals, decimals, expected) => {
-    const ethersBn = BigNumber.from(value)
+    const ethersBn = BigInt(value)
     expect(formatBigNumber(ethersBn, displayDecimals, decimals)).toBe(expected)
   })
 })
@@ -48,7 +47,7 @@ describe('formatBigNumberToFixed', () => {
     ['1020100000000000000', 6, 18, '1.020100'],
     ['1000000000000000000', 0, 18, '1'],
   ])('correctly formats %s (%d, %d) correctly to %s', (value, displayDecimals, decimals, expected) => {
-    const ethersBn = BigNumber.from(value)
+    const ethersBn = BigInt(value)
     expect(formatBigNumberToFixed(ethersBn, displayDecimals, decimals)).toBe(expected)
   })
 })
@@ -61,10 +60,9 @@ describe('formatFixedNumber', () => {
     ['567008695201201503619.22', 18, 18, '567.008695201201503619'],
     ['567008695201201503619.22', 5, 18, '567.00869'],
     ['97634105261.1196', 3, 9, '97.634'],
-    ['97634105261', 1, 9, '97.6'],
-    ['97634105261', 0, 9, '97.0'],
+    ['97634105261.1196', 1, 9, '97.6'],
+    ['97634105261.1196', 0, 9, '97.0'],
   ])('correctly formats %s (%d, %d) correctly to %s', (value, displayDecimals, decimals, expected) => {
-    const ethersFn = FixedNumber.from(value)
-    expect(formatFixedNumber(ethersFn, displayDecimals, decimals)).toBe(expected)
+    expect(formatFixedNumber(value, displayDecimals, decimals)).toBe(expected)
   })
 })

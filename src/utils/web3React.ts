@@ -2,7 +2,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 // import { BscConnector } from '@binance-chain/bsc-connector'
 import { ConnectorNames } from '@plantswap/uikit'
-import { ethers } from 'ethers'
+import { BrowserProvider, hexlify, toUtf8Bytes } from 'ethers'
 import getNodeUrl from './getRpcUrl'
 
 const POLLING_INTERVAL = 12000
@@ -26,8 +26,9 @@ export const connectorsByName: { [connectorName in ConnectorNames]: any } = {
   [ConnectorNames.BSC]: null, // bscConnector
 }
 
-export const getLibrary = (provider): ethers.providers.Web3Provider => {
-  const library = new ethers.providers.Web3Provider(provider)
+export const getLibrary = (provider: any): BrowserProvider => {
+  const library = new BrowserProvider(provider)
+  // BrowserProvider exposes polling via `provider.pollingInterval` (still mutable in v6).
   library.pollingInterval = POLLING_INTERVAL
   return library
 }
@@ -47,7 +48,7 @@ export const signMessage = async (provider: any, account: string, message: strin
    * @see https://github.com/WalletConnect/walletconnect-monorepo/issues/462
    */
   if (provider.provider?.wc) {
-    const wcMessage = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(message))
+    const wcMessage = hexlify(toUtf8Bytes(message))
     const signature = await provider.provider?.wc.signPersonalMessage([wcMessage, account])
     return signature
   }

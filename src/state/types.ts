@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
 import { CampaignType, FarmConfig, VerticalGardenConfig, CollectiblesFarmConfig, Nft, PoolConfig, Team } from 'config/constants/types'
 
 export interface BigNumberToJson {
@@ -133,8 +132,8 @@ export interface BarnPancakeswapFarm extends FarmConfig {
   quoteTokenAmountMc?: SerializedBigNumber
   tokenAmountTotal?: SerializedBigNumber
   quoteTokenAmountTotal?: SerializedBigNumber
-  lpTotalInQuoteToken?: SerializedBigNumber
   lpTotalSupply?: SerializedBigNumber
+  lpTotalInQuoteToken?: SerializedBigNumber
   tokenPriceVsQuote?: SerializedBigNumber
   poolWeight?: SerializedBigNumber
   userData?: {
@@ -500,7 +499,7 @@ export interface VotingState {
   }
 }
 
-export type UserTicketsResponse = [ethers.BigNumber[], number[], boolean[]]
+export type UserTicketsResponse = [bigint[], number[], boolean[]]
 
 // Global state
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ethers } from 'ethers'
+import { TransactionResponse } from 'ethers'
 import {
   useMatchBreakpoints,
   Button,
@@ -26,7 +26,7 @@ export interface ActionProps {
   nft: any
   canClaim?: boolean
   tokenIds?: number[]
-  onClaim?: () => Promise<ethers.providers.TransactionResponse>
+  onClaim?: () => Promise<TransactionResponse>
   refresh: () => void
 }
 

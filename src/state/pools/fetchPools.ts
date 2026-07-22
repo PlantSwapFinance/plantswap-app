@@ -31,8 +31,8 @@ export const fetchPoolsBlockLimits = async () => {
     const endBlock = ends[index]
     return {
       sousId: plantPoolConfig.sousId,
-      startBlock: new BigNumber(startBlock).toJSON(),
-      endBlock: new BigNumber(endBlock).toJSON(),
+      startBlock: new BigNumber(startBlock.toString()).toJSON(),
+      endBlock: new BigNumber(endBlock.toString()).toJSON(),
     }
   })
 }
@@ -63,11 +63,11 @@ export const fetchPoolsTotalStaking = async () => {
   return [
     ...nonBnbPools.map((p, index) => ({
       sousId: p.sousId,
-      totalStaked: new BigNumber(nonBnbPoolsTotalStaked[index]).toJSON(),
+      totalStaked: new BigNumber(nonBnbPoolsTotalStaked[index].toString()).toJSON(),
     })),
     ...bnbPool.map((p, index) => ({
       sousId: p.sousId,
-      totalStaked: new BigNumber(bnbPoolsTotalStaked[index]).toJSON(),
+      totalStaked: new BigNumber(bnbPoolsTotalStaked[index].toString()).toJSON(),
     })),
   ]
 }
@@ -75,7 +75,7 @@ export const fetchPoolsTotalStaking = async () => {
 export const fetchPoolStakingLimit = async (sousId: number): Promise<BigNumber> => {
   try {
     const sousContract = getSouschefV2Contract(sousId)
-    const stakingLimit = await sousContract.poolLimitPerUser()
+    const stakingLimit: bigint = await sousContract.poolLimitPerUser()
     return new BigNumber(stakingLimit.toString())
   } catch (error) {
     return BIG_ZERO

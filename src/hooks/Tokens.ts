@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
-import { parseBytes32String } from '@ethersproject/strings'
+import { decodeBytes32String } from 'ethers'
 import { Currency, ETHER, Token, currencyEquals } from '@pancakeswap/sdk'
 import { useMemo } from 'react'
-import { arrayify } from 'ethers/lib/utils'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import {
   TokenAddressMap,
@@ -68,7 +67,7 @@ export function useAllInactiveTokens(): { [address: string]: Token } {
   const inactiveTokensMap = useCombinedInactiveList()
   const inactiveTokens = useTokensFromMap(inactiveTokensMap, false)
 
-  // filter out any token that are on active list
+  // filter out any tokens not in active list
   const activeTokensAddresses = Object.keys(useAllTokens())
   const filteredInactive = activeTokensAddresses
     ? Object.keys(inactiveTokens).reduce<{ [address: string]: Token }>((newMap, address) => {
@@ -129,8 +128,8 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
   return str && str.length > 0
     ? str
     : // need to check for proper bytes string and valid terminator
-    bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
-    ? parseBytes32String(bytes32)
+    bytes32 && BYTES32_REGEX.test(bytes32) && bytes32[63] === '0'
+    ? decodeBytes32String(bytes32)
     : defaultValue
 }
 

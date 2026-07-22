@@ -16,7 +16,7 @@ export const fetchVerticalGardensAllowance = async (account) => {
 
   const allowances = await multicall(erc20ABI, calls)
   return listVerticalGardens.reduce(
-    (acc, verticalGarden, index) => ({ ...acc, [verticalGarden.vgId]: new BigNumber(allowances[index]).toJSON() }),
+    (acc, verticalGarden, index) => ({ ...acc, [verticalGarden.vgId]: new BigNumber(allowances[index].toString()).toJSON() }),
     {},
   )
 }
@@ -30,7 +30,7 @@ export const fetchVerticalGardensRewardAllowance = async (account) => {
 
   const allowancesReward = await multicall(erc20ABI, calls)
   return listVerticalGardens.reduce(
-    (acc, verticalGarden, index) => ({ ...acc, [verticalGarden.vgId]: new BigNumber(allowancesReward[index]).toJSON() }),
+    (acc, verticalGarden, index) => ({ ...acc, [verticalGarden.vgId]: new BigNumber(allowancesReward[index].toString()).toJSON() }),
     {},
   )
 }
@@ -44,7 +44,7 @@ export const fetchVerticalGardensAllowancePlant = async (account) => {
 
   const allowancesPlant = await multicall(erc20ABI, calls)
   return listVerticalGardens.reduce(
-    (acc, verticalGarden, index) => ({ ...acc, [verticalGarden.vgId]: new BigNumber(allowancesPlant[index]).toJSON() }),
+    (acc, verticalGarden, index) => ({ ...acc, [verticalGarden.vgId]: new BigNumber(allowancesPlant[index].toString()).toJSON() }),
     {},
   )
 }
@@ -58,7 +58,7 @@ export const fetchUserBalances = async (account) => {
   }))
   const tokenBalancesRaw = await multicall(erc20ABI, calls)
   const tokenBalances = listVerticalGardens.reduce(
-    (acc, verticalGarden, index) => ({ ...acc, [verticalGarden.vgId]: new BigNumber(tokenBalancesRaw[index]).toJSON() }),
+    (acc, verticalGarden, index) => ({ ...acc, [verticalGarden.vgId]: new BigNumber(tokenBalancesRaw[index].toString()).toJSON() }),
     {},
   )
 
@@ -73,7 +73,7 @@ export const fetchUserStakeBalances = async (account) => {
   }))
   const gardeners = await multicall(verticalGardenABI, calls)
   const stakedBalances = listVerticalGardens.reduce(
-    (acc, verticalGarden, index) => ({...acc, [verticalGarden.vgId]: new BigNumber(gardeners[index][0]._hex).toJSON(), }),
+    (acc, verticalGarden, index) => ({...acc, [verticalGarden.vgId]: new BigNumber(gardeners[index][0].toString()).toJSON() }),
     {},
   )
 
@@ -90,7 +90,7 @@ export const fetchUserPendingRewards = async (account) => {
   const pendingRewards = listVerticalGardens.reduce(
     (acc, verticalGarden, index) => ({
       ...acc,
-      [verticalGarden.vgId]: new BigNumber(res[index][0]._hex).toJSON(),
+      [verticalGarden.vgId]: new BigNumber(res[index][0].toString()).toJSON(),
     }),
     {},
   )
@@ -108,11 +108,11 @@ export const fetchUserPendingPlantRewards = async (account) => {
   const pendingPlantRewards = listVerticalGardens.reduce(
     (acc, verticalGarden, index) => ({
       ...acc,
-      [verticalGarden.vgId]: new BigNumber(res[index][0]._hex).toJSON(),
+      [verticalGarden.vgId]: new BigNumber(res[index][0].toString()).toJSON(),
     }),
     {},
   )
-  
+
   return { ...pendingPlantRewards }
 }
 
@@ -126,7 +126,7 @@ export const fetchUserEstimateRewards = async (account) => {
   const estimateRewards = listVerticalGardens.reduce(
     (acc, verticalGarden, index) => ({
       ...acc,
-      [verticalGarden.vgId]: new BigNumber(res[index][0]._hex).toJSON(),
+      [verticalGarden.vgId]: new BigNumber(res[index][0].toString()).toJSON(),
     }),
     {},
   )
@@ -144,11 +144,11 @@ export const fetchUserEstimatePlantRewards = async (account) => {
   const estimatePlantRewards = listVerticalGardens.reduce(
     (acc, verticalGarden, index) => ({
       ...acc,
-      [verticalGarden.vgId]: new BigNumber(res[index][0]._hex).toJSON(),
+      [verticalGarden.vgId]: new BigNumber(res[index][0].toString()).toJSON(),
     }),
     {},
   )
-  
+
   return { ...estimatePlantRewards }
 }
 
@@ -162,7 +162,7 @@ export const fetchUserHarvestedRewards = async (account) => {
   const harvestedRewards = listVerticalGardens.reduce(
     (acc, verticalGarden, index) => ({
       ...acc,
-      [verticalGarden.vgId]: new BigNumber(res[index][0]._hex).toJSON(),
+      [verticalGarden.vgId]: new BigNumber(res[index][0].toString()).toJSON(),
     }),
     {},
   )
@@ -180,7 +180,7 @@ export const fetchUserHarvestedPlants = async (account) => {
   const harvestedPlants = listVerticalGardens.reduce(
     (acc, verticalGarden, index) => ({
       ...acc,
-      [verticalGarden.vgId]: new BigNumber(res[index][0]._hex).toJSON(),
+      [verticalGarden.vgId]: new BigNumber(res[index][0].toString()).toJSON(),
     }),
     {},
   )
@@ -198,7 +198,7 @@ export const fetchUserCompoundedRewards = async (account) => {
   const compoudedRewards = listVerticalGardens.reduce(
     (acc, verticalGarden, index) => ({
       ...acc,
-      [verticalGarden.vgId]: new BigNumber(res[index][0]._hex).toJSON(),
+      [verticalGarden.vgId]: new BigNumber(res[index][0].toString()).toJSON(),
     }),
     {},
   )

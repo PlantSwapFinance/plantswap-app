@@ -1,7 +1,7 @@
 import React from 'react'
 import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
-import { ethers } from 'ethers'
+import { TransactionResponse } from 'ethers'
 import useApproveConfirmTransaction from 'hooks/useApproveConfirmTransaction'
 import { Button, InjectedModalProps, Modal, Text, Flex } from '@plantswap/uikit'
 import { Nft } from 'config/constants/types'
@@ -17,7 +17,7 @@ import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 interface ClaimNftModalProps extends InjectedModalProps {
   nft: Nft
   onSuccess: () => void
-  onClaim: () => Promise<ethers.providers.TransactionResponse>
+  onClaim: () => Promise<TransactionResponse>
 }
 
 const ModalContent = styled.div`

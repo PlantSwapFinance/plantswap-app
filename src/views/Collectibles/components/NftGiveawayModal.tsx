@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import confetti from 'canvas-confetti'
 import { Modal, Text, Button, Flex, InjectedModalProps } from '@plantswap/uikit'
-import history from 'routerHistory'
+import { useNavigate } from 'react-router-dom'
 import { delay } from 'lodash'
 import { useTranslation } from 'contexts/Localization'
 import nftList from 'config/constants/nfts'
@@ -48,6 +48,7 @@ const getClaimableNft = (profile: Profile): Nft => {
 }
 
 const NftGiveawayModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { profile } = useProfile()
   const nft = getClaimableNft(profile)
@@ -55,7 +56,7 @@ const NftGiveawayModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
   // This is required because the modal exists outside the Router
   const handleClick = () => {
     onDismiss()
-    history.push('/collectibles')
+    navigate('/collectibles')
   }
 
   useEffect(() => {

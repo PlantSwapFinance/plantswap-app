@@ -5,7 +5,7 @@ import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, Percent, WETH } from '@pancakeswap/sdk'
 import { Button, Text, AddIcon, ArrowDownIcon, CardBody, Slider, Box, Flex, useModal } from '@plantswap/uikit'
-import { RouteComponentProps } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useTranslation } from 'contexts/Localization'
 import { AutoColumn, ColumnCenter } from '../../components/Layout/Column'
@@ -44,12 +44,9 @@ const BorderCard = styled.div`
   padding: 16px;
 `
 
-export default function RemoveLiquidity({
-  history,
-  match: {
-    params: { currencyIdA, currencyIdB },
-  },
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+export default function RemoveLiquidity() {
+  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
+  const navigate = useNavigate()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
   const [tokenA, tokenB] = useMemo(
@@ -402,22 +399,22 @@ export default function RemoveLiquidity({
   const handleSelectCurrencyA = useCallback(
     (currency: Currency) => {
       if (currencyIdB && currencyId(currency) === currencyIdB) {
-        history.push(`/remove/${currencyId(currency)}/${currencyIdA}`)
+        navigate(`/remove/${currencyId(currency)}/${currencyIdA}`)
       } else {
-        history.push(`/remove/${currencyId(currency)}/${currencyIdB}`)
+        navigate(`/remove/${currencyId(currency)}/${currencyIdB}`)
       }
     },
-    [currencyIdA, currencyIdB, history],
+    [currencyIdA, currencyIdB, navigate],
   )
   const handleSelectCurrencyB = useCallback(
     (currency: Currency) => {
       if (currencyIdA && currencyId(currency) === currencyIdA) {
-        history.push(`/remove/${currencyIdB}/${currencyId(currency)}`)
+        navigate(`/remove/${currencyIdB}/${currencyId(currency)}`)
       } else {
-        history.push(`/remove/${currencyIdA}/${currencyId(currency)}`)
+        navigate(`/remove/${currencyIdA}/${currencyId(currency)}`)
       }
     },
-    [currencyIdA, currencyIdB, history],
+    [currencyIdA, currencyIdB, navigate],
   )
 
   const handleDismissConfirmation = useCallback(() => {

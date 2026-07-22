@@ -92,7 +92,7 @@ export const Wrapper = styled.div`
 `
 
 const Page: React.FC<FormMarketSellNftModalProps> = ({ initialView = WalletView.TOKEN }) => {
-  const { id }: { id: string } = useParams()
+  const { id = '' } = useParams<{ id: string }>()
   const [view, setView] = useState(initialView)
   // eslint-disable-next-line
   const [error, setError] = useState(null)

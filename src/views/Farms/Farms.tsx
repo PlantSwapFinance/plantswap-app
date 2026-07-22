@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
-import { Route, useRouteMatch, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { Heading, RowType, Toggle, Text, Flex, EndPage, IconButton, CogIcon, useModal } from '@plantswap/uikit'
 import { ChainId } from '@pancakeswap/sdk'
@@ -119,7 +119,6 @@ const getDisplayApr = (plantRewardsApr?: number, lpRewardsApr?: number) => {
 }
 
 const Farms: React.FC<FarmsProps> = (farmsProps) => {
-  const { path } = useRouteMatch()
   const { pathname } = useLocation()
   const { t } = useTranslation()
   const { data: farmsLP, userDataLoaded } = useFarms()
@@ -354,42 +353,47 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
 
     return (
       <FlexLayout>
-        <Route exact path={`${path}`}>
-          {chosenFarmsMemoized.map((farm) => (
-            <FarmCard
-              key={farm.pid}
-              farm={farm}
-              displayApr={getDisplayApr(farm.apr, farm.lpRewardsApr)}
-              plantPrice={plantPrice}
-              account={account}
-              removed={false}
-            />
-          ))}
-        </Route>
-        <Route exact path={`${path}/history`}>
-          {chosenFarmsMemoized.map((farm) => (
-            <FarmCard
-              key={farm.pid}
-              farm={farm}
-              displayApr={getDisplayApr(farm.apr, farm.lpRewardsApr)}
-              plantPrice={plantPrice}
-              account={account}
-              removed
-            />
-          ))}
-        </Route>
-        <Route exact path={`${path}/archived`}>
-          {chosenFarmsMemoized.map((farm) => (
-            <FarmCard
-              key={farm.pid}
-              farm={farm}
-              displayApr={getDisplayApr(farm.apr, farm.lpRewardsApr)}
-              plantPrice={plantPrice}
-              account={account}
-              removed
-            />
-          ))}
-        </Route>
+        <Routes>
+          <Route
+            index
+            element={chosenFarmsMemoized.map((farm) => (
+              <FarmCard
+                key={farm.pid}
+                farm={farm}
+                displayApr={getDisplayApr(farm.apr, farm.lpRewardsApr)}
+                plantPrice={plantPrice}
+                account={account}
+                removed={false}
+              />
+            ))}
+          />
+          <Route
+            path="history"
+            element={chosenFarmsMemoized.map((farm) => (
+              <FarmCard
+                key={farm.pid}
+                farm={farm}
+                displayApr={getDisplayApr(farm.apr, farm.lpRewardsApr)}
+                plantPrice={plantPrice}
+                account={account}
+                removed
+              />
+            ))}
+          />
+          <Route
+            path="archived"
+            element={chosenFarmsMemoized.map((farm) => (
+              <FarmCard
+                key={farm.pid}
+                farm={farm}
+                displayApr={getDisplayApr(farm.apr, farm.lpRewardsApr)}
+                plantPrice={plantPrice}
+                account={account}
+                removed
+              />
+            ))}
+          />
+        </Routes>
       </FlexLayout>
     )
   }

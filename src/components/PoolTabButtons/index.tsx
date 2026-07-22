@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useLocation, Link, useRouteMatch } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import { ButtonMenu, ButtonMenuItem, NotificationDot } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 
@@ -14,7 +14,6 @@ interface PoolTabButtonsProps {
 }
 
 const PoolTabButtons: React.FC<PoolTabButtonsProps> = ({ basePath, hasStakeInFinishedPools }) => {
-  const { url } = useRouteMatch()
   const location = useLocation()
   const { t } = useTranslation()
 
@@ -41,11 +40,11 @@ const PoolTabButtons: React.FC<PoolTabButtonsProps> = ({ basePath, hasStakeInFin
   return (
     <Wrapper>
       <ButtonMenu activeIndex={activeIndex} scale="sm" variant="subtle">
-        <ButtonMenuItem as={Link} to={`${url}`}>
+        <ButtonMenuItem as={Link} to={`${basePath}`}>
           {t('Live')}
         </ButtonMenuItem>
         <NotificationDot show={hasStakeInFinishedPools}>
-          <ButtonMenuItem as={Link} to={`${url}/history`}>
+          <ButtonMenuItem as={Link} to={`${basePath}/history`}>
             {t('Finished')}
           </ButtonMenuItem>
         </NotificationDot>

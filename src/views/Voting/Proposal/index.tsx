@@ -24,7 +24,7 @@ import Votes from './Votes'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const Proposal = () => {
-  const { id }: { id: string } = useParams()
+  const { id = '' } = useParams<{ id: string }>()
   const proposal = useGetProposal(id)
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()

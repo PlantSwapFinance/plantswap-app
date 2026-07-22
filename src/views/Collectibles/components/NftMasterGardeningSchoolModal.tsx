@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import confetti from 'canvas-confetti'
 import { Modal, Text, Button, Flex, InjectedModalProps } from '@plantswap/uikit'
-import history from 'routerHistory'
+import { useNavigate } from 'react-router-dom'
 import { delay } from 'lodash'
 import { usePlant } from 'hooks/useContract'
 import { getMasterGardeningSchoolNftAddress } from 'utils/addressHelpers'
@@ -51,6 +51,7 @@ const getClaimableNft = (profile: Profile): Nft => {
 }
 
 const NftMasterGardeningSchoolModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const { profile } = useProfile()
   const plantContract = usePlant()
@@ -61,7 +62,7 @@ const NftMasterGardeningSchoolModal: React.FC<InjectedModalProps> = ({ onDismiss
   // This is required because the modal exists outside the Router
   const handleClick = () => {
     onDismiss()
-    history.push('/collectibles')
+    navigate('/collectibles')
   }
 
   const handleApprove = () => {

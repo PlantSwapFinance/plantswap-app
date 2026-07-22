@@ -1,7 +1,7 @@
 import React from 'react'
 import Page from 'components/Layout/Page'
 import styled from 'styled-components'
-import { Link, Redirect, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { ChevronLeftIcon, Flex, Text, Image } from '@plantswap/uikit'
 import PageLoader from 'components/Loader/PageLoader'
 import teams from 'config/constants/teams'
@@ -17,14 +17,14 @@ const StyledImage = styled(Image)`
 `
 
 const Team = () => {
-  const { id: idStr }: { id: string } = useParams()
+  const { id: idStr = '' } = useParams<{ id: string }>()
   const id = Number(idStr)
   const { t } = useTranslation()
   const isValidTeamId = teams.findIndex((team) => team.id === id) !== -1
   const team = useTeam(id)
 
   if (!isValidTeamId) {
-    return <Redirect to="/404" />
+    return <Navigate to="/404" replace />
   }
 
   if (!team) {

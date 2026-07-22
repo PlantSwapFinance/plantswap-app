@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
-import { Route, useRouteMatch, useLocation, NavLink } from 'react-router-dom'
+import { Route, Routes, useLocation, NavLink } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { Heading, RowType, Toggle, Text, Button, ArrowForwardIcon, Flex, EndPage, IconButton, CogIcon, useModal } from '@plantswap/uikit'
 import { ChainId } from '@pancakeswap/sdk'
@@ -119,7 +119,6 @@ const getDisplayApr = (plantRewardsApr?: number, lpRewardsApr?: number) => {
 }
 
 const Gardens: React.FC<GardensProps> = (gardensProps) => {
-  const { path } = useRouteMatch()
   const { pathname } = useLocation()
   const { t } = useTranslation()
   const { data: gardensLP, userDataLoaded } = useFarms()
@@ -362,42 +361,47 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
 
     return (
       <FlexLayout>
-        <Route exact path={`${path}`}>
-          {chosenGardensMemoized.map((garden) => (
-            <GardenCard
-              key={garden.pid}
-              garden={garden}
-              displayApr={getDisplayApr(garden.apr, garden.lpRewardsApr)}
-              plantPrice={plantPrice}
-              account={account}
-              removed={false}
-            />
-          ))}
-        </Route>
-        <Route exact path={`${path}/history`}>
-          {chosenGardensMemoized.map((garden) => (
-            <GardenCard
-              key={garden.pid}
-              garden={garden}
-              displayApr={getDisplayApr(garden.apr, garden.lpRewardsApr)}
-              plantPrice={plantPrice}
-              account={account}
-              removed
-            />
-          ))}
-        </Route>
-        <Route exact path={`${path}/archived`}>
-          {chosenGardensMemoized.map((garden) => (
-            <GardenCard
-              key={garden.pid}
-              garden={garden}
-              displayApr={getDisplayApr(garden.apr, garden.lpRewardsApr)}
-              plantPrice={plantPrice}
-              account={account}
-              removed
-            />
-          ))}
-        </Route>
+        <Routes>
+          <Route
+            index
+            element={chosenGardensMemoized.map((garden) => (
+              <GardenCard
+                key={garden.pid}
+                garden={garden}
+                displayApr={getDisplayApr(garden.apr, garden.lpRewardsApr)}
+                plantPrice={plantPrice}
+                account={account}
+                removed={false}
+              />
+            ))}
+          />
+          <Route
+            path="history"
+            element={chosenGardensMemoized.map((garden) => (
+              <GardenCard
+                key={garden.pid}
+                garden={garden}
+                displayApr={getDisplayApr(garden.apr, garden.lpRewardsApr)}
+                plantPrice={plantPrice}
+                account={account}
+                removed
+              />
+            ))}
+          />
+          <Route
+            path="archived"
+            element={chosenGardensMemoized.map((garden) => (
+              <GardenCard
+                key={garden.pid}
+                garden={garden}
+                displayApr={getDisplayApr(garden.apr, garden.lpRewardsApr)}
+                plantPrice={plantPrice}
+                account={account}
+                removed
+              />
+            ))}
+          />
+        </Routes>
       </FlexLayout>
     )
   }
@@ -422,7 +426,12 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
               {t('Rewards are calculated per block.')}
               <br />
               {t('If you still have tokens in ')}
-              <NavLink exact activeClassName="active" to="/pools" id="garden-v1-link">
+              <NavLink
+                end
+                className={({ isActive }) => (isActive ? 'active' : undefined)}
+                to="/pools"
+                id="garden-v1-link"
+              >
                 <Button p="0" variant="text">
                   <ArrowForwardIcon color="primary" />
                   <Text color="primary" bold fontSize="16px" mr="4px">

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'contexts/Localization'
 import { Helmet } from 'react-helmet-async'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import {
   DEFAULT_META,
   SITE_NAME,

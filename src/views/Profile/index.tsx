@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { EndPage } from '@plantswap/uikit'
 import Page from 'components/Layout/Page'
 import PageLoader from 'components/Loader/PageLoader'
@@ -34,12 +34,10 @@ const Profile = () => {
   return (
     <Page>
       <Header />
-      <Route exact path="/profile">
-        <PublicProfile />
-      </Route>
-      <Route path="/profile/tasks">
-        <TaskCenter />
-      </Route>
+      <Routes>
+        <Route index element={<PublicProfile />} />
+        <Route path="tasks" element={<TaskCenter />} />
+      </Routes>
       <EndPage />
     </Page>
   )

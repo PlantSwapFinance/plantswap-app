@@ -1,4 +1,5 @@
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 import { ModalProvider, light, dark } from '@plantswap/uikit'
 import { Web3ReactProvider } from '@web3-react/core'
 import { HelmetProvider } from 'react-helmet-async'
@@ -22,19 +23,21 @@ const ThemeProviderWrapper = (props) => {
 
 const Providers: React.FC = ({ children }) => {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <ToastsProvider>
-        <HelmetProvider>
-          <ThemeProviderWrapper>
-            <LanguageProvider>
-              <RefreshContextProvider>
-                <ModalProvider>{children}</ModalProvider>
-              </RefreshContextProvider>
-            </LanguageProvider>
-          </ThemeProviderWrapper>
-        </HelmetProvider>
-      </ToastsProvider>
-    </Web3ReactProvider>
+    <BrowserRouter>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <ToastsProvider>
+          <HelmetProvider>
+            <ThemeProviderWrapper>
+              <LanguageProvider>
+                <RefreshContextProvider>
+                  <ModalProvider>{children}</ModalProvider>
+                </RefreshContextProvider>
+              </LanguageProvider>
+            </ThemeProviderWrapper>
+          </HelmetProvider>
+        </ToastsProvider>
+      </Web3ReactProvider>
+    </BrowserRouter>
   )
 }
 

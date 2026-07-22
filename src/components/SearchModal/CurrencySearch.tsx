@@ -2,7 +2,7 @@ import React, { KeyboardEvent, RefObject, useCallback, useMemo, useRef, useState
 import { Currency, ETHER, Token } from '@pancakeswap/sdk'
 import { Text, Input, Box } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
-import { FixedSizeList } from 'react-window'
+import type { ListImperativeAPI } from 'react-window'
 import { useAudioModeManager } from 'state/user/hooks'
 import useDebounce from 'hooks/useDebounce'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -40,7 +40,7 @@ function CurrencySearch({
   const { chainId } = useActiveWeb3React()
 
   // refs for fixed size lists
-  const fixedList = useRef<FixedSizeList>()
+  const fixedList = useRef<ListImperativeAPI>()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
@@ -93,7 +93,7 @@ function CurrencySearch({
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
-    fixedList.current?.scrollTo(0)
+    fixedList.current?.scrollToRow({ index: 0 })
   }, [])
 
   const handleEnter = useCallback(

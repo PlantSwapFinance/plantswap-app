@@ -93,8 +93,8 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1",
+    "@commitlint/cli": "^21.0.0",
+    "@commitlint/config-conventional": "^21.0.0",
     "@pancakeswap/eslint-config-pancake": "^1.1.0",
     "@types/jest": "^30.0.0",
     "@types/react-datepicker": "^7.0.0",

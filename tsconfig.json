@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
-    "target": "es5",
+    "target": "es2020",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -10,7 +9,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -18,7 +17,9 @@
     "strictNullChecks": false,
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": true,
-    "downlevelIteration": true
+    "paths": {
+      "*": ["./src/*"]
+    }
   },
   "exclude": ["node_modules", "cypress"],
   "include": ["./src/**/*.ts", "./src/**/*.tsx"]

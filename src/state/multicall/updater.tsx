@@ -1,4 +1,4 @@
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import { useEffect, useMemo, useRef } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useMulticallContract } from '../../hooks/useContract'
@@ -41,11 +41,13 @@ async function fetchChunk(
     console.debug('Failed to fetch chunk inside retry', error)
     throw error
   }
-  if (resultsBlockNumber.toNumber() < minBlockNumber) {
+  // Ethers v6 returns native bigint for uint256; coerce to Number for the
+  // block-number comparison (safe since block numbers fit in 53 bits).
+  if (Number(resultsBlockNumber) < minBlockNumber) {
     console.debug(`Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`)
     throw new RetryableError('Fetched for old block number')
   }
-  return { results: returnData, blockNumber: resultsBlockNumber.toNumber() }
+  return { results: returnData, blockNumber: Number(resultsBlockNumber) }
 }
 
 /**

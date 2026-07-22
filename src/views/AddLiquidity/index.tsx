@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse } from '@ethersproject/providers'
+import { TransactionResponse } from 'ethers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@pancakeswap/sdk'
 import { Button, Text, Flex, AddIcon, CardBody, Message, useModal } from '@plantswap/uikit'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -129,13 +128,13 @@ export default function AddLiquidity() {
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0],
     }
 
-    let estimate
+    let estimate: (...args: any) => Promise<bigint>
     let method: (...args: any) => Promise<TransactionResponse>
     let args: Array<string | string[] | number>
-    let value: BigNumber | null
+    let value: bigint | null
     if (currencyA === ETHER || currencyB === ETHER) {
       const tokenBIsETH = currencyB === ETHER
-      estimate = router.estimateGas.addLiquidityETH
+      estimate = router.addLiquidityETH.estimateGas
       method = router.addLiquidityETH
       args = [
         wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
@@ -143,11 +142,11 @@ export default function AddLiquidity() {
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         account,
-        deadline.toHexString(),
+        toHex(deadline),
       ]
-      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+      value = BigInt((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
-      estimate = router.estimateGas.addLiquidity
+      estimate = router.addLiquidity.estimateGas
       method = router.addLiquidity
       args = [
         wrappedCurrency(currencyA, chainId)?.address ?? '',
@@ -157,16 +156,16 @@ export default function AddLiquidity() {
         amountsMin[Field.CURRENCY_A].toString(),
         amountsMin[Field.CURRENCY_B].toString(),
         account,
-        deadline.toHexString(),
+        toHex(deadline),
       ]
       value = null
     }
 
     setAttemptingTxn(true)
-    await estimate(...args, value ? { value } : {})
+    await estimate(...args, value !== null ? { value } : {})
       .then((estimatedGasLimit) =>
         method(...args, {
-          ...(value ? { value } : {}),
+          ...(value !== null ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit),
         }).then((response) => {
           setAttemptingTxn(false)
@@ -447,4 +446,10 @@ export default function AddLiquidity() {
       )}
     </Page>
   )
+}
+
+// Encode a bigint deadline as a 0x-prefixed hex string for the router.
+function toHex(value: bigint | undefined): string {
+  if (!value) return '0x0'
+  return `0x${value.toString(16)}`
 }

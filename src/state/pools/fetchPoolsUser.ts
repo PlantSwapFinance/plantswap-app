@@ -23,7 +23,7 @@ export const fetchPoolsAllowance = async (account) => {
 
   const allowances = await multicall(erc20ABI, calls)
   return nonBnbPools.reduce(
-    (acc, pool, index) => ({ ...acc, [pool.sousId]: new BigNumber(allowances[index]).toJSON() }),
+    (acc, pool, index) => ({ ...acc, [pool.sousId]: new BigNumber(allowances[index].toString()).toJSON() }),
     {},
   )
 }
@@ -37,12 +37,12 @@ export const fetchUserBalances = async (account) => {
   }))
   const tokenBalancesRaw = await multicall(erc20ABI, calls)
   const tokenBalances = nonBnbPools.reduce(
-    (acc, pool, index) => ({ ...acc, [pool.sousId]: new BigNumber(tokenBalancesRaw[index]).toJSON() }),
+    (acc, pool, index) => ({ ...acc, [pool.sousId]: new BigNumber(tokenBalancesRaw[index].toString()).toJSON() }),
     {},
   )
 
   // BNB pools
-  const bnbBalance = await simpleRpcProvider.getBalance(account)
+  const bnbBalance: bigint = await simpleRpcProvider.getBalance(account)
   const bnbBalances = bnbPools.reduce(
     (acc, pool) => ({ ...acc, [pool.sousId]: new BigNumber(bnbBalance.toString()).toJSON() }),
     {},
@@ -61,7 +61,7 @@ export const fetchUserStakeBalances = async (account) => {
   const stakedBalances = nonMasterPools.reduce(
     (acc, pool, index) => ({
       ...acc,
-      [pool.sousId]: new BigNumber(userInfo[index].amount._hex).toJSON(),
+      [pool.sousId]: new BigNumber(userInfo[index].amount.toString()).toJSON(),
     }),
     {},
   )
@@ -82,13 +82,13 @@ export const fetchUserPendingRewards = async (account) => {
   const pendingRewards = nonMasterPools.reduce(
     (acc, pool, index) => ({
       ...acc,
-      [pool.sousId]: new BigNumber(res[index]).toJSON(),
+      [pool.sousId]: new BigNumber(res[index].toString()).toJSON(),
     }),
     {},
   )
 
   // Plant / Plant pool
-  const pendingReward = await masterGardenerContract.pendingPlant('0', account)
+  const pendingReward: bigint = await masterGardenerContract.pendingPlant('0', account)
 
   return { ...pendingRewards, 0: new BigNumber(pendingReward.toString()).toJSON() }
 }

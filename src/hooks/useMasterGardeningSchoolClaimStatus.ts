@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ethers } from 'ethers'
+import { TransactionResponse } from 'ethers'
 import { useProfile } from 'state/profile/hooks'
 import { useMasterGardeningSchoolNftContract } from './useContract'
 import useActiveWeb3React from './useActiveWeb3React'
@@ -25,7 +25,7 @@ const useMasterGardeningSchoolClaimStatus = (variationId: number | null) => {
     if (variationId === null) {
       throw new Error('useMasterGardeningSchoolClaimStatus: cannot claim with a null variationId')
     }
-    const response: ethers.providers.TransactionResponse = await masterGardeningSchoolNftContract.mintNFT(variationId)
+    const response: TransactionResponse = await masterGardeningSchoolNftContract.mintNFT(variationId)
     await response.wait()
     return response
   }, [masterGardeningSchoolNftContract, variationId])

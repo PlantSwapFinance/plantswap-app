@@ -1,12 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { splitSignature } from '@ethersproject/bytes'
-import { Contract } from '@ethersproject/contracts'
-import { TransactionResponse } from '@ethersproject/providers'
+import { Contract, Signature, TransactionResponse } from 'ethers'
 import { Currency, currencyEquals, ETHER, Percent, WETH } from '@pancakeswap/sdk'
 import { Button, Text, AddIcon, ArrowDownIcon, CardBody, Slider, Box, Flex, useModal } from '@plantswap/uikit'
 import { useNavigate, useParams } from 'react-router-dom'
-import { BigNumber } from '@ethersproject/bignumber'
 import { useTranslation } from 'contexts/Localization'
 import { AutoColumn, ColumnCenter } from '../../components/Layout/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
@@ -100,7 +97,7 @@ export default function RemoveLiquidity() {
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
     // try to gather a signature for permission
-    const nonce = await pairContract.nonces(account)
+    const nonce: bigint = await pairContract.nonces(account)
 
     const EIP712Domain = [
       { name: 'name', type: 'string' },
@@ -125,8 +122,8 @@ export default function RemoveLiquidity() {
       owner: account,
       spender: ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
-      nonce: nonce.toHexString(),
-      deadline: deadline.toNumber(),
+      nonce: nonce.toString(),
+      deadline: Number(deadline),
     }
     const data = JSON.stringify({
       types: {
@@ -140,13 +137,14 @@ export default function RemoveLiquidity() {
 
     library
       .send('eth_signTypedData_v4', [account, data])
-      .then(splitSignature)
-      .then((signature) => {
+      .then((signature: string) => {
+        // Ethers v6 removed `splitSignature`. Use the Signature class to unpack v/r/s.
+        const sig = Signature.from(signature)
         setSignatureData({
-          v: signature.v,
-          r: signature.r,
-          s: signature.s,
-          deadline: deadline.toNumber(),
+          v: sig.v,
+          r: sig.r,
+          s: sig.s,
+          deadline: Number(deadline),
         })
       })
       .catch((err) => {
@@ -194,6 +192,8 @@ export default function RemoveLiquidity() {
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
+    const deadlineHex = `0x${deadline.toString(16)}`
+
     let methodNames: string[]
     let args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
@@ -207,7 +207,7 @@ export default function RemoveLiquidity() {
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
-          deadline.toHexString(),
+          deadlineHex,
         ]
       }
       // removeLiquidity
@@ -220,7 +220,7 @@ export default function RemoveLiquidity() {
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
           account,
-          deadline.toHexString(),
+          deadlineHex,
         ]
       }
     }
@@ -263,9 +263,9 @@ export default function RemoveLiquidity() {
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
 
-    const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
+    const safeGasEstimates: (bigint | undefined)[] = await Promise.all(
       methodNames.map((methodName) =>
-        router.estimateGas[methodName](...args)
+        router[methodName].estimateGas(...args)
           .then(calculateGasMargin)
           .catch((err) => {
             console.error(`estimateGas failed`, methodName, args, err)
@@ -274,8 +274,8 @@ export default function RemoveLiquidity() {
       ),
     )
 
-    const indexOfSuccessfulEstimation = safeGasEstimates.findIndex((safeGasEstimate) =>
-      BigNumber.isBigNumber(safeGasEstimate),
+    const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(
+      (safeGasEstimate) => typeof safeGasEstimate === 'bigint',
     )
 
     // all estimations failed...
@@ -566,7 +566,7 @@ export default function RemoveLiquidity() {
                 onCurrencySelect={() => null}
               />
               <ColumnCenter>
-                <ArrowDownIcon width="24px" my="16px" />
+                <ArrowDownIcon width="16px" my="16px" />
               </ColumnCenter>
               <CurrencyInputPanel
                 hideBalance
@@ -580,7 +580,7 @@ export default function RemoveLiquidity() {
                 id="remove-liquidity-tokena"
               />
               <ColumnCenter>
-                <AddIcon width="24px" my="16px" />
+                <AddIcon width="16px" my="16px" />
               </ColumnCenter>
               <CurrencyInputPanel
                 hideBalance

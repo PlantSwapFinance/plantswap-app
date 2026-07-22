@@ -1,9 +1,9 @@
-import ethers, { Contract } from 'ethers'
+import { Contract } from 'ethers'
 
 export type MultiCallResponse<T> = T | null
 
 // Chainlink Orance
-export type ChainLinkOracleLatestAnswerResponse = ethers.BigNumber
+export type ChainLinkOracleLatestAnswerResponse = bigint
 
 export interface ChainLinkOracleContract extends Contract {
   latestAnswer: ContractFunction<ChainLinkOracleLatestAnswerResponse>
@@ -20,22 +20,22 @@ export enum FarmAuctionContractStatus {
 
 export interface AuctionsResponse {
   status: FarmAuctionContractStatus
-  startBlock: ethers.BigNumber
-  endBlock: ethers.BigNumber
-  initialBidAmount: ethers.BigNumber
-  leaderboard: ethers.BigNumber
-  leaderboardThreshold: ethers.BigNumber
+  startBlock: bigint
+  endBlock: bigint
+  initialBidAmount: bigint
+  leaderboard: bigint
+  leaderboardThreshold: bigint
 }
 
 export interface BidsPerAuction {
   account: string
-  amount: ethers.BigNumber
+  amount: bigint
 }
 
-export type ViewBidsPerAuctionResponse = [BidsPerAuction[], ethers.BigNumber]
+export type ViewBidsPerAuctionResponse = [BidsPerAuction[], bigint]
 
 // [auctionId, bids, claimed, nextCursor]
-export type ViewBidderAuctionsResponse = [ethers.BigNumber[], ethers.BigNumber[], boolean[], ethers.BigNumber]
+export type ViewBidderAuctionsResponse = [bigint[], bigint[], boolean[], bigint]
 
 type GetWhitelistedAddressesResponse = [
   {
@@ -43,18 +43,18 @@ type GetWhitelistedAddressesResponse = [
     lpToken: string
     token: string
   }[],
-  ethers.BigNumber,
+  bigint,
 ]
 
 interface AuctionsHistoryResponse {
-  totalAmount: ethers.BigNumber
+  totalAmount: bigint
   hasClaimed: boolean
 }
 
 export interface FarmAuctionContract extends Contract {
-  currentAuctionId: ContractFunction<ethers.BigNumber>
-  viewBidders: ContractFunction<[string[], ethers.BigNumber]>
-  totalCollected: ContractFunction<ethers.BigNumber>
+  currentAuctionId: ContractFunction<bigint>
+  viewBidders: ContractFunction<[string[], bigint]>
+  totalCollected: ContractFunction<bigint>
   auctions: ContractFunction<AuctionsResponse>
   claimable: ContractFunction<boolean>
   viewBidsPerAuction: ContractFunction<ViewBidsPerAuctionResponse>

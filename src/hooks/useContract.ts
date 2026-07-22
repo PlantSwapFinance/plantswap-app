@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ethers } from 'ethers'
+import { Contract, Provider, Signer } from 'ethers'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import {
   getBep20Contract,
@@ -21,7 +21,6 @@ import {
 } from 'utils/contractHelpers'
 
 // Imports below migrated from Exchange useContract.ts
-import { Contract } from '@ethersproject/contracts'
 import { ChainId, WETH } from '@pancakeswap/sdk'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import ENS_PUBLIC_RESOLVER_ABI from '../config/abi/ens-public-resolver.json'
@@ -32,7 +31,7 @@ import WETH_ABI from '../config/abi/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../config/constants/multicall'
 import { getContract, getSigner } from '../utils'
 
-type SignerArg = ethers.Signer | ethers.providers.Provider
+type SignerArg = Signer | Provider
 
 /**
  * Returns a contract bound to a signer when the user is connected, or to the

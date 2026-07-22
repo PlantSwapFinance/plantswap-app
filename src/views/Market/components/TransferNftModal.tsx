@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { ethers } from 'ethers'
+import { isAddress } from 'ethers'
 import { Button, Input, Modal, Text } from '@plantswap/uikit'
 import { getAddressByType } from 'utils/collectibles'
 import { Nft } from 'config/constants/types'
@@ -49,7 +49,7 @@ const TransferNftModal: React.FC<TransferNftModalProps> = ({ nft, tokenIds, onSu
 
   const handleConfirm = async () => {
     try {
-      const isValidAddress = ethers.utils.isAddress(value)
+      const isValidAddress = isAddress(value)
 
       if (!isValidAddress) {
         setError(t('Please enter a valid wallet address'))

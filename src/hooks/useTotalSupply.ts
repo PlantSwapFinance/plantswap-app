@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { Token, TokenAmount } from '@pancakeswap/sdk'
 import { useTokenContract } from './useContract'
 import { useSingleCallResult } from '../state/multicall/hooks'
@@ -8,7 +7,7 @@ import { useSingleCallResult } from '../state/multicall/hooks'
 function useTotalSupply(token?: Token): TokenAmount | undefined {
   const contract = useTokenContract(token?.address, false)
 
-  const totalSupply: BigNumber = useSingleCallResult(contract, 'totalSupply')?.result?.[0]
+  const totalSupply: bigint | undefined = useSingleCallResult(contract, 'totalSupply')?.result?.[0]
 
   return token && totalSupply ? new TokenAmount(token, totalSupply.toString()) : undefined
 }

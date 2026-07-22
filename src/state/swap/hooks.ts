@@ -1,4 +1,4 @@
-import { parseUnits } from '@ethersproject/units'
+import { parseUnits } from 'ethers'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@pancakeswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'

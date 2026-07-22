@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { ethers, Contract } from 'ethers'
+import { Contract, MaxUint256 } from 'ethers'
 import { useAppDispatch } from 'state'
 import { updateUserAllowance } from 'state/actions'
 import { useTranslation } from 'contexts/Localization'
@@ -18,7 +18,7 @@ export const useApproveCollectiblesFarmForAll = (collectiblesFarmingPoolContract
       setRequestedApproval(true)
       const tx = await collectiblesFarmingPoolContract.setApprovalForAll(
         collectiblesFarmingPoolContract,
-        ethers.constants.MaxUint256,
+        MaxUint256,
       )
       const receipt = await tx.wait()
 

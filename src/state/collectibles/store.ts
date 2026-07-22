@@ -6,7 +6,6 @@ import { NftType } from 'config/constants/types'
 import { getAddress } from 'utils/addressHelpers'
 import { getErc721Contract } from 'utils/contractHelpers'
 import { getNftByTokenId } from 'utils/collectibles'
-import { ethers } from 'ethers'
 
 export const initialState: CollectiblesState = {
   isInitialized: false,
@@ -38,8 +37,9 @@ export const fetchWalletNfts = async (account: string): Promise<void> => {
 
     const getTokenIdAndData = async (index: number) => {
       try {
-        const tokenIdBn: ethers.BigNumber = await contract.tokenOfOwnerByIndex(account, index)
-        const tokenId = tokenIdBn.toNumber()
+        const tokenIdBn: bigint = await contract.tokenOfOwnerByIndex(account, index)
+        // Ethers v6 returns native bigint; casting to Number is safe for tokenIds in practice.
+        const tokenId = Number(tokenIdBn)
 
         const walletNft = await getNftByTokenId(address, tokenId)
         return [tokenId, walletNft.identifier]
@@ -49,8 +49,8 @@ export const fetchWalletNfts = async (account: string): Promise<void> => {
       }
     }
 
-    const balanceOfResponse = await contract.balanceOf(account)
-    const balanceOf = balanceOfResponse.toNumber()
+    const balanceOfResponse: bigint = await contract.balanceOf(account)
+    const balanceOf = Number(balanceOfResponse)
 
     if (balanceOf === 0) {
       return []

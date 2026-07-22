@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
+import { isAddress } from 'ethers'
 import { Modal, Text, Button, AutoRenewIcon, ModalBody, Box, Input, Radio, Flex } from '@plantswap/uikit'
 import { ContextApi } from 'contexts/Localization/types'
 import { farmsConfig } from 'config/constants'
@@ -118,7 +118,7 @@ const getAddFormErrors = (formData: AddFormState, t: ContextApi['t']) => {
 
   if (!lpTokenAddress) {
     errors.lpTokenAddress = [t('%field% is required', { field: 'LP Token Address' })]
-  } else if (!ethers.utils.isAddress(lpTokenAddress)) {
+  } else if (!isAddress(lpTokenAddress)) {
     errors.lpTokenAddress = [t('%field% is not a valid address', { field: 'LP Token Address' })]
   }
 

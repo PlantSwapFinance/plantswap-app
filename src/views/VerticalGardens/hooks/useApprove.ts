@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { ethers, Contract } from 'ethers'
+import { Contract, MaxUint256 } from 'ethers'
 import { useAppDispatch } from 'state'
 import { updateUserAllowance } from 'state/actions'
 import { useTranslation } from 'contexts/Localization'
@@ -16,7 +16,7 @@ export const useApproveVerticalGarden = (verticalGardenContractAddress: Contract
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)
-      const tx = await verticalGardenContractAddress.approve(verticalGardenContractAddress, ethers.constants.MaxUint256)
+      const tx = await verticalGardenContractAddress.approve(verticalGardenContractAddress, MaxUint256)
       const receipt = await tx.wait()
 
       dispatch(updateUserAllowance(vgId, account))

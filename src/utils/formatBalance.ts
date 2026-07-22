@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
-import { formatUnits } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers'
 import { getLanguageCodeFromLS } from 'contexts/Localization/helpers'
 import { BIG_TEN } from './bigNumber'
 
@@ -35,31 +34,33 @@ export const formatNumber = (number: number, minPrecision = 2, maxPrecision = 2)
 }
 
 /**
- * Method to format the display of wei given an ethers.BigNumber object
- * Note: does NOT round
+ * Method to format the display of wei given a native bigint (or bigintish) value.
+ * Note: does NOT round.
  */
-export const formatBigNumber = (number: ethers.BigNumber, displayDecimals = 18, decimals = 18) => {
-  const remainder = number.mod(ethers.BigNumber.from(10).pow(decimals - displayDecimals))
-  return formatUnits(number.sub(remainder), decimals)
+export const formatBigNumber = (number: bigint, displayDecimals = 18, decimals = 18) => {
+  const divisor = 10n ** BigInt(decimals - displayDecimals)
+  const remainder = number % divisor
+  return formatUnits(number - remainder, decimals)
 }
 
 /**
- * Method to format the display of wei given an ethers.BigNumber object with toFixed
- * Note: rounds
+ * Method to format the display of wei given a native bigint (or bigintish) value with toFixed.
+ * Note: rounds.
  */
-export const formatBigNumberToFixed = (number: ethers.BigNumber, displayDecimals = 18, decimals = 18) => {
+export const formatBigNumberToFixed = (number: bigint, displayDecimals = 18, decimals = 18) => {
   const formattedString = formatUnits(number, decimals)
   return (+formattedString).toFixed(displayDecimals)
 }
 
 /**
- * Formats a FixedNumber like BigNumber
- * i.e. Formats 9763410526137450427.1196 into 9.763 (3 display decimals)
+ * Formats a FixedNumber-like decimal string by stripping the fractional part,
+ * then delegates to formatBigNumber.
+ * e.g. "9763410526137450427.1196" becomes "9763410526137450427" then 9.763 (3 display decimals).
  */
-export const formatFixedNumber = (number: ethers.FixedNumber, displayDecimals = 18, decimals = 18) => {
+export const formatFixedNumber = (number: string, displayDecimals = 18, decimals = 18) => {
   // Remove decimal
-  const [leftSide] = number.toString().split('.')
-  return formatBigNumber(ethers.BigNumber.from(leftSide), displayDecimals, decimals)
+  const [leftSide] = number.split('.')
+  return formatBigNumber(BigInt(leftSide), displayDecimals, decimals)
 }
 
 export const formatLocalisedCompactNumber = (number: number): string => {

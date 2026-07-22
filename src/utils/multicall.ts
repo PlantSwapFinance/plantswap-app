@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { Interface } from 'ethers'
 import { getMulticallContract } from 'utils/contractHelpers'
 import { MultiCallResponse } from './types'
 
@@ -15,7 +15,7 @@ interface MulticallOptions {
 const multicall = async <T = any>(abi: any[], calls: Call[]): Promise<T> => {
   try {
     const multi = getMulticallContract()
-    const itf = new ethers.utils.Interface(abi)
+    const itf = new Interface(abi)
 
     const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)])
     const { returnData } = await multi.aggregate(calldata)
@@ -41,7 +41,7 @@ export const multicallv2 = async <T = any>(
 ): Promise<MultiCallResponse<T>> => {
   const { requireSuccess } = options
   const multi = getMulticallContract()
-  const itf = new ethers.utils.Interface(abi)
+  const itf = new Interface(abi)
 
   const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)])
   const returnData = await multi.tryAggregate(requireSuccess, calldata)

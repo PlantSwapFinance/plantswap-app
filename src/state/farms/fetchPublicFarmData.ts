@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import masterchefABI from 'config/abi/mastergardener.json'
+import masterchefABI from 'config/abi/masterchef.json'
 import erc20 from 'config/abi/erc20.json'
 import { getAddress, getMasterGardenerAddress } from 'utils/addressHelpers'
 import { BIG_TEN, BIG_ZERO } from 'utils/bigNumber'
@@ -56,15 +56,15 @@ const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
     lpTokenRatio = new BigNumber(100)
 
     // Raw amount of token in the LP, including those not staked
-    tokenAmountTotal = new BigNumber(lpTokenBalanceMC).div(BIG_TEN.pow(tokenDecimals))
-    quoteTokenAmountTotal = new BigNumber(lpTokenBalanceMC).div(BIG_TEN.pow(tokenDecimals))
+    tokenAmountTotal = new BigNumber(lpTokenBalanceMC.toString()).div(BIG_TEN.pow(Number(tokenDecimals)))
+    quoteTokenAmountTotal = new BigNumber(lpTokenBalanceMC.toString()).div(BIG_TEN.pow(Number(tokenDecimals)))
 
     // Amount of token in the LP that are staked in the MC (i.e amount of token * lp ratio)
     tokenAmountMc = tokenAmountTotal.times(lpTokenRatio)
     quoteTokenAmountMc = quoteTokenAmountTotal.times(lpTokenRatio)
 
     // Total staked in LP, in quote token value
-    lpTotalInQuoteToken = new BigNumber(lpTokenBalanceMC).div(BIG_TEN.pow(tokenDecimals))
+    lpTotalInQuoteToken = new BigNumber(lpTokenBalanceMC.toString()).div(BIG_TEN.pow(Number(tokenDecimals)))
 
     tokenPriceVsQuote = tokenAmountTotal
 
@@ -84,8 +84,8 @@ const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
           ])
         : [null, null]
 
-    allocPoint = info ? new BigNumber(info.allocPoint?._hex) : BIG_ZERO
-    poolWeight = totalAllocPoint ? allocPoint.div(new BigNumber(totalAllocPoint)) : BIG_ZERO
+    allocPoint = info ? new BigNumber(info.allocPoint.toString()) : BIG_ZERO
+    poolWeight = totalAllocPoint ? allocPoint.div(new BigNumber(totalAllocPoint.toString())) : BIG_ZERO
   }
   else {
     calls = [
@@ -128,11 +128,11 @@ const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
       await multicall(erc20, calls)
 
     // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
-    lpTokenRatio = new BigNumber(lpTokenBalanceMC).div(new BigNumber(lpTotalSupply))
+    lpTokenRatio = new BigNumber(lpTokenBalanceMC.toString()).div(new BigNumber(lpTotalSupply.toString()))
 
     // Raw amount of token in the LP, including those not staked
-    tokenAmountTotal = new BigNumber(tokenBalanceLP).div(BIG_TEN.pow(tokenDecimals))
-    quoteTokenAmountTotal = new BigNumber(quoteTokenBalanceLP).div(BIG_TEN.pow(quoteTokenDecimals))
+    tokenAmountTotal = new BigNumber(tokenBalanceLP.toString()).div(BIG_TEN.pow(Number(tokenDecimals)))
+    quoteTokenAmountTotal = new BigNumber(quoteTokenBalanceLP.toString()).div(BIG_TEN.pow(Number(quoteTokenDecimals)))
     lpTotalSupplyCount = lpTotalSupply
     // Amount of token in the LP that are staked in the MC (i.e amount of token * lp ratio)
     tokenAmountMc = tokenAmountTotal.times(lpTokenRatio)
@@ -159,8 +159,8 @@ const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
           ])
         : [null, null]
 
-    allocPoint = info ? new BigNumber(info.allocPoint?._hex) : BIG_ZERO
-    poolWeight = totalAllocPoint ? allocPoint.div(new BigNumber(totalAllocPoint)) : BIG_ZERO
+    allocPoint = info ? new BigNumber(info.allocPoint.toString()) : BIG_ZERO
+    poolWeight = totalAllocPoint ? allocPoint.div(new BigNumber(totalAllocPoint.toString())) : BIG_ZERO
   }
 
   return {
@@ -168,7 +168,7 @@ const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
     quoteTokenAmountMc: quoteTokenAmountMc.toJSON(),
     tokenAmountTotal: tokenAmountTotal.toJSON(),
     quoteTokenAmountTotal: quoteTokenAmountTotal.toJSON(),
-    lpTotalSupply: new BigNumber(lpTotalSupplyCount).toJSON(),
+    lpTotalSupply: new BigNumber(lpTotalSupplyCount.toString()).toJSON(),
     lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
     tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
     poolWeight: poolWeight.toJSON(),

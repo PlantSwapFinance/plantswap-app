@@ -1,5 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { Contract } from '@ethersproject/contracts'
+import { Contract, TransactionResponse } from 'ethers'
 import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@pancakeswap/sdk'
 import { useMemo } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -23,7 +22,7 @@ interface SwapCall {
 
 interface SuccessfulCall {
   call: SwapCall
-  gasEstimate: BigNumber
+  gasEstimate: bigint
 }
 
 interface FailedCall {
@@ -65,7 +64,7 @@ function useSwapCallArguments(
         feeOnTransfer: false,
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
-        deadline: deadline.toNumber(),
+        deadline: Number(deadline),
       }),
     )
 
@@ -75,7 +74,7 @@ function useSwapCallArguments(
           feeOnTransfer: true,
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
-          deadline: deadline.toNumber(),
+          deadline: Number(deadline),
         }),
       )
     }
@@ -122,8 +121,8 @@ export function useSwapCallback(
             } = call
             const options = !value || isZero(value) ? {} : { value }
 
-            return contract.estimateGas[methodName](...args, options)
-              .then((gasEstimate) => {
+            return contract[methodName].estimateGas(...args, options)
+              .then((gasEstimate: bigint) => {
                 return {
                   call,
                   gasEstimate,
@@ -132,7 +131,7 @@ export function useSwapCallback(
               .catch((gasError) => {
                 console.error('Gas estimate failed, trying eth_call to extract error', call)
 
-                return contract.callStatic[methodName](...args, options)
+                return contract[methodName].staticCall(...args, options)
                   .then((result) => {
                     console.error('Unexpected successful call after failed estimate gas', call, gasError, result)
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
@@ -150,7 +149,7 @@ export function useSwapCallback(
           }),
         )
 
-        // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
+        // a successful estimation is a bigint gas estimate and the next call is also a bigint gas estimate
         const successfulEstimation = estimatedCalls.find(
           (el, ix, list): el is SuccessfulCall =>
             'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1]),
@@ -174,7 +173,7 @@ export function useSwapCallback(
           gasLimit: calculateGasMargin(gasEstimate),
           ...(value && !isZero(value) ? { value, from: account } : { from: account }),
         })
-          .then((response: any) => {
+          .then((response: TransactionResponse) => {
             const inputSymbol = trade.inputAmount.currency.symbol
             const outputSymbol = trade.outputAmount.currency.symbol
             const inputAmount = trade.inputAmount.toSignificant(3)

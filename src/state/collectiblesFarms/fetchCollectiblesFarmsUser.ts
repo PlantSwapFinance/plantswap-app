@@ -91,7 +91,7 @@ export const fetchUserBalances = async (account, nftAddress = getPlantswapGarden
   }))
   const gardeners = await multicall(collectiblesFarmABI, calls)
   const stakedBalances = collectiblesFarmsConfig.reduce(
-    (acc, collectiblesFarm, index) => ({...acc, [collectiblesFarm.cfId]: new BigNumber(gardeners[index][0]._hex).toJSON(), }),
+    (acc, collectiblesFarm, index) => ({...acc, [collectiblesFarm.cfId]: new BigNumber(gardeners[index][0].toString()).toJSON(), }),
     {},
   )
 
@@ -110,7 +110,7 @@ export const fetchUserToken = async (account, cfId, collectiblesFarmingPoolContr
   }
   const tokenIdBn = await multicall(collectiblesFarmABI, nftDataFetchPromises)
   const tokenIds = nftDataFetchPromises.map((c) => (
-    new BigNumber(tokenIdBn[c.params[1] - 1][0]._hex).toJSON()
+    new BigNumber(tokenIdBn[c.params[1] - 1][0].toString()).toJSON()
   ))
   
   return { ...tokenIds }

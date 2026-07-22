@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react'
 import { noop } from 'lodash'
-import { ethers } from 'ethers'
+import { TransactionResponse } from 'ethers'
 import useToast from 'hooks/useToast'
 import { useTranslation } from 'contexts/Localization'
 import useActiveWeb3React from './useActiveWeb3React'
@@ -69,8 +69,8 @@ const reducer = (state: State, actions: Action): State => {
 }
 
 interface ApproveConfirmTransaction {
-  onApprove: () => ethers.providers.TransactionResponse
-  onConfirm: () => ethers.providers.TransactionResponse
+  onApprove: () => Promise<TransactionResponse>
+  onConfirm: () => Promise<TransactionResponse>
   onRequiresApproval?: () => Promise<boolean>
   onSuccess: (state: State) => void
   onApproveSuccess?: (state: State) => void

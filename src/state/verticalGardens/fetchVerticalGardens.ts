@@ -64,21 +64,21 @@ export const fetchVerticalGardenTotalStaked = async () => { // NEW
       name: 'lastUpdBlockNumberPrevious',
     }
   })
-  
+
   const callsLastRewardUpdateTotalStakedToken = verticalGardensTotalStaked.map((verticalGardenConfig) => {
     return {
       address: getAddress(verticalGardenConfig.verticalGardenContractAddress),
       name: 'lastUpdTotalStakedToken',
     }
   })
-  
+
   const callsLastRewardUpdateRewardTokenGained = verticalGardensTotalStaked.map((verticalGardenConfig) => {
     return {
       address: getAddress(verticalGardenConfig.verticalGardenContractAddress),
       name: 'lastUpdRewardTokenGained',
     }
   })
-  
+
   const callsLastRewardUpdatePlantGained = verticalGardensTotalStaked.map((verticalGardenConfig) => {
     return {
       address: getAddress(verticalGardenConfig.verticalGardenContractAddress),
@@ -115,18 +115,18 @@ export const fetchVerticalGardenTotalStaked = async () => { // NEW
     const lastRewardUpdatePlantGained = lastRewardUpdatePlantGaineds[index]
     return {
       vgId: plantVerticalGardenConfig.vgId,
-      totalStaked: new BigNumber(totalStaked).toJSON(),
-      totalStakedEachBlock: new BigNumber(totalStakedEachBlock).toJSON(),
-      totalPendingStakedRewardToSplit: new BigNumber(totalPendingStakedRewardToSplit).toJSON(),
-      totalPendingPlantRewardToSplit: new BigNumber(totalPendingPlantRewardToSplit).toJSON(),
-      pendingStakedInStakedMasterChef: new BigNumber(pendingStakedInStakedMasterChef).toJSON(),
-      pendingPlantInPlantMasterGardener: new BigNumber(pendingPlantInPlantMasterGardener).toJSON(),
-      freezeContractTillBlock: new BigNumber(freezeContractTillBlock).toJSON(),
-      lastRewardUpdateBlock: new BigNumber(lastRewardUpdateBlock).toJSON(), 
-      lastRewardUpdateBlockPrevious: new BigNumber(lastRewardUpdateBlockPrevious).toJSON(),
-      lastRewardUpdateTotalStakedToken: new BigNumber(lastRewardUpdateTotalStakedToken).toJSON(),
-      lastRewardUpdateRewardTokenGained: new BigNumber(lastRewardUpdateRewardTokenGained).toJSON(),
-      lastRewardUpdatePlantGained: new BigNumber(lastRewardUpdatePlantGained).toJSON(),
+      totalStaked: new BigNumber(totalStaked.toString()).toJSON(),
+      totalStakedEachBlock: new BigNumber(totalStakedEachBlock.toString()).toJSON(),
+      totalPendingStakedRewardToSplit: new BigNumber(totalPendingStakedRewardToSplit.toString()).toJSON(),
+      totalPendingPlantRewardToSplit: new BigNumber(totalPendingPlantRewardToSplit.toString()).toJSON(),
+      pendingStakedInStakedMasterChef: new BigNumber(pendingStakedInStakedMasterChef.toString()).toJSON(),
+      pendingPlantInPlantMasterGardener: new BigNumber(pendingPlantInPlantMasterGardener.toString()).toJSON(),
+      freezeContractTillBlock: new BigNumber(freezeContractTillBlock.toString()).toJSON(),
+      lastRewardUpdateBlock: new BigNumber(lastRewardUpdateBlock.toString()).toJSON(),
+      lastRewardUpdateBlockPrevious: new BigNumber(lastRewardUpdateBlockPrevious.toString()).toJSON(),
+      lastRewardUpdateTotalStakedToken: new BigNumber(lastRewardUpdateTotalStakedToken.toString()).toJSON(),
+      lastRewardUpdateRewardTokenGained: new BigNumber(lastRewardUpdateRewardTokenGained.toString()).toJSON(),
+      lastRewardUpdatePlantGained: new BigNumber(lastRewardUpdatePlantGained.toString()).toJSON(),
     }
   })
 }
@@ -164,21 +164,21 @@ export const fetchVerticalGardenInfo = async () => { // NEW
       name: 'lastUpdBlockNumberPrevious',
     }
   })
-  
+
   const callsLastRewardUpdateTotalStakedToken = verticalGardensInfo.map((verticalGardenConfig) => {
     return {
       address: getAddress(verticalGardenConfig.verticalGardenContractAddress),
       name: 'lastUpdTotalStakedToken',
     }
   })
-  
+
   const callsLastRewardUpdateRewardTokenGained = verticalGardensInfo.map((verticalGardenConfig) => {
     return {
       address: getAddress(verticalGardenConfig.verticalGardenContractAddress),
       name: 'lastUpdRewardTokenGained',
     }
   })
-  
+
   const callsLastRewardUpdatePlantGained = verticalGardensInfo.map((verticalGardenConfig) => {
     return {
       address: getAddress(verticalGardenConfig.verticalGardenContractAddress),
@@ -194,7 +194,7 @@ export const fetchVerticalGardenInfo = async () => { // NEW
   const lastRewardUpdateTotalStakedTokens = await multicall(verticalGardenABI, callsLastRewardUpdateTotalStakedToken)
   const lastRewardUpdateRewardTokenGaineds = await multicall(verticalGardenABI, callsLastRewardUpdateRewardTokenGained)
   const lastRewardUpdatePlantGaineds = await multicall(verticalGardenABI, callsLastRewardUpdatePlantGained)
-  
+
 
   return verticalGardensInfo.map((plantVerticalGardenConfig, index) => {
     const depositActive = depositActives[index]
@@ -209,12 +209,12 @@ export const fetchVerticalGardenInfo = async () => { // NEW
       vgId: plantVerticalGardenConfig.vgId,
       depositActive: depositActive.toJSON(),
       freezeContract: freezeContract.toJSON(),
-      freezeContractTillBlock: new BigNumber(freezeContractTillBlock).toJSON(),
-      lastRewardUpdateBlock: new BigNumber(lastRewardUpdateBlock).toJSON(), 
-      lastRewardUpdateBlockPrevious: new BigNumber(lastRewardUpdateBlockPrevious).toJSON(),
-      lastRewardUpdateTotalStakedToken: new BigNumber(lastRewardUpdateTotalStakedToken).toJSON(),
-      lastRewardUpdateRewardTokenGained: new BigNumber(lastRewardUpdateRewardTokenGained).toJSON(),
-      lastRewardUpdatePlantGained: new BigNumber(lastRewardUpdatePlantGained).toJSON(),
+      freezeContractTillBlock: new BigNumber(freezeContractTillBlock.toString()).toJSON(),
+      lastRewardUpdateBlock: new BigNumber(lastRewardUpdateBlock.toString()).toJSON(),
+      lastRewardUpdateBlockPrevious: new BigNumber(lastRewardUpdateBlockPrevious.toString()).toJSON(),
+      lastRewardUpdateTotalStakedToken: new BigNumber(lastRewardUpdateTotalStakedToken.toString()).toJSON(),
+      lastRewardUpdateRewardTokenGained: new BigNumber(lastRewardUpdateRewardTokenGained.toString()).toJSON(),
+      lastRewardUpdatePlantGained: new BigNumber(lastRewardUpdatePlantGained.toString()).toJSON(),
     }
   })
 }
@@ -246,11 +246,11 @@ export const fetchVerticalGardensTotalStatking = async () => { // OLD
   return [
     ...nonBnbVerticalGardens.map((v, index) => ({
       vgId: v.vgId,
-      totalStaked: new BigNumber(nonBnbVerticalGardensTotalStaked[index]).toJSON(),
+      totalStaked: new BigNumber(nonBnbVerticalGardensTotalStaked[index].toString()).toJSON(),
     })),
     ...bnbVerticalGarden.map((v, index) => ({
       vgId: v.vgId,
-      totalStaked: new BigNumber(bnbVerticalGardensTotalStaked[index]).toJSON(),
+      totalStaked: new BigNumber(bnbVerticalGardensTotalStaked[index].toString()).toJSON(),
     })),
   ]
 }

@@ -1,8 +1,4 @@
-import { Contract } from '@ethersproject/contracts'
-import { getAddress } from '@ethersproject/address'
-import { AddressZero } from '@ethersproject/constants'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { BigNumber } from '@ethersproject/bignumber'
+import { Contract, getAddress, ZeroAddress, BrowserProvider, JsonRpcSigner } from 'ethers'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@pancakeswap/sdk'
 import { ROUTER_ADDRESS } from '../config/constants'
@@ -51,9 +47,9 @@ export function shortenAddress(address: string, chars = 4): string {
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
 
-// add 10%
-export function calculateGasMargin(value: BigNumber): BigNumber {
-  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000))
+// add 10% (native bigint arithmetic in ethers v6)
+export function calculateGasMargin(value: bigint): bigint {
+  return (value * (10000n + 1000n)) / 10000n
 }
 
 // converts a basis points value to a sdk percent
@@ -72,18 +68,22 @@ export function calculateSlippageAmount(value: CurrencyAmount, slippage: number)
 }
 
 // account is not optional
-export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
-  return library.getSigner(account).connectUnchecked()
+export function getSigner(library: BrowserProvider, account: string): Promise<JsonRpcSigner> {
+  // v6's BrowserProvider.getSigner returns a Promise; we keep the same contract
+  // here so callers can either await it or chain directly. The v5
+  // `connectUnchecked()` helper is no longer needed — async estimation works
+  // directly off the signer.
+  return library.getSigner(account)
 }
 
 // account is optional
-export function getProviderOrSigner(library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
-  return account ? getSigner(library, account) : library
+export function getProviderOrSigner(library: BrowserProvider, account?: string): BrowserProvider | Promise<JsonRpcSigner> {
+  return account ? getSigner(library, account) : (library as BrowserProvider | Promise<JsonRpcSigner>)
 }
 
 // account is optional
-export function getContract(address: string, ABI: any, library: Web3Provider, account?: string): Contract {
-  if (!isAddress(address) || address === AddressZero) {
+export function getContract(address: string, ABI: any, library: BrowserProvider, account?: string): Contract {
+  if (!isAddress(address) || address === ZeroAddress) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
@@ -91,7 +91,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
+export function getRouterContract(_: number, library: BrowserProvider, account?: string): Contract {
   return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
 }
 

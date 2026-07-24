@@ -9592,10 +9592,10 @@ negotiator@^1.0.0:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-1.0.0.tgz#b6c91bb47172d69f93cfd7c357bbb529019b5f6a"
   integrity sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==
 
-netlify-cli@^26.0.0:
-  version "26.2.0"
-  resolved "https://registry.yarnpkg.com/netlify-cli/-/netlify-cli-26.2.0.tgz#cfb3141d80b50fbd602f76b1c8466c399664ef97"
-  integrity sha512-3jQg9WQoa1H74478fHZisj3T8dLM67x4F4Sgi7kROBHzJD9NNCYYw99dKRYWJOtEa1dUNyZu2W4VTdPzA1kjiw==
+netlify-cli@^27.0.0:
+  version "27.0.0"
+  resolved "https://registry.yarnpkg.com/netlify-cli/-/netlify-cli-27.0.0.tgz#4cd4980e763569f72ec433ca0b4d4ea1639acfb9"
+  integrity sha512-iVcVM2x7dLo9vLpgg9YnVqWmCPSu/B8abMXNfkHFcVB8ylNTBCEipcx/eyLDN2jqdZATp2Omm4drMQJXvKXLxA==
   dependencies:
     "@fastify/static" "^9.1.1"
     "@netlify/ai" "^0.4.1"

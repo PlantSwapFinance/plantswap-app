@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { Card, CardBody, CardHeader, Flex, Heading, Text, Button, OpenNewIcon, useModal, Modal } from '@plantswap/uikit'
 import { nanoid } from 'nanoid'
 import { useTranslation } from 'contexts/Localization'
-import emailjs from 'emailjs-com'
+import emailjs from '@emailjs/browser'
 import usersApi from 'utils/calls/users'
 import UsernameList from './components/users/UsernameList'
 import MenuUser from './components/users/MenuUser'
@@ -56,7 +56,10 @@ const UsersList: React.FC = () => {
       })
       emailjs
         .sendForm(
-          'gmail_marc_esportscentra', 'template_basic', e.target, 'user_JLozWFTpRTLvTUI0DUZAC'
+          'gmail_marc_esportscentra',
+          'template_basic',
+          e.target,
+          { publicKey: 'user_JLozWFTpRTLvTUI0DUZAC' },
         )
     }
   }

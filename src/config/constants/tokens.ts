@@ -1,5 +1,5 @@
+import type { Currency } from '@pancakeswap/sdk'
 import { ChainId, Token } from '@pancakeswap/sdk'
-
 export const PLANT: { [chainId: number]: Token } = {
   [ChainId.MAINNET]: new Token(
     ChainId.MAINNET,

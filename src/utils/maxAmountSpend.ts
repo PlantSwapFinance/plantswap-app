@@ -1,4 +1,5 @@
-import { CurrencyAmount, ETHER, JSBI } from '@pancakeswap/sdk'
+import { CurrencyAmount, Ether } from '@pancakeswap/sdk'
+import JSBI from 'jsbi'
 import { MIN_BNB } from '../config/constants'
 
 /**
@@ -7,7 +8,7 @@ import { MIN_BNB } from '../config/constants'
  */
 export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
   if (!currencyAmount) return undefined
-  if (currencyAmount.currency === ETHER) {
+  if (currencyAmount.currency === Ether) {
     if (JSBI.greaterThan(currencyAmount.raw, MIN_BNB)) {
       return CurrencyAmount.ether(JSBI.subtract(currencyAmount.raw, MIN_BNB))
     }

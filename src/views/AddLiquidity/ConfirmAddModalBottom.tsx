@@ -1,4 +1,5 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { CurrencyAmount, Fraction, Percent } from '@pancakeswap/sdk'
 import React from 'react'
 import { Button, Text } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'

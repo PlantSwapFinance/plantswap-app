@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Token, Currency } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { Token } from '@pancakeswap/sdk'
 import { Button, Text, ErrorIcon, Flex, Message, Checkbox, Link, Tag, Grid } from '@plantswap/uikit'
 import { AutoColumn } from 'components/Layout/Column'
 import { useAddUserToken } from 'state/user/hooks'

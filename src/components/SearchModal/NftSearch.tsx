@@ -1,5 +1,6 @@
 import React, { KeyboardEvent, RefObject, useCallback, useMemo, useRef, useState, useEffect } from 'react'
-import { Currency, ETHER, Token } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { Ether, Token } from '@pancakeswap/sdk'
 import { Text, Input, Box } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import type { ListImperativeAPI } from 'react-window'
@@ -99,7 +100,7 @@ function NftSearch({
       if (e.key === 'Enter') {
         const s = debouncedQuery.toLowerCase().trim()
         if (s === 'bnb') {
-          handleCurrencySelect(ETHER)
+          handleCurrencySelect(Ether)
         } else if (filteredSortedTokens.length > 0) {
           if (
             filteredSortedTokens[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||

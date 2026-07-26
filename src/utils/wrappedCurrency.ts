@@ -1,18 +1,18 @@
-import { ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH } from '@pancakeswap/sdk'
-
+import type { Currency } from '@pancakeswap/sdk'
+import { ChainId, CurrencyAmount, Ether, Token, WETH9 } from '@pancakeswap/sdk'
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
-  return chainId && currency === ETHER ? WETH[chainId] : currency instanceof Token ? currency : undefined
+  return chainId && currency === Ether ? WETH9[chainId] : currency instanceof Token ? currency : undefined
 }
 
 export function wrappedCurrencyAmount(
   currencyAmount: CurrencyAmount | undefined,
   chainId: ChainId | undefined,
-): TokenAmount | undefined {
+): CurrencyAmount | undefined {
   const token = currencyAmount && chainId ? wrappedCurrency(currencyAmount.currency, chainId) : undefined
-  return token && currencyAmount ? new TokenAmount(token, currencyAmount.raw) : undefined
+  return token && currencyAmount ? new CurrencyAmount(token, currencyAmount.raw) : undefined
 }
 
 export function unwrappedToken(token: Token): Currency {
-  if (token.equals(WETH[token.chainId])) return ETHER
+  if (token.equals(WETH9[token.chainId])) return Ether
   return token
 }

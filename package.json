@@ -32,7 +32,7 @@
     "@ethersproject/experimental": "^5.0.1",
     "@fontsource/kanit": "^5.2.8",
     "@neondatabase/serverless": "^1.0.2",
-    "@pancakeswap/sdk": "^5.0.0",
+    "@pancakeswap/sdk": "5.8.0",
     "@plantswap/uikit": "0.1.8",
     "@react-three/cannon": "^6.0.0",
     "@react-three/drei": "^10.0.0",
@@ -63,6 +63,7 @@
     "graphql": "^17.0.0",
     "graphql-request": "^7.0.0",
     "js-cookie": "^3.0.0",
+    "jsbi": "^3.2.5",
     "lodash": "^4.17.21",
     "multiformats": "^14.0.0",
     "multihashes": "^4.0.0",
@@ -108,5 +109,8 @@
   "main": "index.js",
   "repository": "https://github.com/PlantSwapFinance/plantswapfinance-frontend",
   "author": "plantswapfinance@gmail.com",
-  "license": "MIT"
+  "license": "MIT",
+  "resolutions": {
+    "@pancakeswap/swap-sdk-core": "1.1.0"
+  }
 }

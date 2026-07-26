@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { decodeBytes32String } from 'ethers'
-import { Currency, ETHER, Token, currencyEquals } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { Ether, Token } from '@pancakeswap/sdk'
+import currencyEquals from './../utils/currencyEquals'
 import { useMemo } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import {
@@ -189,5 +191,5 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const isBNB = currencyId?.toUpperCase() === 'BNB'
   const token = useToken(isBNB ? undefined : currencyId)
-  return isBNB ? ETHER : token
+  return isBNB ? Ether : token
 }

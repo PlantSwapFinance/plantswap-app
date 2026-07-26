@@ -1,5 +1,7 @@
 import React, { CSSProperties, MutableRefObject, useMemo } from 'react'
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { CurrencyAmount, Ether, Token } from '@pancakeswap/sdk'
+import currencyEquals from './../../utils/currencyEquals'
 import { Text } from '@plantswap/uikit'
 import styled from 'styled-components'
 import { List, type ListImperativeAPI, type RowComponentProps } from 'react-window'
@@ -19,7 +21,7 @@ import { isTokenOnList } from '../../utils'
 import ImportRow from './ImportRow'
 
 function currencyKey(currency: Currency): string {
-  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
+  return currency instanceof Token ? currency.address : currency === Ether ? 'Ether' : ''
 }
 
 const StyledBalanceText = styled(Text)`
@@ -179,7 +181,7 @@ export default function CurrencyList({
   breakIndex: number | undefined
 }) {
   const itemData: (Currency | undefined)[] = useMemo(() => {
-    let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
+    let formatted: (Currency | undefined)[] = showETH ? [Currency.Ether, ...currencies] : currencies
     if (breakIndex !== undefined) {
       formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
     }

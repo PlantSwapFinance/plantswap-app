@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react'
+import type { Currency } from '@pancakeswap/sdk'
 import { Percent } from '@pancakeswap/sdk'
-
 import ConfirmPriceImpactModal from 'components/ConfirmPriceImpactModal'
 import { ALLOWED_PRICE_IMPACT_HIGH } from 'config/constants'
 

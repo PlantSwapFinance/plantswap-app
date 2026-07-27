@@ -111,6 +111,6 @@
   "author": "plantswapfinance@gmail.com",
   "license": "MIT",
   "resolutions": {
-    "@pancakeswap/swap-sdk-core": "1.1.0"
+    "@pancakeswap/swap-sdk-core": "1.6.0"
   }
 }

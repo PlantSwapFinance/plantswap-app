@@ -1,4 +1,5 @@
-import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade } from '@pancakeswap/sdk'
+import { CurrencyAmount, Fraction, Percent, Trade } from '@pancakeswap/sdk'
+import JSBI from 'jsbi'
 import {
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
   ALLOWED_PRICE_IMPACT_HIGH,
@@ -41,8 +42,8 @@ export function computeTradePriceBreakdown(trade?: Trade | null): {
   const realizedLPFeeAmount =
     realizedLPFee &&
     trade &&
-    (trade.inputAmount instanceof TokenAmount
-      ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
+    (trade.inputAmount instanceof CurrencyAmount
+      ? new CurrencyAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
       : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
 
   return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount }

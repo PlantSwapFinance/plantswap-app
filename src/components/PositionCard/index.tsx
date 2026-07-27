@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { JSBI, Pair, Percent } from '@pancakeswap/sdk'
+import { Pair, Percent } from '@pancakeswap/sdk'
+import JSBI from 'jsbi'
 import {
   Button,
   Text,

@@ -4,7 +4,7 @@ import { Card, CardBody, CardHeader, Flex, Heading, Text, Button, OpenNewIcon, u
 import { nanoid } from 'nanoid'
 import { useTranslation } from 'contexts/Localization'
 import bcrypt from 'bcryptjs'
-import emailjs from 'emailjs-com'
+import emailjs from '@emailjs/browser'
 import usersApi from 'utils/calls/users'
 import UserList from './components/users/UserList'
 import MenuUser from './components/users/MenuUser'
@@ -71,7 +71,10 @@ const UsersList: React.FC = () => {
       })
       emailjs
         .sendForm(
-          'gmail_marc_esportscentra', 'template_basic', e.target, 'user_JLozWFTpRTLvTUI0DUZAC'
+          'gmail_marc_esportscentra',
+          'template_basic',
+          e.target,
+          { publicKey: 'user_JLozWFTpRTLvTUI0DUZAC' },
         )
     }
   }

@@ -1,5 +1,6 @@
 import { ZeroAddress } from 'ethers'
-import { TokenAmount, Token, ChainId, Percent, JSBI } from '@pancakeswap/sdk'
+import { CurrencyAmount, Token, ChainId, Percent } from '@pancakeswap/sdk'
+import JSBI from 'jsbi'
 
 import {
   getBscScanLink,
@@ -28,7 +29,7 @@ describe('utils', () => {
 
   describe('#calculateSlippageAmount', () => {
     it('bounds are correct', () => {
-      const tokenAmount = new TokenAmount(new Token(ChainId.MAINNET, ZeroAddress, 0), '100')
+      const tokenAmount = new CurrencyAmount(new Token(ChainId.MAINNET, ZeroAddress, 0), '100')
       expect(() => calculateSlippageAmount(tokenAmount, -1)).toThrow()
       expect(calculateSlippageAmount(tokenAmount, 0).map((bound) => bound.toString())).toEqual(['100', '100'])
       expect(calculateSlippageAmount(tokenAmount, 100).map((bound) => bound.toString())).toEqual(['99', '101'])

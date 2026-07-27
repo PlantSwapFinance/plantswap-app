@@ -1,4 +1,6 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { CurrencyAmount, Ether, Pair, Percent, Price } from '@pancakeswap/sdk'
+import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { PairState, usePair } from 'hooks/usePairs'
@@ -50,7 +52,7 @@ export function useDerivedMintInfo(
   parsedAmounts: { [field in Field]?: CurrencyAmount }
   price?: Price
   noLiquidity?: boolean
-  liquidityMinted?: TokenAmount
+  liquidityMinted?: CurrencyAmount
   poolTokenPercentage?: Percent
   error?: string
 } {
@@ -106,7 +108,7 @@ export function useDerivedMintInfo(
           dependentField === Field.CURRENCY_B
             ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
             : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
-        return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
+        return dependentCurrency === Ether ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
       }
       return undefined
     }

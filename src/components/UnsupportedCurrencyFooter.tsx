@@ -1,5 +1,6 @@
 import React from 'react'
-import { Currency, Token } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { Token } from '@pancakeswap/sdk'
 import { Button, Text, Modal, useModal, InjectedModalProps, Link } from '@plantswap/uikit'
 import styled from 'styled-components'
 import { AutoRow } from 'components/Layout/Row'

@@ -1,7 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Contract, Signature, TransactionResponse } from 'ethers'
-import { Currency, currencyEquals, ETHER, Percent, WETH } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { Ether, Percent, WETH9 } from '@pancakeswap/sdk'
+import currencyEquals from './../../utils/currencyEquals'
 import { Button, Text, AddIcon, ArrowDownIcon, CardBody, Slider, Box, Flex, useModal } from '@plantswap/uikit'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'contexts/Localization'
@@ -187,8 +189,8 @@ export default function RemoveLiquidity() {
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER
-    const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
+    const currencyBIsETH = currencyB === Ether
+    const oneCurrencyIsETH = currencyA === Ether || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -389,11 +391,11 @@ export default function RemoveLiquidity() {
     [onUserInput],
   )
 
-  const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER
+  const oneCurrencyIsETH = currencyA === Ether || currencyB === Ether
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WETH[chainId], currencyB))),
+      ((currencyA && currencyEquals(WETH9[chainId], currencyA)) ||
+        (currencyB && currencyEquals(WETH9[chainId], currencyB))),
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -528,16 +530,16 @@ export default function RemoveLiquidity() {
                     <RowBetween style={{ justifyContent: 'flex-end', fontSize: '14px' }}>
                       {oneCurrencyIsETH ? (
                         <StyledInternalLink
-                          to={`/remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
-                            currencyB === ETHER ? WETH[chainId].address : currencyIdB
+                          to={`/remove/${currencyA === Ether ? WETH9[chainId].address : currencyIdA}/${
+                            currencyB === Ether ? WETH9[chainId].address : currencyIdB
                           }`}
                         >
                           {t('Receive WBNB')}
                         </StyledInternalLink>
                       ) : oneCurrencyIsWETH ? (
                         <StyledInternalLink
-                          to={`/remove/${currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'BNB' : currencyIdA}/${
-                            currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'BNB' : currencyIdB
+                          to={`/remove/${currencyA && currencyEquals(currencyA, WETH9[chainId]) ? 'BNB' : currencyIdA}/${
+                            currencyB && currencyEquals(currencyB, WETH9[chainId]) ? 'BNB' : currencyIdB
                           }`}
                         >
                           {t('Receive BNB')}

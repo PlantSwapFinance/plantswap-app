@@ -1,4 +1,6 @@
-import { Currency, currencyEquals, ETHER, WETH } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { Ether, WETH9 } from '@pancakeswap/sdk'
+import currencyEquals from './../utils/currencyEquals'
 import { useMemo } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { tryParseAmount } from '../state/swap/hooks'
@@ -36,7 +38,7 @@ export default function useWrapCallback(
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency === ETHER && currencyEquals(WETH[chainId], outputCurrency)) {
+    if (inputCurrency === Ether && currencyEquals(WETH9[chainId], outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
         execute:
@@ -53,7 +55,7 @@ export default function useWrapCallback(
         inputError: sufficientBalance ? undefined : 'Insufficient BNB balance',
       }
     }
-    if (currencyEquals(WETH[chainId], inputCurrency) && outputCurrency === ETHER) {
+    if (currencyEquals(WETH9[chainId], inputCurrency) && outputCurrency === Ether) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:

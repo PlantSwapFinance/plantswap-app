@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
+import type { Currency } from '@pancakeswap/sdk'
 import { Percent, Trade } from '@pancakeswap/sdk'
-
 /**
  * Local swap-execution state used by the Swap and Donate views. Distinct from
  * `state/swap/store`'s `SwapState`, which is the global swap-store record.

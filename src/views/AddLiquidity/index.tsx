@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from 'react'
 import { TransactionResponse } from 'ethers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { Ether, CurrencyAmount, WETH9 } from '@pancakeswap/sdk'
+import currencyEquals from './../../utils/currencyEquals'
 import { Button, Text, Flex, AddIcon, CardBody, Message, useModal } from '@plantswap/uikit'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
@@ -47,8 +49,8 @@ export default function AddLiquidity() {
 
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
-        (currencyB && currencyEquals(currencyB, WETH[chainId]))),
+      ((currencyA && currencyEquals(currencyA, WETH9[chainId])) ||
+        (currencyB && currencyEquals(currencyB, WETH9[chainId]))),
   )
 
   const expertMode = useIsExpertMode()
@@ -88,7 +90,7 @@ export default function AddLiquidity() {
   }
 
   // get the max amounts user can add
-  const maxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
+  const maxAmounts: { [field in Field]?: CurrencyAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
         ...accumulator,
@@ -98,7 +100,7 @@ export default function AddLiquidity() {
     {},
   )
 
-  const atMaxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
+  const atMaxAmounts: { [field in Field]?: CurrencyAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
         ...accumulator,
@@ -132,8 +134,8 @@ export default function AddLiquidity() {
     let method: (...args: any) => Promise<TransactionResponse>
     let args: Array<string | string[] | number>
     let value: bigint | null
-    if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsETH = currencyB === ETHER
+    if (currencyA === Ether || currencyB === Ether) {
+      const tokenBIsETH = currencyB === Ether
       estimate = router.addLiquidityETH.estimateGas
       method = router.addLiquidityETH
       args = [

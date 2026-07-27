@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import emailjs from 'emailjs-com'
+import emailjs from '@emailjs/browser'
 import Page from 'components/Layout/Page'
 import PageHeader from 'components/PageHeader'
 import { Heading, Flex, EndPage, Text, Input, Button } from '@plantswap/uikit'
@@ -45,7 +45,9 @@ const ContactUs = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    emailjs.sendForm('service_2heraoe', 'template_revj3os', e.target, 'user_LncbCjsg709omIRnMnAH3').then(
+    emailjs
+      .sendForm('service_2heraoe', 'template_revj3os', e.target, { publicKey: 'user_LncbCjsg709omIRnMnAH3' })
+      .then(
       () => {
         clearState()
         setSend(true)

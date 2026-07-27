@@ -1,6 +1,8 @@
 import { Contract, getAddress, ZeroAddress, BrowserProvider, JsonRpcSigner } from 'ethers'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { ChainId, Percent, Token, CurrencyAmount, Ether } from '@pancakeswap/sdk'
+import JSBI from 'jsbi'
 import { ROUTER_ADDRESS } from '../config/constants'
 import { BASE_BSC_SCAN_URLS } from '../config'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -100,6 +102,6 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  if (currency === ETHER) return true
+  if (currency === Ether) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }

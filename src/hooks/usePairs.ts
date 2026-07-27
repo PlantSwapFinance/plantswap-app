@@ -1,4 +1,5 @@
-import { TokenAmount, Pair, Currency } from '@pancakeswap/sdk'
+import type { Currency } from '@pancakeswap/sdk'
+import { CurrencyAmount, Pair } from '@pancakeswap/sdk'
 import { useMemo } from 'react'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { Interface } from 'ethers'
@@ -52,8 +53,8 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       return [
         PairState.EXISTS,
         new Pair(
-          new TokenAmount(token0, reserve0.toString()),
-          new TokenAmount(token1, reserve1.toString()),
+          new CurrencyAmount(token0, reserve0.toString()),
+          new CurrencyAmount(token1, reserve1.toString()),
         ),
       ]
     })

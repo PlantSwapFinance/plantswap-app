@@ -1,7 +1,7 @@
 /**
  * Generates build/sitemap.xml at build time.
  *
- * Run automatically after `react-scripts build` via the chained `build` script
+ * Run automatically after `vite build` via the chained `build` script
  * in package.json. Also runnable directly via `yarn sitemap:generate`.
  *
  * Source of truth for which URLs to include is the INDEXABLE_ROUTES table

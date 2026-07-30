@@ -1,4 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"]
+  "extends": [
+    "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "description": "@uniswap/token-lists 1.0.0-beta.35 was published with a broken tarball (no dist/ directory in the published package). Pin to beta.34 until upstream republishes.",
+      "matchPackageNames": ["@uniswap/token-lists"],
+      "allowedVersions": "<=1.0.0-beta.34"
+    }
+  ]
 }

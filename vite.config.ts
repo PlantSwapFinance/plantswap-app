@@ -15,20 +15,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // - sourcemaps stay on for production to keep runtime debugging usable.
 // - resolve.tsconfigPaths enables Vite 8's native tsconfig path alias
 //   resolution (the same plugin we used before is now built-in).
-// - The @pancakeswap/swap-sdk-evm alias substitutes a local stub for the
-//   published package: swap-sdk-evm@1.2.1 (pulled in by @pancakeswap/sdk
-//   5.9.1) imports scaled-UI symbols that swap-sdk-core 1.6.0 does not
-//   export, so the umbrella @pancakeswap/sdk barrel fails to evaluate.
-//   The stub is empty because nothing in this app actually imports from
-//   swap-sdk-evm — Router and SwapParameters are re-exported by the
-//   umbrella from @pancakeswap/v2-sdk instead.
+// - The @pancakeswap/swap-sdk-core alias adds the scaled-UI symbols that
+//   swap-sdk-core@1.6.0 (pulled in by @pancakeswap/sdk@5.9.1) was supposed
+//   to ship but does not. swap-sdk-evm@1.2.1 imports them at module
+//   evaluation, so without the alias every import of @pancakeswap/sdk
+//   fails to load. The shim re-exports everything from the real package
+//   and only adds the missing exports — see shims/swap-sdk-core.mjs.
 export default defineConfig({
   plugins: [react()],
   envPrefix: ['VITE_', 'REACT_APP_'],
   resolve: {
     tsconfigPaths: true,
     alias: {
-      '@pancakeswap/swap-sdk-evm': path.resolve(__dirname, 'shims/swap-sdk-evm.mjs'),
+      '@pancakeswap/swap-sdk-core': path.resolve(__dirname, 'shims/swap-sdk-core.mjs'),
     },
   },
   build: {

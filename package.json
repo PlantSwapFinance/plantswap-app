@@ -28,11 +28,12 @@
   },
   "dependencies": {
     "@binance-chain/bsc-connector": "^1.0.0",
+    "@emailjs/browser": "^4.4.1",
     "@ethersproject/experimental": "^5.0.1",
     "@fontsource/kanit": "^5.2.8",
     "@neondatabase/serverless": "^1.0.2",
     "@pancakeswap/sdk": "5.9.1",
-    "@plantswap/uikit": "0.1.8",
+    "@plantswap/uikit": "1.0.0-alpha.0",
     "@react-three/cannon": "^6.0.0",
     "@react-three/drei": "^10.0.0",
     "@react-three/fiber": "^9.0.0",
@@ -51,7 +52,6 @@
     "@web3-react/core": "^8.0.0",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "^6.2.4",
-    "@emailjs/browser": "^4.4.1",
     "ajv": "^8.0.0",
     "bcryptjs": "^3.0.0",
     "bignumber.js": "^11.0.0",
@@ -111,5 +111,6 @@
   "license": "MIT",
   "resolutions": {
     "@pancakeswap/swap-sdk-core": "1.6.0"
-  }
+  },
+  "packageManager": "yarn@4.18.0+sha512.fcb8716fe7cd0eece141ffc18b92193a9df9204c1ba83189c288835223fc0bbe64af473bab0d5e9927a7daeb5caf2bb07eb2787cc9338ca040ea125f2a1f2f7e"
 }

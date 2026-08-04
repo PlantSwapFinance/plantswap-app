@@ -1914,21 +1914,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/build@npm:^36.2.3":
-  version: 36.2.3
-  resolution: "@netlify/build@npm:36.2.3"
+"@netlify/build@npm:^36.2.4":
+  version: 36.2.4
+  resolution: "@netlify/build@npm:36.2.4"
   dependencies:
     "@bugsnag/js": "npm:^8.0.0"
     "@netlify/blobs": "npm:^10.4.4"
-    "@netlify/cache-utils": "npm:^7.1.0"
+    "@netlify/cache-utils": "npm:^7.1.1"
     "@netlify/config": "npm:^25.1.1"
-    "@netlify/edge-bundler": "npm:16.0.0"
-    "@netlify/functions-utils": "npm:^7.1.0"
+    "@netlify/edge-bundler": "npm:16.0.1"
+    "@netlify/functions-utils": "npm:^7.1.1"
     "@netlify/git-utils": "npm:^7.1.0"
     "@netlify/opentelemetry-utils": "npm:^3.1.0"
     "@netlify/plugins-list": "npm:^6.81.6"
     "@netlify/run-utils": "npm:^7.1.0"
-    "@netlify/zip-it-and-ship-it": "npm:15.3.0"
+    "@netlify/zip-it-and-ship-it": "npm:15.3.1"
     "@sindresorhus/slugify": "npm:^2.0.0"
     ansi-escapes: "npm:^7.0.0"
     ansis: "npm:^4.1.0"
@@ -1977,22 +1977,20 @@ __metadata:
       optional: true
   bin:
     netlify-build: bin.js
-  checksum: 10c0/0fa310087efc35b329ffc187703c80217e1d04a15c05fa7c2a6605107e6ff28996e7e333332b885a0c5e1ced2d5f408661d42b9374a281069211aa677efa80b0
+  checksum: 10c0/3dd9fd7e8591035e7916386987f2aed37bd6ee390744542000e0e7eddbdd1f303c0348d7420e6793d72fc358500d1032d3df623f66fd96c902dd914af55f72ab
   languageName: node
   linkType: hard
 
-"@netlify/cache-utils@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "@netlify/cache-utils@npm:7.1.0"
+"@netlify/cache-utils@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "@netlify/cache-utils@npm:7.1.1"
   dependencies:
-    cpy: "npm:^11.0.0"
     get-stream: "npm:^9.0.0"
-    globby: "npm:^14.0.0"
     junk: "npm:^4.0.0"
     locate-path: "npm:^7.0.0"
     move-file: "npm:^3.0.0"
     readdirp: "npm:^4.0.0"
-  checksum: 10c0/8935fec46a7b6d1c4674df3e8014b867f54c94eb5bfd3c45edeec4fb03aa608a66dadea625aa5c32c37b9e744c5963dc083daeb09c7976fe0cfcfae02ee0ddd0
+  checksum: 10c0/dbdb04a572c3c6b0c5c9af299c4e38f7014fe7e301d7002e8624c9ea10f294cc483391c96ad495c9bf4b70aefd9b54491974e69eac65fec657fc7ead73c13e8a
   languageName: node
   linkType: hard
 
@@ -2093,9 +2091,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/edge-bundler@npm:16.0.0, @netlify/edge-bundler@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "@netlify/edge-bundler@npm:16.0.0"
+"@netlify/edge-bundler@npm:16.0.1, @netlify/edge-bundler@npm:^16.0.1":
+  version: 16.0.1
+  resolution: "@netlify/edge-bundler@npm:16.0.1"
   dependencies:
     "@import-maps/resolve": "npm:^2.0.0"
     "@sveltejs/acorn-typescript": "npm:^1.0.11"
@@ -2118,7 +2116,7 @@ __metadata:
     tar: "npm:^7.5.12"
     tmp-promise: "npm:^3.0.3"
     urlpattern-polyfill: "npm:8.0.2"
-  checksum: 10c0/f1c00e54154d5af207f219f43a46a0b3f569239082f12b03fcacc89b181dc9fe1d3787fb864c63ab05940324930097ee8bcfed80b7119d8334f664352c7bb10a
+  checksum: 10c0/4de20e65d52404296a44e472c9194a88ffc4c6ab44e5cf18d452b332c8f8d48fb767bc356dec9636c42c4ccfa05803b8f5e32411716a1238dd3dc9ae1065609d
   languageName: node
   linkType: hard
 
@@ -2209,14 +2207,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/functions-utils@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "@netlify/functions-utils@npm:7.1.0"
+"@netlify/functions-utils@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "@netlify/functions-utils@npm:7.1.1"
   dependencies:
-    "@netlify/zip-it-and-ship-it": "npm:15.3.0"
+    "@netlify/zip-it-and-ship-it": "npm:15.3.1"
     cpy: "npm:^11.0.0"
     path-exists: "npm:^5.0.0"
-  checksum: 10c0/0860537b2b7968d2510f987b30ebd2aadad3dd171fb807e758a738b39073e9586f19c3903f05d3d59e3a8ec9404aacc1d3b7938709f70e3fa3165c1a2eaf559b
+  checksum: 10c0/5caf34bb7ad1e956bd43eb5704f3ee067a37ef35083c47c49dafef20b6730d9ded6843f63fd5ee3efa2efb97e2040dbc18d69ce5c72bcd4519cf812e72a1f1f0
   languageName: node
   linkType: hard
 
@@ -2524,6 +2522,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@netlify/serverless-functions-api@npm:2.18.0":
+  version: 2.18.0
+  resolution: "@netlify/serverless-functions-api@npm:2.18.0"
+  dependencies:
+    "@netlify/types": "npm:^2.8.0"
+  checksum: 10c0/7836f73aa8a0f3fe5b729322d64f85ce2094b76b87b13fd98ea486f0e7d569996752daffcbb3ed231311d4b93d80bc0cca347c7cdfcd17c958f02ed22728bc4c
+  languageName: node
+  linkType: hard
+
 "@netlify/static@npm:3.1.11":
   version: 3.1.11
   resolution: "@netlify/static@npm:3.1.11"
@@ -2533,14 +2540,57 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/types@npm:2.8.0, @netlify/types@npm:^2.6.0":
+"@netlify/types@npm:2.8.0, @netlify/types@npm:^2.6.0, @netlify/types@npm:^2.8.0":
   version: 2.8.0
   resolution: "@netlify/types@npm:2.8.0"
   checksum: 10c0/f6d75de6786652890f811853cc34fa094af4fb1ac02e4e300d4aa432989d55824b7aeb4fb8bd57a92037948963080ad4bbc4c66eb32db38768c747fbeb8d9143
   languageName: node
   linkType: hard
 
-"@netlify/zip-it-and-ship-it@npm:15.3.0, @netlify/zip-it-and-ship-it@npm:^15.3.0":
+"@netlify/zip-it-and-ship-it@npm:15.3.1, @netlify/zip-it-and-ship-it@npm:^15.3.1":
+  version: 15.3.1
+  resolution: "@netlify/zip-it-and-ship-it@npm:15.3.1"
+  dependencies:
+    "@babel/parser": "npm:^7.22.5"
+    "@babel/types": "npm:^7.28.5"
+    "@netlify/binary-info": "npm:^1.0.0"
+    "@netlify/serverless-functions-api": "npm:2.18.0"
+    "@opentelemetry/api": "npm:~1.8.0"
+    "@vercel/nft": "npm:0.29.4"
+    archiver: "npm:^8.0.0"
+    common-path-prefix: "npm:^3.0.0"
+    copy-file: "npm:^11.0.0"
+    es-module-lexer: "npm:^1.0.0"
+    esbuild: "npm:0.28.1"
+    execa: "npm:^8.0.0"
+    fast-glob: "npm:^3.3.3"
+    filter-obj: "npm:^6.0.0"
+    find-up: "npm:^7.0.0"
+    is-path-inside: "npm:^4.0.0"
+    junk: "npm:^4.0.0"
+    locate-path: "npm:^7.0.0"
+    merge-options: "npm:^3.0.4"
+    minimatch: "npm:^10.2.4"
+    normalize-path: "npm:^3.0.0"
+    p-map: "npm:^7.0.0"
+    path-exists: "npm:^5.0.0"
+    precinct: "npm:^12.0.0"
+    require-package-name: "npm:^2.0.1"
+    resolve: "npm:^2.0.0-next.1"
+    semver: "npm:^7.3.8"
+    tmp-promise: "npm:^3.0.2"
+    toml: "npm:^3.0.0"
+    unixify: "npm:^1.0.0"
+    urlpattern-polyfill: "npm:8.0.2"
+    yargs: "npm:^17.0.0"
+    zod: "npm:^3.23.8"
+  bin:
+    zip-it-and-ship-it: bin.js
+  checksum: 10c0/effe386f2383e5d34c2d18053794ecfeeb46779eb66e288705eb95d47daaa9f369a96c61e58b389f83990f1285c70f76f6de03aa398d6566b2061a28838b7239
+  languageName: node
+  linkType: hard
+
+"@netlify/zip-it-and-ship-it@npm:^15.3.0":
   version: 15.3.0
   resolution: "@netlify/zip-it-and-ship-it@npm:15.3.0"
   dependencies:
@@ -5575,6 +5625,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"archiver@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "archiver@npm:8.0.0"
+  dependencies:
+    async: "npm:^3.2.4"
+    buffer-crc32: "npm:^1.0.0"
+    is-stream: "npm:^4.0.0"
+    lazystream: "npm:^1.0.0"
+    normalize-path: "npm:^3.0.0"
+    readable-stream: "npm:^4.0.0"
+    readdir-glob: "npm:^3.0.0"
+    tar-stream: "npm:^3.0.0"
+    zip-stream: "npm:^7.0.2"
+  checksum: 10c0/bcb12f3c8c0baac15ab0b3e92d2b6a249a09c59ffded8b259bdf5ff7ea547a75a93d79e614f99d8ba9d5f4a8ee43bbcedcd07117b1faef3369249fd8070efec8
+  languageName: node
+  linkType: hard
+
 "arg@npm:^4.1.0":
   version: 4.1.3
   resolution: "arg@npm:4.1.3"
@@ -6831,6 +6898,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"compress-commons@npm:^7.0.0":
+  version: 7.0.1
+  resolution: "compress-commons@npm:7.0.1"
+  dependencies:
+    crc-32: "npm:^1.2.0"
+    crc32-stream: "npm:^7.0.1"
+    is-stream: "npm:^4.0.0"
+    normalize-path: "npm:^3.0.0"
+    readable-stream: "npm:^4.0.0"
+  checksum: 10c0/9837b9971c7e536f14b113178e944741a0cb76051db2c84ff23da2b6321f2f6da8ed922d713bb643987d4cd39eeaa537c73d9d7843f9eb74f8fe47afe93d0733
+  languageName: node
+  linkType: hard
+
 "concat-map@npm:0.0.1":
   version: 0.0.1
   resolution: "concat-map@npm:0.0.1"
@@ -7060,6 +7140,16 @@ __metadata:
     crc-32: "npm:^1.2.0"
     readable-stream: "npm:^4.0.0"
   checksum: 10c0/bf9c84571ede2d119c2b4f3a9ef5eeb9ff94b588493c0d3862259af86d3679dcce1c8569dd2b0a6eff2f35f5e2081cc1263b846d2538d4054da78cf34f262a3d
+  languageName: node
+  linkType: hard
+
+"crc32-stream@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "crc32-stream@npm:7.0.1"
+  dependencies:
+    crc-32: "npm:^1.2.0"
+    readable-stream: "npm:^4.0.0"
+  checksum: 10c0/0d8d217ca4f328bba859a6bef8593028d24841bef2fe4dc44ae892c7cace4301ce6d5676b568642ddb0a709ee3f0f7af1d1ada4c9c399bc5a4ff9b93d5d1071d
   languageName: node
   linkType: hard
 
@@ -9674,7 +9764,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globby@npm:^14.0.0, globby@npm:^14.0.2":
+"globby@npm:^14.0.2":
   version: 14.1.0
   resolution: "globby@npm:14.1.0"
   dependencies:
@@ -10734,7 +10824,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-stream@npm:^4.0.1":
+"is-stream@npm:^4.0.0, is-stream@npm:^4.0.1":
   version: 4.0.1
   resolution: "is-stream@npm:4.0.1"
   checksum: 10c0/2706c7f19b851327ba374687bc4a3940805e14ca496dc672b9629e744d143b1ad9c6f1b162dece81c7bfbc0f83b32b61ccc19ad2e05aad2dd7af347408f60c7f
@@ -12646,10 +12736,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"modern-tar@npm:^0.7.5":
-  version: 0.7.7
-  resolution: "modern-tar@npm:0.7.7"
-  checksum: 10c0/5363f46514e2be5dc76726cd252bf8adde159268358bc21980b63d581d1072046bba51207455989ddcd3c794c42fc809c81737a15cb970a880868ad6e40299fb
+"modern-tar@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "modern-tar@npm:0.8.0"
+  checksum: 10c0/a6c288ae9637fff842b03449e5fec6e6a2335548c41dcc2d7beef648c9f7775be3c3d4e31a7b42f7c727bef512023692a35abbeb81d886d54da4d40b873f40ed
   languageName: node
   linkType: hard
 
@@ -12822,26 +12912,26 @@ __metadata:
   linkType: hard
 
 "netlify-cli@npm:^27.0.0":
-  version: 27.0.1
-  resolution: "netlify-cli@npm:27.0.1"
+  version: 27.0.3
+  resolution: "netlify-cli@npm:27.0.3"
   dependencies:
     "@fastify/static": "npm:^10.0.0"
     "@netlify/ai": "npm:^0.4.3"
     "@netlify/api": "npm:^15.1.0"
     "@netlify/blobs": "npm:^10.7.10"
-    "@netlify/build": "npm:^36.2.3"
+    "@netlify/build": "npm:^36.2.4"
     "@netlify/build-info": "npm:^11.2.0"
     "@netlify/config": "npm:^25.1.1"
     "@netlify/dev": "npm:^4.18.10"
     "@netlify/dev-utils": "npm:^4.4.7"
-    "@netlify/edge-bundler": "npm:^16.0.0"
+    "@netlify/edge-bundler": "npm:^16.0.1"
     "@netlify/edge-functions": "npm:^3.0.8"
     "@netlify/edge-functions-bootstrap": "npm:^2.17.1"
     "@netlify/headers-parser": "npm:^10.1.0"
     "@netlify/images": "npm:^1.3.11"
     "@netlify/local-functions-proxy": "npm:^2.0.3"
     "@netlify/redirect-parser": "npm:^16.1.0"
-    "@netlify/zip-it-and-ship-it": "npm:^15.3.0"
+    "@netlify/zip-it-and-ship-it": "npm:^15.3.1"
     "@octokit/rest": "npm:^22.0.0"
     "@opentelemetry/api": "npm:^1.8.0"
     "@pnpm/tabtab": "npm:^0.5.4"
@@ -12893,7 +12983,7 @@ __metadata:
     log-update: "npm:^7.2.0"
     maxstache: "npm:^1.0.7"
     maxstache-stream: "npm:^1.0.4"
-    modern-tar: "npm:^0.7.5"
+    modern-tar: "npm:^0.8.0"
     multiparty: "npm:^4.2.3"
     nanospinner: "npm:^1.2.2"
     netlify-redirector: "npm:^0.5.0"
@@ -12924,7 +13014,7 @@ __metadata:
   bin:
     netlify: bin/run.js
     ntl: bin/run.js
-  checksum: 10c0/bda31459851f3c190859f2a47459a343e43d2934d4f2697cf0cca40c3d3212b1cd41569679d701c4ae7c2632a833575365f5d2fdfa5c8a3a030b5fefc6d2f01d
+  checksum: 10c0/b0f79a4612bcfbc7b9e787d0edcddc99826124b4c7c1c068c7b558e4256bf99880d4ce68351061165086a2994fd5c50ffa93df39304a067c75fb32a2f4e0cf35
   languageName: node
   linkType: hard
 
@@ -14795,6 +14885,15 @@ __metadata:
   dependencies:
     minimatch: "npm:^5.1.0"
   checksum: 10c0/a37e0716726650845d761f1041387acd93aa91b28dd5381950733f994b6c349ddc1e21e266ec7cc1f9b92e205a7a972232f9b89d5424d07361c2c3753d5dbace
+  languageName: node
+  linkType: hard
+
+"readdir-glob@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "readdir-glob@npm:3.0.0"
+  dependencies:
+    minimatch: "npm:^10.2.2"
+  checksum: 10c0/9a358c8347b4db2a1f72168da67f7ef8d9ccd51f7fdaa127eed8170a1025e97942705f827b0b45e6fdc0e40f04d0859ba75c3d471ee1fcc9e2cfb9fc81606989
   languageName: node
   linkType: hard
 
@@ -18197,6 +18296,17 @@ __metadata:
     compress-commons: "npm:^6.0.2"
     readable-stream: "npm:^4.0.0"
   checksum: 10c0/50f2fb30327fb9d09879abf7ae2493705313adf403e794b030151aaae00009162419d60d0519e807673ec04d442e140c8879ca14314df0a0192de3b233e8f28b
+  languageName: node
+  linkType: hard
+
+"zip-stream@npm:^7.0.2":
+  version: 7.0.5
+  resolution: "zip-stream@npm:7.0.5"
+  dependencies:
+    compress-commons: "npm:^7.0.0"
+    normalize-path: "npm:^3.0.0"
+    readable-stream: "npm:^4.0.0"
+  checksum: 10c0/e1669e17031c3c7243cb9014eacfaa66f4cd2e0d613a57dbee9caf7122ae869f8b2ea2e5891b5d9eee2897060c01db048b9b2a544ba83e227f6c162905282e48
   languageName: node
   linkType: hard
 

@@ -62,7 +62,25 @@ export default async function resolveListFromUrl(
       continue
     }
 
-    const json = await response.json()
+    // Guard against non-JSON responses (e.g. an HTML 404 page from a missing dev backend).
+    // `response.json()` throws "Unexpected token <, <!DOCTYPE ..." or
+    // "Unexpected end of JSON input" on those, surfacing as an uncaught
+    // `Uncaught (in promise) SyntaxError`. Swallow the parse error and
+    // move on to the next URL or surface a clean "Failed to download list"
+    // error so the rest of the app keeps running.
+    const text = await response.text()
+    if (!text) {
+      if (isLast) throw new Error(`Failed to download list ${listUrl}`)
+      continue
+    }
+    let json
+    try {
+      json = JSON.parse(text)
+    } catch (parseError) {
+      console.error('Failed to parse token list JSON', listUrl, parseError)
+      if (isLast) throw new Error(`Failed to download list ${listUrl}`)
+      continue
+    }
     if (!tokenListValidator(json)) {
       const validationErrors: string =
         tokenListValidator.errors?.reduce<string>((memo, error) => {

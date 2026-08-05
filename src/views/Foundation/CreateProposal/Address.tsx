@@ -22,7 +22,7 @@ const Address: React.FC<AddressProps> = ({ onRemove, onTextInput, ...props }) =>
     <Box position="relative">
       <Input {...props} onChange={handleChange} isWarning={isWarning} />
       {onRemove && (
-        <Box position="absolute" right="8px" top="0px" zIndex={30}>
+        <Box position="absolute" right="8px" $top="0px" zIndex={30}>
           <IconButton variant="text" onClick={onRemove}>
             <CloseIcon />
           </IconButton>

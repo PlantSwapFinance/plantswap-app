@@ -179,7 +179,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
         }
 
         const { plantRewardsApr, lpRewardsApr } = isActive
-          ? getFarmApr(new BigNumber(farm.poolWeight), plantPrice, totalLiquidity, farm.lpAddresses[ChainId.MAINNET])
+          ? getFarmApr(new BigNumber(farm.poolWeight), plantPrice, totalLiquidity, farm.lpAddresses[ChainId.BSC])
           : { plantRewardsApr: 0, lpRewardsApr: 0 }
 
         return { ...farm, apr: plantRewardsApr, lpRewardsApr, liquidity: totalLiquidity }

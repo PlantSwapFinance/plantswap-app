@@ -30,6 +30,19 @@ export default defineConfig({
       '@pancakeswap/swap-sdk-core': path.resolve(__dirname, 'shims/swap-sdk-core.mjs'),
     },
   },
+  // `@plantswap/uikit@1.0.1`'s ESM build references `jsxDEV` from
+  // `react/jsx-dev-runtime` at module top-level (`const DefaultSeparator =
+  // jsxDEV(Icon$39, ...)`). Vite 8's rolldown bundler splits that file
+  // into smaller chunks and the JSX-runtime import sometimes fails to
+  // bind before the chunk that calls `jsxDEV(...)`. The result is a
+  // white page with `(0, H.jsxDEV) is not a function` thrown at
+  // module-evaluation time.
+  //
+  // Forcing the package to pre-bundle keeps `jsxDEV` and uikit's other
+  // body code in the same chunk, eliminating the race.
+  optimizeDeps: {
+    include: ['@plantswap/uikit'],
+  },
   build: {
     outDir: 'build',
     sourcemap: true,

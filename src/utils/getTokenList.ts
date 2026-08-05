@@ -7,7 +7,13 @@ import contenthashToUri from './contenthashToUri'
 import { parseENSAddress } from './ENS/parseENSAddress'
 import uriToHttp from './uriToHttp'
 
-const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
+// The Uniswap token-list schema uses the JSON Schema `"date-time"` format
+// for its `timestamp` field, which ajv 8.x no longer ships with by default
+// and treats as a hard schema error in strict mode (it throws
+// `unknown format "date-time" ignored in schema at path "#/properties/timestamp"`
+// at compile time, white-paging the app). Disabling `strictSchema` lets the
+// validator compile while still flagging other real schema issues.
+const tokenListValidator = new Ajv({ allErrors: true, strictSchema: false }).compile(schema)
 
 /**
  * Contains the logic for resolving a list URL to a validated token list

@@ -51,11 +51,6 @@ const config: (t: ContextApi['t']) => MenuEntry[] = (t) => [
     },
   },
   {
-    label: t('Foundation'),
-    icon: 'ContributionIcon',
-    href: '/foundation',
-  },
-  {
     label: t('Teams & Profile'),
     icon: 'GroupsIcon',
     items: [

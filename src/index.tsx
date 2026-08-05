@@ -1,5 +1,19 @@
 import React, { useMemo, ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
+// Pin `jsxDEV` to a real local binding and re-expose it on
+// `globalThis` before any other module evaluates. `@plantswap/uikit@1.0.1`
+// references `jsxDEV` at the top of its `index.esm.js`
+// (`const DefaultSeparator = jsxDEV(Icon$39, ...)`) and Vite 8's
+// rolldown bundler splits that into smaller chunks. When the chunk
+// that *calls* `jsxDEV(...)` lands before the chunk that binds the
+// `jsxDEV` import, the call resolves to `undefined` and the page
+// white-screens with `(0, H.jsxDEV) is not a function`. Importing
+// it here (above every other import) forces the binding to be
+// evaluated first, and exposing it on `globalThis` is a belt-and-
+// suspenders fallback for any chunk that still tries to resolve
+// `jsxDEV` through a hoisted global.
+import { jsxDEV as _jsxDEV } from 'react/jsx-dev-runtime'
+;(globalThis as unknown as { jsxDEV: typeof _jsxDEV }).jsxDEV = _jsxDEV
 // Self-host the Kanit font used across the app — avoids the
 // render-blocking CSS fetch from fonts.googleapis.com.
 import '@fontsource/kanit/400.css'
@@ -28,7 +42,11 @@ import ErrorBoundary from './components/ErrorBoundary'
 // misorder module evaluation, which made `react/jsx-dev-runtime`'s
 // `jsxDEV` export arrive `undefined` when the very first JSX expression
 // in this file ran (`<React.StrictMode>...`). Result: a white page
-// with `(0, U.jsxDEV) is not a function` at module-evaluation time.
+// with `(0, H.jsxDEV) is not a function` at module-evaluation time,
+// raised inside `@plantswap/uikit@1.0.1`'s top-level
+// `const DefaultSeparator = jsxDEV(Icon$39, ...)` call. The import at
+// the top of this file pins `jsxDEV` to a real local binding before
+// anything else evaluates, so the call site can never see `undefined`.
 ;(globalThis as unknown as { Buffer: typeof Buffer }).Buffer = Buffer
 installGlobalErrorHandlers()
 

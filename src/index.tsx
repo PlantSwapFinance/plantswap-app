@@ -11,6 +11,11 @@ import '@fontsource/kanit/600.css'
 // module so the global is set before those modules evaluate.
 import { Buffer } from 'buffer'
 ;(globalThis as unknown as { Buffer: typeof Buffer }).Buffer = Buffer
+// Install `window.onerror` / `onunhandledrejection` loggers so async
+// exceptions that escape React's render path still surface in the
+// console instead of white-screening silently.
+import installGlobalErrorHandlers from './handlers/installGlobalErrorHandlers'
+installGlobalErrorHandlers()
 import useActiveWeb3React from './hooks/useActiveWeb3React'
 import { BLOCKED_ADDRESSES } from './config/constants'
 import ApplicationUpdater from './state/application/updater'
@@ -19,6 +24,7 @@ import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
 import App from './App'
 import Providers from './Providers'
+import ErrorBoundary from './components/ErrorBoundary'
 
 function Updaters() {
   return (
@@ -44,11 +50,16 @@ const container = document.getElementById('root')
 const root = createRoot(container as HTMLElement)
 root.render(
   <React.StrictMode>
-    <Providers>
-      <Blocklist>
-        <Updaters />
-        <App />
-      </Blocklist>
-    </Providers>
+    {/* Catch any render-time throw and surface a readable fallback
+        instead of a white page. Sits inside StrictMode so the boundary
+        itself isn't double-invoked in dev. */}
+    <ErrorBoundary>
+      <Providers>
+        <Blocklist>
+          <Updaters />
+          <App />
+        </Blocklist>
+      </Providers>
+    </ErrorBoundary>
   </React.StrictMode>,
 )

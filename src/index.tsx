@@ -7,15 +7,12 @@ import '@fontsource/kanit/600.css'
 // Polyfill `Buffer` on `globalThis` so libraries like `bn.js` and
 // `@pancakeswap/sdk` that defensively read `buffer.Buffer` don't get
 // Vite's `Module "buffer" has been externalized … Cannot access
-// "buffer.Buffer" in client code` warning. Imported before any other
-// module so the global is set before those modules evaluate.
+// "buffer.Buffer" in client code` warning.
 import { Buffer } from 'buffer'
-;(globalThis as unknown as { Buffer: typeof Buffer }).Buffer = Buffer
 // Install `window.onerror` / `onunhandledrejection` loggers so async
 // exceptions that escape React's render path still surface in the
 // console instead of white-screening silently.
 import installGlobalErrorHandlers from './handlers/installGlobalErrorHandlers'
-installGlobalErrorHandlers()
 import useActiveWeb3React from './hooks/useActiveWeb3React'
 import { BLOCKED_ADDRESSES } from './config/constants'
 import ApplicationUpdater from './state/application/updater'
@@ -25,6 +22,15 @@ import TransactionUpdater from './state/transactions/updater'
 import App from './App'
 import Providers from './Providers'
 import ErrorBoundary from './components/ErrorBoundary'
+
+// All side effects must run AFTER every import above has resolved.
+// Putting them between imports caused Vite 8's rolldown bundler to
+// misorder module evaluation, which made `react/jsx-dev-runtime`'s
+// `jsxDEV` export arrive `undefined` when the very first JSX expression
+// in this file ran (`<React.StrictMode>...`). Result: a white page
+// with `(0, U.jsxDEV) is not a function` at module-evaluation time.
+;(globalThis as unknown as { Buffer: typeof Buffer }).Buffer = Buffer
+installGlobalErrorHandlers()
 
 function Updaters() {
   return (

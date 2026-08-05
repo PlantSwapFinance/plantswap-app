@@ -11199,10 +11199,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsbi@npm:^4.0.0":
-  version: 4.3.2
-  resolution: "jsbi@npm:4.3.2"
-  checksum: 10c0/f8deb4fc1b1828ee9f90b19b778748f23877d63d437a083b4bead36c7b76c8d173b5dbe2a20cc5dc0217be5bde81791b696b104d5a40d7ede5fda34831d9fab6
+"jsbi@npm:^3.2.5":
+  version: 3.2.5
+  resolution: "jsbi@npm:3.2.5"
+  checksum: 10c0/74d4725f76f169d7848f3f2f88a8dd252d995421c1fefdaed8116daf4a1897c514ce8336ebb68303a2cf8d659e4fbc16791a1d232420b52cec3cf1f12ad760ed
   languageName: node
   linkType: hard
 
@@ -14083,7 +14083,7 @@ __metadata:
     graphql-request: "npm:^7.0.0"
     husky: "npm:9.1.7"
     js-cookie: "npm:^3.0.0"
-    jsbi: "npm:^4.0.0"
+    jsbi: "npm:^3.2.5"
     lodash: "npm:^4.17.21"
     multiformats: "npm:^14.0.0"
     multihashes: "npm:^4.0.0"

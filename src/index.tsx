@@ -37,11 +37,11 @@ const container = document.getElementById('root')
 const root = createRoot(container as HTMLElement)
 root.render(
   <React.StrictMode>
-    <Blocklist>
-      <Providers>
+    <Providers>
+      <Blocklist>
         <Updaters />
         <App />
-      </Providers>
-    </Blocklist>
+      </Blocklist>
+    </Providers>
   </React.StrictMode>,
 )

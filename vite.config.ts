@@ -41,11 +41,25 @@ export default defineConfig({
   // Forcing the package to pre-bundle keeps `jsxDEV` and uikit's other
   // body code in the same chunk, eliminating the race.
   optimizeDeps: {
-    include: ['@plantswap/uikit'],
+    include: ['@plantswap/uikit', 'react/jsx-dev-runtime'],
   },
   build: {
     outDir: 'build',
     sourcemap: true,
+    // Pin uikit (and the JSX dev runtime it depends on) into a single
+    // shared chunk in the production build too — `optimizeDeps` only
+    // applies in dev, so without this the production bundle still hits
+    // the chunk-loading race.
+    rolldownOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('@plantswap/uikit') || id.includes('react/jsx-dev-runtime') || id.includes('react/jsx-runtime')) {
+            return 'uikit-vendor'
+          }
+          return undefined
+        },
+      },
+    },
   },
   server: {
     port: 3000,

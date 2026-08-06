@@ -5,8 +5,6 @@ import '@fontsource/kanit/400.css'
 import '@fontsource/kanit/600.css'
 // Polyfill Buffer on globalThis so bn.js and @pancakeswap/sdk can read it.
 import { Buffer } from 'buffer'
-// Install window error loggers so async exceptions still surface.
-import installGlobalErrorHandlers from './handlers/installGlobalErrorHandlers'
 import useActiveWeb3React from './hooks/useActiveWeb3React'
 import { BLOCKED_ADDRESSES } from './config/constants'
 import ApplicationUpdater from './state/application/updater'
@@ -15,11 +13,8 @@ import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
 import App from './App'
 import Providers from './Providers'
-import ErrorBoundary from './components/ErrorBoundary'
 
-// Side effects after every import has resolved.
 ;(globalThis as unknown as { Buffer: typeof Buffer }).Buffer = Buffer
-installGlobalErrorHandlers()
 
 function Updaters() {
   return (
@@ -45,13 +40,11 @@ const container = document.getElementById('root')
 const root = createRoot(container as HTMLElement)
 root.render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <Providers>
-        <Blocklist>
-          <Updaters />
-          <App />
-        </Blocklist>
-      </Providers>
-    </ErrorBoundary>
+    <Providers>
+      <Blocklist>
+        <Updaters />
+        <App />
+      </Blocklist>
+    </Providers>
   </React.StrictMode>,
 )

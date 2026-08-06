@@ -1,13 +1,4 @@
 import React, { useEffect, useRef } from 'react'
-// `react-countup` ships a CommonJS module whose `default` export is wrapped
-// inconsistently across bundlers — under Vite 8's rolldown, the default
-// import sometimes resolves to the whole module namespace object instead of
-// the CountUp component, which makes `<CountUp>` render as `got: object`
-// at React's createFiberFromTypeAndProps and white-pages the tree.
-//
-// Bypass the broken default export entirely: use the named `useCountUp`
-// hook (which is reliably a function) and build a tiny local wrapper that
-// renders a `<span>` and lets the hook drive the count-up animation.
 import { useCountUp } from 'react-countup'
 import { Text, TextProps } from '@plantswap/uikit'
 

@@ -30,36 +30,21 @@ export default defineConfig({
       '@pancakeswap/swap-sdk-core': path.resolve(__dirname, 'shims/swap-sdk-core.mjs'),
     },
   },
-  // `@plantswap/uikit@1.0.1`'s ESM build references `jsxDEV` from
-  // `react/jsx-dev-runtime` at module top-level (`const DefaultSeparator =
-  // jsxDEV(Icon$39, ...)`). Vite 8's rolldown bundler splits that file
-  // into smaller chunks and the JSX-runtime import sometimes fails to
-  // bind before the chunk that calls `jsxDEV(...)`. The result is a
-  // white page with `(0, H.jsxDEV) is not a function` thrown at
-  // module-evaluation time.
-  //
-  // Forcing the package to pre-bundle keeps `jsxDEV` and uikit's other
-  // body code in the same chunk, eliminating the race.
+  // `@plantswap/uikit@1.0.0-alpha.0` and `1.0.1` both unconditionally
+  // `import { jsxDEV } from 'react/jsx-dev-runtime'` at the top of
+  // `dist/index.esm.js`. Vite 8 / rolldown split the runtime into a
+  // separate chunk that could load *after* uikit's call site,
+  // throwing `(0, q.jsxDEV) is not a function`. The fix lives in
+  // `scripts/patch-uikit-jsx-runtime.cjs` (run via `postinstall`),
+  // which rewrites uikit's import to the production JSX runtime
+  // (`react/jsx-runtime`) and aliases the local binding. Once
+  // applied, no bundler config is needed.
   optimizeDeps: {
-    include: ['@plantswap/uikit', 'react/jsx-dev-runtime'],
+    include: ['@plantswap/uikit'],
   },
   build: {
     outDir: 'build',
     sourcemap: true,
-    // Pin uikit (and the JSX dev runtime it depends on) into a single
-    // shared chunk in the production build too — `optimizeDeps` only
-    // applies in dev, so without this the production bundle still hits
-    // the chunk-loading race.
-    rolldownOptions: {
-      output: {
-        manualChunks: (id) => {
-          if (id.includes('@plantswap/uikit') || id.includes('react/jsx-dev-runtime') || id.includes('react/jsx-runtime')) {
-            return 'uikit-vendor'
-          }
-          return undefined
-        },
-      },
-    },
   },
   server: {
     port: 3000,

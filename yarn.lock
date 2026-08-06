@@ -16410,9 +16410,9 @@ __metadata:
   linkType: hard
 
 "swiper@npm:^14.0.0":
-  version: 14.0.7
-  resolution: "swiper@npm:14.0.7"
-  checksum: 10c0/f8a7e42855ffc71929c5903da9146dd45d096c3f2b4aa0706aea9355c8caa145c646072f5dcbd5f76edabae069a45e5a3482f9ed3804f389abbf59f3c8f2267f
+  version: 14.1.0
+  resolution: "swiper@npm:14.1.0"
+  checksum: 10c0/142f9c3df5ef583dc86984fb6fed5c9c4afd070d996d33c9a1cc6b03541b24e3c62b9e9d034de30a6f5e7294eb87ebb8036a6ba5749707197b3bf2445b09e03b
   languageName: node
   linkType: hard
 

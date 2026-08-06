@@ -11,8 +11,8 @@ type ChainTokenList = {
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.MAINNET]: [WETH9[ChainId.MAINNET], PLANT[ChainId.MAINNET], BUSD[ChainId.MAINNET], USDT, BTCB, UST, ETH, USDC],
-  [ChainId.TESTNET]: [WETH9[ChainId.TESTNET], PLANT[ChainId.TESTNET], BUSD[ChainId.TESTNET]],
+  [ChainId.BSC]: [WETH9[ChainId.BSC], PLANT[ChainId.BSC], BUSD[ChainId.BSC], USDT, BTCB, UST, ETH, USDC],
+  [ChainId.BSC_TESTNET]: [WETH9[ChainId.BSC_TESTNET], PLANT[ChainId.BSC_TESTNET], BUSD[ChainId.BSC_TESTNET]],
 }
 
 /**
@@ -20,34 +20,34 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
  * @example { [WBTC.address]: [renBTC], [renBTC.address]: [WBTC] }
  */
 export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.MAINNET]: {},
+  [ChainId.BSC]: {},
 }
 
 /**
  * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
  * tokens.
- * @example [AMPL.address]: [DAI, WETH9[ChainId.MAINNET]]
+ * @example [AMPL.address]: [DAI, WETH9[ChainId.BSC]]
  */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.MAINNET]: {},
+  [ChainId.BSC]: {},
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
-  [ChainId.MAINNET]: [BUSD[ChainId.MAINNET], CAKE[ChainId.MAINNET], BTCB],
-  [ChainId.TESTNET]: [WETH9[ChainId.TESTNET], CAKE[ChainId.TESTNET], BUSD[ChainId.TESTNET]],
+  [ChainId.BSC]: [BUSD[ChainId.BSC], CAKE[ChainId.BSC], BTCB],
+  [ChainId.BSC_TESTNET]: [WETH9[ChainId.BSC_TESTNET], CAKE[ChainId.BSC_TESTNET], BUSD[ChainId.BSC_TESTNET]],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
-  [ChainId.MAINNET]: [WETH9[ChainId.MAINNET], DAI, BUSD[ChainId.MAINNET], USDT],
-  [ChainId.TESTNET]: [WETH9[ChainId.TESTNET], CAKE[ChainId.TESTNET], BUSD[ChainId.TESTNET]],
+  [ChainId.BSC]: [WETH9[ChainId.BSC], DAI, BUSD[ChainId.BSC], USDT],
+  [ChainId.BSC_TESTNET]: [WETH9[ChainId.BSC_TESTNET], CAKE[ChainId.BSC_TESTNET], BUSD[ChainId.BSC_TESTNET]],
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
-  [ChainId.MAINNET]: [
-    [CAKE[ChainId.MAINNET], WBNB],
-    [BUSD[ChainId.MAINNET], USDT],
+  [ChainId.BSC]: [
+    [CAKE[ChainId.BSC], WBNB],
+    [BUSD[ChainId.BSC], USDT],
     [DAI, USDT],
   ],
 }

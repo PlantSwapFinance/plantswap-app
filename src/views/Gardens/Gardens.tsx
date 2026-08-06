@@ -186,7 +186,7 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
               new BigNumber(garden.poolWeight),
               plantPrice,
               totalLiquidity,
-              garden.lpAddresses[ChainId.MAINNET],
+              garden.lpAddresses[ChainId.BSC],
             )
           : { plantRewardsApr: 0, lpRewardsApr: 0 }
 

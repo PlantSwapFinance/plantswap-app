@@ -8,7 +8,7 @@ import { BUSD, CAKE } from '../config/constants/tokens'
 import { PairState, usePairs } from './usePairs'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
-const BUSD_MAINNET = BUSD[ChainId.MAINNET]
+const BUSD_MAINNET = BUSD[ChainId.BSC]
 
 /**
  * Returns the price in BUSD of the input currency
@@ -23,8 +23,8 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
         chainId && wrapped && currencyEquals(WETH9[chainId], wrapped) ? undefined : currency,
         chainId ? WETH9[chainId] : undefined,
       ],
-      [wrapped?.equals(BUSD_MAINNET) ? undefined : wrapped, chainId === ChainId.MAINNET ? BUSD_MAINNET : undefined],
-      [chainId ? WETH9[chainId] : undefined, chainId === ChainId.MAINNET ? BUSD_MAINNET : undefined],
+      [wrapped?.equals(BUSD_MAINNET) ? undefined : wrapped, chainId === ChainId.BSC ? BUSD_MAINNET : undefined],
+      [chainId ? WETH9[chainId] : undefined, chainId === ChainId.BSC ? BUSD_MAINNET : undefined],
     ],
     [chainId, currency, wrapped],
   )
@@ -75,7 +75,7 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
 
 export const usePlantBusdPrice = (): Price | undefined => {
   const { chainId } = useActiveWeb3React()
-  const currentChaindId = chainId || ChainId.MAINNET
+  const currentChaindId = chainId || ChainId.BSC
   const plantBusdPrice = useBUSDPrice(CAKE[currentChaindId])
   return plantBusdPrice
 }

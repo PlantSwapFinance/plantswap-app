@@ -113,8 +113,13 @@ const getFarmQuoteTokenPrice = (farm: Farm, quoteTokenFarm: Farm, bnbPriceBusd: 
 const fetchFarmsPrices = async (farms) => {
   const bnbBusdFarm = farms.find((farm: Farm) => farm.pid === 28)
   const cakeBnbFarm = farms.find((farm: Farm) => farm.pid === 29)
-  const bnbPriceBusd = bnbBusdFarm.tokenPriceVsQuote ? BIG_ONE.div(bnbBusdFarm.tokenPriceVsQuote) : BIG_ZERO
-  const cakePriceBnb = cakeBnbFarm.tokenPriceVsQuote ? BIG_ONE.div(cakeBnbFarm.tokenPriceVsQuote) : BIG_ZERO
+  // Guard against missing farms — `farms.find` returns undefined if the farms
+  // store hasn't loaded the special pid 28 / pid 29 entries yet, in which case
+  // `.tokenPriceVsQuote` would throw. Without this, the `usePollFarmsData`
+  // promise rejects as an uncaught "Cannot read properties of undefined
+  // (reading 'tokenPriceVsQuote')" before the rest of the prices land.
+  const bnbPriceBusd = bnbBusdFarm?.tokenPriceVsQuote ? BIG_ONE.div(bnbBusdFarm.tokenPriceVsQuote) : BIG_ZERO
+  const cakePriceBnb = cakeBnbFarm?.tokenPriceVsQuote ? BIG_ONE.div(cakeBnbFarm.tokenPriceVsQuote) : BIG_ZERO
 
   const farmsWithPrices = farms.map((farm) => {
     const quoteTokenFarm = getFarmFromTokenSymbol(farms, farm.quoteToken.symbol)

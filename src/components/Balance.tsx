@@ -1,6 +1,38 @@
 import React, { useEffect, useRef } from 'react'
-import CountUp from 'react-countup'
+import { useCountUp } from 'react-countup'
 import { Text, TextProps } from '@plantswap/uikit'
+
+interface CountUpProps {
+  start?: number
+  end: number
+  decimals?: number
+  duration?: number
+  prefix?: string
+  suffix?: string
+  separator?: string
+}
+
+const CountUp: React.FC<CountUpProps> = ({ start, end, decimals, duration, prefix, suffix, separator }) => {
+  const containerRef = useRef<HTMLSpanElement>(null)
+  useCountUp({
+    ref: containerRef as unknown as React.RefObject<HTMLElement>,
+    start,
+    end,
+    decimals,
+    duration,
+    prefix,
+    suffix,
+    separator,
+    enableReinitialize: false,
+    startOnMount: true,
+  })
+  return (
+    <span ref={containerRef}>
+      {prefix}
+      {start ?? ''}
+    </span>
+  )
+}
 
 interface BalanceProps extends TextProps {
   value: number

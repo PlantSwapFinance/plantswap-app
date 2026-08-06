@@ -6,67 +6,64 @@ import { simpleRpcProvider } from 'utils/providers'
 
 /**
  * Provides a web3 provider with or without user's signer.
- * Recreate web3 instance only if the provider change.
+ * Recreate web3 instance only if the provider changes.
  *
- * The codebase was originally written against @web3-react/core v6, which
- * exposed the ethers provider as `library` and bundled `activate`/`deactivate`
- * onto the context. The installed v8 splits these onto the connector and
- * renames `library` to `provider`. We mirror the v6 shape here so the rest of
- * the app keeps using `library`/`activate`/`deactivate` without churn.
+ * Written against @web3-react/core v6, which exposes:
+ *   - `library` (the ethers provider from `getLibrary`)
+ *   - `activate(connector, errorCallback?)` / `deactivate()` on the context
+ *   - `active` flag computed from chainId + account
  *
- * The return type is intentionally left untyped (TS-inferred) — the original
- * v6 import (`Web3ReactContextInterface` from `@web3-react/core/dist/types`)
- * no longer resolves in v8, so the migration hardcodes the shape we expose
- * instead of relying on a re-exported alias.
+ * The connector packages (`@web3-react/injected-connector`,
+ * `@web3-react/walletconnect-connector`) are on v6 as well — keeping the
+ * core package on v6 is what makes the `activate(connector, …)` call sites
+ * in `useAuth` and friends type- and runtime-compatible.
+ *
+ * The return type is intentionally left untyped (TS-inferred): the original
+ * v6 `Web3ReactContextInterface` import path no longer resolves cleanly with
+ * the current dependency graph, so we hardcode the shape we expose.
  */
 const useActiveWeb3React = () => {
-  // v8's `useWeb3React<T>()` constrains T to its v5-era BaseProvider type from
-  // @ethersproject/providers; ethers v6's BrowserProvider doesn't satisfy it
-  // structurally. We intentionally call the unconstrained overload and let
-  // the rest of the function treat the returned provider as opaque.
   const context = useWeb3React()
-  const refEth = useRef(context.provider)
-  const [provider, setprovider] = useState<BrowserProvider>(
-    ((context.provider as unknown as BrowserProvider | undefined) ||
+  const refEth = useRef(context.library)
+  const [provider, setProvider] = useState<BrowserProvider>(
+    ((context.library as unknown as BrowserProvider | undefined) ||
       (simpleRpcProvider as unknown as BrowserProvider)),
   )
 
   useEffect(() => {
-    if (context.provider !== refEth.current) {
-      setprovider(
-        (context.provider as unknown as BrowserProvider | undefined) ||
+    if (context.library !== refEth.current) {
+      setProvider(
+        (context.library as unknown as BrowserProvider | undefined) ||
           (simpleRpcProvider as unknown as BrowserProvider),
       )
-      refEth.current = context.provider
+      refEth.current = context.library
     }
-  }, [context.provider])
+  }, [context.library])
 
   const activate = useCallback(
-    async (connector?: Connector) => {
+    async (connector?: Connector, callback?: (error: Error) => void) => {
       const target = connector ?? context.connector
       if (!target) throw new Error('No active connector to activate')
-      await target.activate()
+      await context.activate(target, callback)
     },
-    [context.connector],
+    [context],
   )
 
   const deactivate = useCallback(() => {
-    if (context.connector) {
-      void context.connector.deactivate()
-    }
-  }, [context.connector])
+    void context.deactivate()
+  }, [context])
 
-  const active = Boolean(context.connector && context.chainId !== undefined && context.account !== undefined)
+  const active = Boolean(context.active)
 
   return {
     connector: context.connector,
     library: provider,
     chainId: context.chainId ?? parseInt(import.meta.env.REACT_APP_CHAIN_ID, 10),
-    account: context.account,
+    account: context.account ?? undefined,
     active,
     activate,
     deactivate,
-    error: undefined,
+    error: context.error,
   }
 }
 

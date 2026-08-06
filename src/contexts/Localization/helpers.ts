@@ -1,6 +1,6 @@
 import { EN } from 'config/localization/languages'
 
-const publicUrl = process.env.PUBLIC_URL
+const publicUrl = import.meta.env.BASE_URL
 
 export const LS_KEY = 'plantswap_language'
 

@@ -109,7 +109,12 @@ export const usePricePlantBusd = (): BigNumber => {
   const [dataCheck, setDataCheck] = useState(false)
   const [dataMissingCheck, setDataMissingCheck] = useState(false)
   const plantBnbFarm = useFarmFromPid(4)
-  const plantBnbBusdPrice = plantBnbFarm.token.busdPrice
+  // Guard both `plantBnbFarm` (missing until the farms store hydrates) and
+  // `busdPrice` (the field is optional on Farm). Without this, the initial
+  // render would pass `undefined` to `new BigNumber`, throwing
+  // `[BigNumber Error] BigNumber, string, number, or BigInt expected: undefined`
+  // and white-paging <Menu>.
+  const plantBnbBusdPrice = plantBnbFarm?.token.busdPrice
   const [unchainedPrice, setUnchainedPrice] = useState<string>(plantBnbBusdPrice)
 
   if (plantBnbBusdPrice !== undefined) {
@@ -151,7 +156,7 @@ export const usePricePlantBusd = (): BigNumber => {
       })
     }
   }
-  return new BigNumber(unchainedPrice)
+  return new BigNumber(unchainedPrice ?? '0')
 }
 
 export const usePriceCakeBusd = (): BigNumber => {

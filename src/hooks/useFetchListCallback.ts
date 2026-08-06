@@ -18,7 +18,7 @@ function useFetchListCallback(actions: FetcherActions): (listUrl: string, sendDi
 
   const ensResolver = useCallback(
     (ensName: string) => {
-      if (chainId !== ChainId.MAINNET) {
+      if (chainId !== ChainId.BSC) {
         throw new Error('Could not construct mainnet ENS resolver')
       }
       return resolveENSContentHash(ensName, library)

@@ -8,16 +8,16 @@ describe('transaction reducer', () => {
       const next = transactionsReducer(initialState, {
         type: 'transactions/addTransaction',
         payload: {
-          chainId: ChainId.MAINNET,
+          chainId: ChainId.BSC,
           summary: 'hello world',
           hash: '0x0',
           approval: { tokenAddress: 'abc', spender: 'def' },
           from: 'abc',
         },
       })
-      expect(next[ChainId.MAINNET]).toBeTruthy()
-      expect(next[ChainId.MAINNET]?.['0x0']).toBeTruthy()
-      const tx = next[ChainId.MAINNET]?.['0x0']
+      expect(next[ChainId.BSC]).toBeTruthy()
+      expect(next[ChainId.BSC]?.['0x0']).toBeTruthy()
+      const tx = next[ChainId.BSC]?.['0x0']
       expect(tx).toBeTruthy()
       expect(tx?.hash).toEqual('0x0')
       expect(tx?.summary).toEqual('hello world')
@@ -32,7 +32,7 @@ describe('transaction reducer', () => {
       const next = transactionsReducer(initialState, {
         type: 'transactions/finalizeTransaction',
         payload: {
-          chainId: ChainId.TESTNET,
+          chainId: ChainId.BSC_TESTNET,
           hash: '0x0',
           receipt: {
             status: 1,
@@ -53,7 +53,7 @@ describe('transaction reducer', () => {
         type: 'transactions/addTransaction',
         payload: {
           hash: '0x0',
-          chainId: ChainId.TESTNET,
+          chainId: ChainId.BSC_TESTNET,
           approval: { spender: '0x0', tokenAddress: '0x0' },
           summary: 'hello world',
           from: '0x0',
@@ -63,7 +63,7 @@ describe('transaction reducer', () => {
       const next = transactionsReducer(after1, {
         type: 'transactions/finalizeTransaction',
         payload: {
-          chainId: ChainId.TESTNET,
+          chainId: ChainId.BSC_TESTNET,
           hash: '0x0',
           receipt: {
             status: 1,
@@ -77,7 +77,7 @@ describe('transaction reducer', () => {
           },
         },
       })
-      const tx = next[ChainId.TESTNET]?.['0x0']
+      const tx = next[ChainId.BSC_TESTNET]?.['0x0']
       expect(tx?.summary).toEqual('hello world')
       expect(tx?.confirmedTime).toBeGreaterThanOrEqual(beforeTime)
       expect(tx?.receipt).toEqual({
@@ -97,7 +97,7 @@ describe('transaction reducer', () => {
     it('no op if not valid transaction', () => {
       const next = transactionsReducer(initialState, {
         type: 'transactions/checkedTransaction',
-        payload: { chainId: ChainId.TESTNET, hash: '0x0', blockNumber: 1 },
+        payload: { chainId: ChainId.BSC_TESTNET, hash: '0x0', blockNumber: 1 },
       })
       expect(next).toEqual({})
     })
@@ -106,7 +106,7 @@ describe('transaction reducer', () => {
         type: 'transactions/addTransaction',
         payload: {
           hash: '0x0',
-          chainId: ChainId.TESTNET,
+          chainId: ChainId.BSC_TESTNET,
           approval: { spender: '0x0', tokenAddress: '0x0' },
           summary: 'hello world',
           from: '0x0',
@@ -114,9 +114,9 @@ describe('transaction reducer', () => {
       })
       const next = transactionsReducer(after1, {
         type: 'transactions/checkedTransaction',
-        payload: { chainId: ChainId.TESTNET, hash: '0x0', blockNumber: 1 },
+        payload: { chainId: ChainId.BSC_TESTNET, hash: '0x0', blockNumber: 1 },
       })
-      const tx = next[ChainId.TESTNET]?.['0x0']
+      const tx = next[ChainId.BSC_TESTNET]?.['0x0']
       expect(tx?.lastCheckedBlockNumber).toEqual(1)
     })
     it('never decreases', () => {
@@ -124,7 +124,7 @@ describe('transaction reducer', () => {
         type: 'transactions/addTransaction',
         payload: {
           hash: '0x0',
-          chainId: ChainId.TESTNET,
+          chainId: ChainId.BSC_TESTNET,
           approval: { spender: '0x0', tokenAddress: '0x0' },
           summary: 'hello world',
           from: '0x0',
@@ -132,13 +132,13 @@ describe('transaction reducer', () => {
       })
       const after2 = transactionsReducer(after1, {
         type: 'transactions/checkedTransaction',
-        payload: { chainId: ChainId.TESTNET, hash: '0x0', blockNumber: 3 },
+        payload: { chainId: ChainId.BSC_TESTNET, hash: '0x0', blockNumber: 3 },
       })
       const after3 = transactionsReducer(after2, {
         type: 'transactions/checkedTransaction',
-        payload: { chainId: ChainId.TESTNET, hash: '0x0', blockNumber: 1 },
+        payload: { chainId: ChainId.BSC_TESTNET, hash: '0x0', blockNumber: 1 },
       })
-      const tx = after3[ChainId.TESTNET]?.['0x0']
+      const tx = after3[ChainId.BSC_TESTNET]?.['0x0']
       expect(tx?.lastCheckedBlockNumber).toEqual(3)
     })
   })
@@ -148,7 +148,7 @@ describe('transaction reducer', () => {
       const after1: TransactionState = transactionsReducer(initialState, {
         type: 'transactions/addTransaction',
         payload: {
-          chainId: ChainId.MAINNET,
+          chainId: ChainId.BSC,
           summary: 'hello world',
           hash: '0x0',
           approval: { tokenAddress: 'abc', spender: 'def' },
@@ -158,7 +158,7 @@ describe('transaction reducer', () => {
       const after2: TransactionState = transactionsReducer(after1, {
         type: 'transactions/addTransaction',
         payload: {
-          chainId: ChainId.TESTNET,
+          chainId: ChainId.BSC_TESTNET,
           summary: 'hello world',
           hash: '0x1',
           approval: { tokenAddress: 'abc', spender: 'def' },
@@ -166,17 +166,17 @@ describe('transaction reducer', () => {
         },
       })
       expect(Object.keys(after2)).toHaveLength(2)
-      expect(Object.keys(after2)).toEqual([String(ChainId.MAINNET), String(ChainId.TESTNET)])
-      expect(Object.keys(after2[ChainId.MAINNET] ?? {})).toEqual(['0x0'])
-      expect(Object.keys(after2[ChainId.TESTNET] ?? {})).toEqual(['0x1'])
+      expect(Object.keys(after2)).toEqual([String(ChainId.BSC), String(ChainId.BSC_TESTNET)])
+      expect(Object.keys(after2[ChainId.BSC] ?? {})).toEqual(['0x0'])
+      expect(Object.keys(after2[ChainId.BSC_TESTNET] ?? {})).toEqual(['0x1'])
       const afterClear = transactionsReducer(after2, {
         type: 'transactions/clearAllTransactions',
-        payload: { chainId: ChainId.MAINNET },
+        payload: { chainId: ChainId.BSC },
       })
       expect(Object.keys(afterClear)).toHaveLength(2)
-      expect(Object.keys(afterClear)).toEqual([String(ChainId.MAINNET), String(ChainId.TESTNET)])
-      expect(Object.keys(afterClear[ChainId.MAINNET] ?? {})).toEqual([])
-      expect(Object.keys(afterClear[ChainId.TESTNET] ?? {})).toEqual(['0x1'])
+      expect(Object.keys(afterClear)).toEqual([String(ChainId.BSC), String(ChainId.BSC_TESTNET)])
+      expect(Object.keys(afterClear[ChainId.BSC] ?? {})).toEqual([])
+      expect(Object.keys(afterClear[ChainId.BSC_TESTNET] ?? {})).toEqual(['0x1'])
     })
   })
 })

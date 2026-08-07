@@ -34,7 +34,7 @@
     "@fontsource/kanit": "^5.2.8",
     "@neondatabase/serverless": "^1.0.2",
     "@pancakeswap/sdk": "5.9.1",
-    "@plantswap/uikit": "1.0.0-alpha.0",
+    "@plantswap/uikit": "1.0.1",
     "@react-three/cannon": "^6.0.0",
     "@react-three/drei": "^10.0.0",
     "@react-three/fiber": "^9.0.0",

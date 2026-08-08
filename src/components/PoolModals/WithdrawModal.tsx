@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { Button, Modal } from '@plantswap/uikit'
 import { ModalActions, ModalInput } from 'components/Modal'
 import { useTranslation } from 'contexts/Localization'
-import { getFullDisplayBalance } from 'utils/formatBalance'
+import { getFullDisplayBalance, toSafeBigNumber } from 'utils/formatBalance'
 import useToast from 'hooks/useToast'
 
 export interface PoolWithdrawModalProps {
@@ -33,8 +33,9 @@ const PoolWithdrawModal: React.FC<PoolWithdrawModalProps> = ({
     return getFullDisplayBalance(max)
   }, [max])
 
-  const valNumber = new BigNumber(val)
-  const fullBalanceNumber = new BigNumber(fullBalance)
+  // `val` starts as '' — raw `new BigNumber('')` throws and white-screens the modal portal.
+  const valNumber = useMemo(() => toSafeBigNumber(val), [val])
+  const fullBalanceNumber = useMemo(() => toSafeBigNumber(fullBalance), [fullBalance])
 
   const handleChange = useCallback(
     (e: React.FormEvent<HTMLInputElement>) => {

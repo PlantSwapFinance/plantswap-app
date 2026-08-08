@@ -5,14 +5,20 @@ import { BIG_TEN, BIG_ZERO } from './bigNumber'
 
 type BigNumberish = BigNumber | string | number | bigint | null | undefined
 
-const toSafeBigNumber = (value: BigNumberish): BigNumber => {
-  if (value === null || value === undefined) {
+/** Coerce user input / optional balances; empty string and NaN become 0. */
+export const toSafeBigNumber = (value: BigNumberish): BigNumber => {
+  if (value === null || value === undefined || value === '') {
     return BIG_ZERO
   }
   if (BigNumber.isBigNumber(value)) {
-    return value
+    return value.isFinite() ? value : BIG_ZERO
   }
-  return new BigNumber(value)
+  try {
+    const bn = new BigNumber(value)
+    return bn.isFinite() ? bn : BIG_ZERO
+  } catch {
+    return BIG_ZERO
+  }
 }
 
 /**

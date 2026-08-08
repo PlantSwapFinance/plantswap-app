@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { ModalProvider, light, dark } from '@plantswap/uikit'
+import { ErrorBoundary, ModalProvider, light, dark } from '@plantswap/uikit'
 import { Web3ReactProvider } from '@web3-react/core'
 import { HelmetProvider } from 'react-helmet-async'
 import { ThemeProvider } from 'styled-components'
@@ -30,7 +30,18 @@ const Providers: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
             <ThemeProviderWrapper>
               <LanguageProvider>
                 <RefreshContextProvider>
-                  <ModalProvider>{children}</ModalProvider>
+                  {/*
+                    Wrap ModalProvider so portal-rendered modals are covered.
+                    RouteErrorBoundary only wraps route children, so stake/deposit
+                    modal crashes otherwise white-screen the whole app.
+                  */}
+                  <ErrorBoundary
+                    onError={(error, errorInfo) => {
+                      console.error('App render error', error, errorInfo)
+                    }}
+                  >
+                    <ModalProvider>{children}</ModalProvider>
+                  </ErrorBoundary>
                 </RefreshContextProvider>
               </LanguageProvider>
             </ThemeProviderWrapper>

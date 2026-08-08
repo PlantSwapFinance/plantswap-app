@@ -26,34 +26,36 @@ const Apr: React.FC<AprProps> = ({ verticalGarden, showIcon = true, ...props }) 
     stakingTokenPrice,
    } = verticalGarden
   const { t } = useTranslation()
+  const plantPrice = usePricePlantBusd()
+  const cakePrice = usePriceCakeBusd()
   const roundingDecimals = 2
   const performanceFee = 0
   const compoundFrequency = 0
 
   const apyModalLink = verticalEarningToken?.address ? `/swap?outputCurrency=${getAddress(verticalEarningToken.address)}` : '/swap'
 
-  const apyBlockCount = new BigNumber(lastRewardUpdateBlock).minus(lastRewardUpdateBlockPrevious)
-
-  const stakingTokenPriceBigNum = new BigNumber(stakingTokenPrice)
-  const plantPrice = usePricePlantBusd()
-  const cakePrice = usePriceCakeBusd()
+  const apyBlockCount = new BigNumber(lastRewardUpdateBlock ?? 0).minus(lastRewardUpdateBlockPrevious ?? 0)
+  const plantGained = new BigNumber(lastRewardUpdatePlantGained ?? 0)
+  const totalStaked = new BigNumber(lastRewardUpdateTotalStakedToken ?? 0)
+  const stakingTokenPriceBigNum = new BigNumber(stakingTokenPrice ?? 0)
+  const canComputeApy = apyBlockCount.gt(0) && totalStaked.gt(0)
 
   let plantTokenApy = new BigNumber(0)
-  if(stakingToken.symbol === 'CAKE') {
-    plantTokenApy = new BigNumber(lastRewardUpdatePlantGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .div(new BigNumber(cakePrice).div(new BigNumber(plantPrice)))
-                                        .multipliedBy(new BigNumber(100))
+  if (canComputeApy && stakingToken.symbol === 'CAKE') {
+    plantTokenApy = plantGained
+      .div(apyBlockCount)
+      .multipliedBy(10512000)
+      .div(totalStaked)
+      .div(cakePrice.div(plantPrice))
+      .multipliedBy(100)
   }
-  if(stakingToken.symbol !== 'CAKE' && stakingTokenPrice !== undefined) {
-    plantTokenApy = new BigNumber(lastRewardUpdatePlantGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .div(new BigNumber(stakingTokenPriceBigNum).div(new BigNumber(plantPrice)))
-                                        .multipliedBy(new BigNumber(100))
+  if (canComputeApy && stakingToken.symbol !== 'CAKE' && stakingTokenPriceBigNum.gt(0)) {
+    plantTokenApy = plantGained
+      .div(apyBlockCount)
+      .multipliedBy(10512000)
+      .div(totalStaked)
+      .div(stakingTokenPriceBigNum.div(plantPrice))
+      .multipliedBy(100)
   }
 
   const [onPresentApyModal] = useModal(

@@ -48,7 +48,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ verticalGarden, u
 
   const stakedTokenBalance = getBalanceNumber(stakedBalance, stakingToken.decimals)
   const stakedTokenDollarBalance = getBalanceNumber(
-    stakedBalance.multipliedBy(stakingTokenPrice),
+    stakedBalance.multipliedBy(stakingTokenPrice ?? 0),
     stakingToken.decimals,
   )
   const needsApproval = !allowance.gt(0) && !isBnbPool

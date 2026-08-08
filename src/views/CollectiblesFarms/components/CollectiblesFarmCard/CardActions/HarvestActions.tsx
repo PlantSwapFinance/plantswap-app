@@ -25,7 +25,7 @@ const HarvestActions: React.FC<HarvestActionsProps> = ({
   const rewardTokenBalance = getBalanceNumber(earnings, stakingRewardToken.decimals)
   const formattedBalance = formatNumber(rewardTokenBalance, 3, 3)
   const earningsDollarValue = getBalanceNumber(
-    earnings.multipliedBy(stakingExtraRewardTokenPrice),
+    earnings.multipliedBy(stakingExtraRewardTokenPrice ?? 0),
     stakingRewardToken.decimals,
   )
   const fullBalance = getFullDisplayBalance(earnings, stakingRewardToken.decimals)

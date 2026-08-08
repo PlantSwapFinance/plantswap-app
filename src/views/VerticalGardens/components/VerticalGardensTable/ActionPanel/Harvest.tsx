@@ -34,7 +34,7 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({
 
   const stakingRewardTokenBalance = getBalanceNumber(earnings, stakingRewardToken.decimals)
   const stakingRewardTokenDollarBalance = getBalanceNumber(
-    earnings.multipliedBy(stakingRewardTokenPrice),
+    earnings.multipliedBy(stakingRewardTokenPrice ?? 0),
     stakingRewardToken.decimals,
   )
   const fullBalance = getFullDisplayBalance(earnings, stakingRewardToken.decimals)

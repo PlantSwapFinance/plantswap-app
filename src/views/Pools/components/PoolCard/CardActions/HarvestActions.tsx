@@ -25,7 +25,10 @@ const HarvestActions: React.FC<HarvestActionsProps> = ({
   const isCompoundPool = sousId === 0
   const rewardTokenBalance = getBalanceNumber(earnings, earningToken.decimals)
   const formattedBalance = formatNumber(rewardTokenBalance, 3, 3)
-  const earningsDollarValue = getBalanceNumber(earnings.multipliedBy(earningTokenPrice), earningToken.decimals)
+  const earningsDollarValue = getBalanceNumber(
+    earnings.multipliedBy(earningTokenPrice ?? 0),
+    earningToken.decimals,
+  )
   const fullBalance = getFullDisplayBalance(earnings, earningToken.decimals)
 
   return (

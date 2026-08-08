@@ -33,7 +33,10 @@ const EarningsCell: React.FC<EarningsCellProps> = ({ pool, account, userDataLoad
   const earnings = userData?.pendingReward ? new BigNumber(userData.pendingReward) : BIG_ZERO
   // These will be reassigned later if its Auto PLANT vault
   const earningTokenBalance = getBalanceNumber(earnings, earningToken.decimals)
-  const earningTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(earningTokenPrice), earningToken.decimals)
+  const earningTokenDollarBalance = getBalanceNumber(
+    earnings.multipliedBy(earningTokenPrice ?? 0),
+    earningToken.decimals,
+  )
   const hasEarnings = account && earnings.gt(0)
   const fullBalance = getFullDisplayBalance(earnings, earningToken.decimals)
   const formattedBalance = formatNumber(earningTokenBalance, 3, 3)

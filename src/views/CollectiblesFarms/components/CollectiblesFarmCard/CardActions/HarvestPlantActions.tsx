@@ -22,7 +22,10 @@ const HarvestPlantActions: React.FC<HarvestActionsProps> = ({
 }) => {
   const stakingRewardTokenBalance = getBalanceNumber(earnings, stakingRewardToken.decimals)
 
-  const stakingRewardTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(stakingExtraRewardTokenPrice), stakingRewardToken.decimals)
+  const stakingRewardTokenDollarBalance = getBalanceNumber(
+    earnings.multipliedBy(stakingExtraRewardTokenPrice ?? 0),
+    stakingRewardToken.decimals,
+  )
   const hasEarnings = earnings.toNumber() > 0
 
   return (

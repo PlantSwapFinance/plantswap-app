@@ -75,7 +75,7 @@ export const getPlantVaultEarnings = (
   const autoPlantProfit = plantAsBigNumber.minus(plantAtLastUserAction)
   const autoPlantToDisplay = autoPlantProfit.gte(0) ? getBalanceNumber(autoPlantProfit, 18) : 0
 
-  const autoUsdProfit = autoPlantProfit.times(earningTokenPrice)
+  const autoUsdProfit = autoPlantProfit.times(earningTokenPrice ?? 0)
   const autoUsdToDisplay = autoUsdProfit.gte(0) ? getBalanceNumber(autoUsdProfit, 18) : 0
   return { hasAutoEarnings, autoPlantToDisplay, autoUsdToDisplay }
 }

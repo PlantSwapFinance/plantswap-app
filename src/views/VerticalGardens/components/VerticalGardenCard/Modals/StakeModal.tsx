@@ -49,7 +49,8 @@ const StakeModal: React.FC<StakeModalProps> = ({
     return stakingTokenBalance
   }
 
-  const usdValueStaked = stakeAmount && formatNumber(new BigNumber(stakeAmount).times(stakingTokenPrice).toNumber())
+  const usdValueStaked =
+    stakeAmount && formatNumber(new BigNumber(stakeAmount).times(stakingTokenPrice ?? 0).toNumber())
 
   const handleStakeInputChange = (input: string) => {
     if (input) {

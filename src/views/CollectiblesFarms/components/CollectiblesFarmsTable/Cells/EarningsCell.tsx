@@ -35,7 +35,7 @@ const EarningsCell: React.FC<EarningsCellProps> = ({ collectiblesFarm, account, 
   // const earnings = userData?.pendingReward ? new BigNumber(userData.pendingReward) : BIG_ZERO
   // These will be reassigned later if its Auto PLANT vault
   const stakingRewardTokenBalance = getBalanceNumber(earnings)
-  const stakingRewardTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(stakingExtraRewardTokenPrice))
+  const stakingRewardTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(stakingExtraRewardTokenPrice ?? 0))
   const hasEarnings = account && earnings.gt(0)
   const fullBalance = getFullDisplayBalance(earnings)
   const formattedBalance = formatNumber(stakingRewardTokenBalance, 3, 3)

@@ -173,9 +173,9 @@ const Gardens: React.FC<GardensProps> = (gardensProps) => {
   const gardensList = useCallback(
     (gardensToDisplay: Farm[]): GardenWithStakedValue[] => {
       let gardensToDisplayWithAPR: GardenWithStakedValue[] = gardensToDisplay.map((garden) => {
-        // if (!garden.lpTotalInQuoteToken || !garden.quoteToken.busdPrice) {
-        //   return garden
-        // }
+        if (!garden.lpTotalInQuoteToken || !garden.quoteToken.busdPrice) {
+          return garden
+        }
 
         let totalLiquidity = new BigNumber(garden.lpTotalInQuoteToken).times(garden.quoteToken.busdPrice)
         if (priceCake && garden.lpSymbol === 'CAKE') {

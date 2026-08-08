@@ -24,7 +24,12 @@ const multicall = async <T = any>(abi: any[], calls: Call[]): Promise<T> => {
 
     return res
   } catch (error) {
-    throw new Error(error)
+    // Preserve the original error (e.g. RPC "Failed to fetch") for callers.
+    // `new Error(error)` stringifies it to "Error: TypeError: ..." and loses the stack.
+    if (error instanceof Error) {
+      throw error
+    }
+    throw new Error(typeof error === 'string' ? error : 'Multicall failed')
   }
 }
 

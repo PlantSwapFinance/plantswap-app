@@ -1,6 +1,6 @@
-const PLANTSWAP_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.json'
-const PANCAKE_EXTENDED = 'https://tokens.plantswap.finance/plantswap-extended.json'
+// PancakeSwap token CDN (tokens.plantswap.finance no longer resolves reliably)
 const PANCAKE_TOP100 = 'https://tokens.pancakeswap.finance/pancakeswap-top-100.json'
+const PANCAKE_EXTENDED = 'https://tokens.pancakeswap.finance/pancakeswap-extended.json'
 
 const PLANTSWAP_NFT = 'https://plantswap.finance/lists/plantswap-nft-list.json'
 const PANCAKE_NFT = 'https://plantswap.finance/lists/pancakeswap-nft-list.json'
@@ -10,7 +10,6 @@ export const UNSUPPORTED_NFTLIST_URLS: string[] = []
 
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
-  PLANTSWAP_TOP100,
   PANCAKE_TOP100,
   PANCAKE_EXTENDED,
   ...UNSUPPORTED_LIST_URLS, // need to load unsupported tokens as well

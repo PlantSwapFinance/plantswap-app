@@ -48,24 +48,29 @@ export const setLoadArchivedFarmsData = (payload: boolean): void => {
  * `fetchFarmsPublicDataAsync` thunk.
  */
 export const fetchFarmsPublicData = async (pids: number[]): Promise<void> => {
-  const farmsToFetch = farmsConfig.filter((farmConfig) => pids.includes(farmConfig.pid))
-  const farmsWithPriceHelpers = farmsToFetch.concat(priceHelperLpsConfig)
+  try {
+    const farmsToFetch = farmsConfig.filter((farmConfig) => pids.includes(farmConfig.pid))
+    const farmsWithPriceHelpers = farmsToFetch.concat(priceHelperLpsConfig)
 
-  const farmsRaw = await fetchFarms(farmsWithPriceHelpers)
-  const farms = await fetchFarmsPrices(farmsRaw)
-  // Filter out price helper LP config farms.
-  const liveFarms = (farms as Farm[]).filter((farm) => farm.pid || farm.pid === 0)
+    const farmsRaw = await fetchFarms(farmsWithPriceHelpers)
+    const farms = await fetchFarmsPrices(farmsRaw)
+    // Filter out price helper LP config farms.
+    const liveFarms = (farms as Farm[]).filter((farm) => farm.pid || farm.pid === 0)
 
-  useFarmsStore.setState(
-    (state) => ({
-      data: state.data.map((farm) => {
-        const liveFarmData = liveFarms.find((d) => d.pid === farm.pid)
-        return liveFarmData ? { ...farm, ...liveFarmData } : farm
+    useFarmsStore.setState(
+      (state) => ({
+        data: state.data.map((farm) => {
+          const liveFarmData = liveFarms.find((d) => d.pid === farm.pid)
+          return liveFarmData ? { ...farm, ...liveFarmData } : farm
+        }),
       }),
-    }),
-    false,
-    'farms/fetchFarmsPublicDataAsync/fulfilled',
-  )
+      false,
+      'farms/fetchFarmsPublicDataAsync/fulfilled',
+    )
+  } catch (error) {
+    // RPC / multicall outages used to surface as uncaught promise rejections.
+    console.error('Failed to fetch farms public data', error)
+  }
 }
 
 export interface FarmUserDataResponse {
@@ -88,29 +93,33 @@ export const fetchFarmUserData = async ({
   account: string
   pids: number[]
 }): Promise<void> => {
-  const farmsToFetch = farmsConfig.filter((farmConfig) => pids.includes(farmConfig.pid))
-  const userFarmAllowances = await fetchFarmUserAllowances(account, farmsToFetch)
-  const userFarmTokenBalances = await fetchFarmUserTokenBalances(account, farmsToFetch)
-  const userStakedBalances = await fetchFarmUserStakedBalances(account, farmsToFetch)
-  const userFarmEarnings = await fetchFarmUserEarnings(account, farmsToFetch)
+  try {
+    const farmsToFetch = farmsConfig.filter((farmConfig) => pids.includes(farmConfig.pid))
+    const userFarmAllowances = await fetchFarmUserAllowances(account, farmsToFetch)
+    const userFarmTokenBalances = await fetchFarmUserTokenBalances(account, farmsToFetch)
+    const userStakedBalances = await fetchFarmUserStakedBalances(account, farmsToFetch)
+    const userFarmEarnings = await fetchFarmUserEarnings(account, farmsToFetch)
 
-  const rows: FarmUserDataResponse[] = userFarmAllowances.map((_, index) => ({
-    pid: farmsToFetch[index].pid,
-    allowance: userFarmAllowances[index],
-    tokenBalance: userFarmTokenBalances[index],
-    stakedBalance: userStakedBalances[index],
-    earnings: userFarmEarnings[index],
-  }))
+    const rows: FarmUserDataResponse[] = userFarmAllowances.map((_, index) => ({
+      pid: farmsToFetch[index].pid,
+      allowance: userFarmAllowances[index],
+      tokenBalance: userFarmTokenBalances[index],
+      stakedBalance: userStakedBalances[index],
+      earnings: userFarmEarnings[index],
+    }))
 
-  useFarmsStore.setState(
-    (state) => ({
-      data: state.data.map((farm) => {
-        const userDataEl = rows.find((r) => r.pid === farm.pid)
-        return userDataEl ? { ...farm, userData: userDataEl } : farm
+    useFarmsStore.setState(
+      (state) => ({
+        data: state.data.map((farm) => {
+          const userDataEl = rows.find((r) => r.pid === farm.pid)
+          return userDataEl ? { ...farm, userData: userDataEl } : farm
+        }),
+        userDataLoaded: true,
       }),
-      userDataLoaded: true,
-    }),
-    false,
-    'farms/fetchFarmUserDataAsync/fulfilled',
-  )
+      false,
+      'farms/fetchFarmUserDataAsync/fulfilled',
+    )
+  } catch (error) {
+    console.error('Failed to fetch farm user data', error)
+  }
 }

@@ -23,7 +23,12 @@ export function isTradeBetter(
   if (minimumDelta.equalTo(ZERO_PERCENT)) {
     return tradeA.executionPrice.lessThan(tradeB.executionPrice)
   }
-  return tradeA.executionPrice.raw.multiply(minimumDelta.add(ONE_HUNDRED_PERCENT)).lessThan(tradeB.executionPrice)
+
+  // SDK v5 Price no longer has `.raw`; compare via Fraction math instead.
+  // Price.multiply() only accepts another Price, so use asFraction for the delta scale.
+  return tradeA.executionPrice.asFraction
+    .multiply(minimumDelta.add(ONE_HUNDRED_PERCENT))
+    .lessThan(tradeB.executionPrice)
 }
 
 export default isTradeBetter

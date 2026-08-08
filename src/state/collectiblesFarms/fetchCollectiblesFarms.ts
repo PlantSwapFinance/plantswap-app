@@ -1,8 +1,8 @@
-import BigNumber from 'bignumber.js'
 import collectiblesFarmsConfig from 'config/constants/collectiblesFarms'
 import collectiblesFarmingPoolABI from 'config/abi/collectiblesFarmingPool.json'
 import multicall from 'utils/multicall'
 import { getAddress } from 'utils/addressHelpers'
+import { toSerializedBigNumber } from 'utils/bigNumber'
 
 export const fetchCollectiblesFarmTotalStaked = async () => { // NEW
  const callsTotalStaked = collectiblesFarmsConfig.map((collectiblesFarmConfig) => {
@@ -88,15 +88,15 @@ export const fetchCollectiblesFarmTotalStaked = async () => { // NEW
     const depositPointsPerToken = depositPointsPerTokens[index]
     return {
       cfId: plantCollectiblesFarmConfig.cfId,
-      totalStaked: new BigNumber(totalStaked).toJSON(),
+      totalStaked: toSerializedBigNumber(totalStaked),
       nftAddress,
-      totalTokenPerBlock: new BigNumber(totalTokenPerBlock).toJSON(),
+      totalTokenPerBlock: toSerializedBigNumber(totalTokenPerBlock),
       variantIdStart,
-      variantIdEnd, 
+      variantIdEnd,
       isActive,
-      isAddedByUser: new BigNumber(isAddedByUser).toJSON(),
-      depositBlockTimeMinimum: new BigNumber(depositBlockTimeMinimum).toJSON(),
-      depositPointsPerToken: new BigNumber(depositPointsPerToken).toJSON(),
+      isAddedByUser: toSerializedBigNumber(isAddedByUser),
+      depositBlockTimeMinimum: toSerializedBigNumber(depositBlockTimeMinimum),
+      depositPointsPerToken: toSerializedBigNumber(depositPointsPerToken),
     }
   })
 }

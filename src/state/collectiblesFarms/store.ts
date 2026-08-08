@@ -71,12 +71,16 @@ export const updateCollectiblesFarmsUserData = (payload: { cfId: string; field: 
 }
 
 export const fetchCollectiblesFarmsPublicData = async (): Promise<void> => {
-  const totalStakeds = await fetchCollectiblesFarmTotalStaked()
-  const liveData = collectiblesFarmsConfig.map((cf) => {
-    const totalStaked = totalStakeds.find((entry) => entry.cfId === cf.cfId)
-    return { ...totalStaked, isFinished: cf.isFinished }
-  })
-  setCollectiblesFarmsPublicData(liveData)
+  try {
+    const totalStakeds = await fetchCollectiblesFarmTotalStaked()
+    const liveData = collectiblesFarmsConfig.map((cf) => {
+      const totalStaked = totalStakeds.find((entry) => entry.cfId === cf.cfId)
+      return { ...totalStaked, isFinished: cf.isFinished }
+    })
+    setCollectiblesFarmsPublicData(liveData)
+  } catch (error) {
+    console.error('Failed to fetch collectibles farms public data', error)
+  }
 }
 
 export const fetchCollectiblesFarmsUserData = async (account: string): Promise<void> => {

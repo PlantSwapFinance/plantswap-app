@@ -1,6 +1,7 @@
 import React, { lazy, useEffect, useRef, useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ResetCSS } from '@plantswap/uikit'
+import RouteErrorBoundary from 'components/RouteErrorBoundary'
 import BigNumber from 'bignumber.js'
 import Cookies from 'js-cookie'
 import useEagerConnect from 'hooks/useEagerConnect'
@@ -146,8 +147,9 @@ const App: React.FC = () => {
       <GlobalStyle />
       {account && account === MASTERGARDENERDEVADDRESS ? (
         <MenuDev>
-          <SuspenseWithChunkError fallback={<PageLoader />}>
-            <Routes>
+          <RouteErrorBoundary>
+            <SuspenseWithChunkError fallback={<PageLoader />}>
+              <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/farms/*" element={<Farms />} />
               {/* DASHBOARD */}
@@ -209,13 +211,15 @@ const App: React.FC = () => {
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
-            </Routes>
-          </SuspenseWithChunkError>
+              </Routes>
+            </SuspenseWithChunkError>
+          </RouteErrorBoundary>
         </MenuDev>
       ) : (
         <Menu>
-          <SuspenseWithChunkError fallback={<PageLoader />}>
-            <Routes>
+          <RouteErrorBoundary>
+            <SuspenseWithChunkError fallback={<PageLoader />}>
+              <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/farms/*" element={<Farms />} />
               <Route path="/gardens/*" element={<Gardens tokenMode />} />
@@ -270,8 +274,9 @@ const App: React.FC = () => {
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
-            </Routes>
-          </SuspenseWithChunkError>
+              </Routes>
+            </SuspenseWithChunkError>
+          </RouteErrorBoundary>
         </Menu>
       )}
       <EasterEgg iterations={2} />

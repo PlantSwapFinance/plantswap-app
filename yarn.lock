@@ -731,7 +731,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/address@npm:5.8.0, @ethersproject/address@npm:^5.8.0":
+"@ethersproject/address@npm:5.8.0, @ethersproject/address@npm:^5, @ethersproject/address@npm:^5.8.0":
   version: 5.8.0
   resolution: "@ethersproject/address@npm:5.8.0"
   dependencies:
@@ -879,7 +879,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/keccak256@npm:5.8.0, @ethersproject/keccak256@npm:^5.0.0-beta.130, @ethersproject/keccak256@npm:^5.8.0":
+"@ethersproject/keccak256@npm:5.8.0, @ethersproject/keccak256@npm:^5.8.0":
   version: 5.8.0
   resolution: "@ethersproject/keccak256@npm:5.8.0"
   dependencies:
@@ -924,7 +924,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/providers@npm:5.8.0":
+"@ethersproject/providers@npm:5.8.0, @ethersproject/providers@npm:^5":
   version: 5.8.0
   resolution: "@ethersproject/providers@npm:5.8.0"
   dependencies:
@@ -5155,18 +5155,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-react/core@npm:^6.1.9":
-  version: 6.1.9
-  resolution: "@web3-react/core@npm:6.1.9"
+"@web3-react/core@npm:^8.0.0":
+  version: 8.2.3
+  resolution: "@web3-react/core@npm:8.2.3"
   dependencies:
-    "@ethersproject/keccak256": "npm:^5.0.0-beta.130"
-    "@web3-react/abstract-connector": "npm:^6.0.7"
-    "@web3-react/types": "npm:^6.0.7"
-    tiny-invariant: "npm:^1.0.6"
-    tiny-warning: "npm:^1.0.3"
+    "@ethersproject/providers": "npm:^5"
+    "@web3-react/store": "npm:^8.2.3"
+    "@web3-react/types": "npm:^8.2.3"
+    zustand: "npm:4.4.0"
   peerDependencies:
     react: ">=16.8"
-  checksum: 10c0/e2fe9bb33b2fa5c5d11ef654ac3918618952a1c06de2852ebaf554449d655ef97f9797f13e230ac163df3c05b669ea65717c9398e96e84eda92d0d7b689b7ca5
+  dependenciesMeta:
+    "@ethersproject/providers":
+      optional: true
+  checksum: 10c0/740a40f019eb17c9cf71d058dcdfed1522463e6036aeb5e045467cf0d1a99e50342ddd886b4b169a4fe8fe702aeba02efc658e6ba7d672526d35b6fbdfa3a919
   languageName: node
   linkType: hard
 
@@ -5181,10 +5183,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@web3-react/store@npm:^8.2.3":
+  version: 8.2.3
+  resolution: "@web3-react/store@npm:8.2.3"
+  dependencies:
+    "@ethersproject/address": "npm:^5"
+    "@web3-react/types": "npm:^8.2.3"
+    zustand: "npm:4.4.0"
+  checksum: 10c0/bd0fad55e461a2d339956026448cb5ec6da05124d7ddfb368766ddf94d9e75e11e9a6b03e5b8953811106b8bb7afee69228b56801ef78fbdf7d36713d67b327c
+  languageName: node
+  linkType: hard
+
 "@web3-react/types@npm:^6.0.7":
   version: 6.0.7
   resolution: "@web3-react/types@npm:6.0.7"
   checksum: 10c0/d8fe1e5113acce63e100f5b685e9c02deb151fb2bb0e40e09a975118eb08824a90590d8d015eaed7dc182ba214c396c519db94d5b440eb8352ec5db08f520aa6
+  languageName: node
+  linkType: hard
+
+"@web3-react/types@npm:^8.2.3":
+  version: 8.2.3
+  resolution: "@web3-react/types@npm:8.2.3"
+  dependencies:
+    zustand: "npm:4.4.0"
+  checksum: 10c0/88d7f0d13e1887d07168892c1245dc439e76feaaa28633a1b73428089154a1d48044c5fc70a7bede2f470dc8875a8c0b49542edbda3a2f1563a221e05d2f1b3b
   languageName: node
   linkType: hard
 
@@ -14033,7 +14055,7 @@ __metadata:
     "@uniswap/v2-core": "npm:^1.0.0"
     "@uniswap/v2-periphery": "npm:^1.1.0-beta.0"
     "@vitejs/plugin-react": "npm:^6.0.4"
-    "@web3-react/core": "npm:^6.1.9"
+    "@web3-react/core": "npm:^8.0.0"
     "@web3-react/injected-connector": "npm:^6.0.7"
     "@web3-react/walletconnect-connector": "npm:^6.2.4"
     ajv: "npm:^8.0.0"
@@ -17449,6 +17471,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"use-sync-external-store@npm:1.2.0":
+  version: 1.2.0
+  resolution: "use-sync-external-store@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/ac4814e5592524f242921157e791b022efe36e451fe0d4fd4d204322d5433a4fc300d63b0ade5185f8e0735ded044c70bcf6d2352db0f74d097a238cebd2da02
+  languageName: node
+  linkType: hard
+
 "use-sync-external-store@npm:^1.2.2, use-sync-external-store@npm:^1.4.0":
   version: 1.6.0
   resolution: "use-sync-external-store@npm:1.6.0"
@@ -18275,6 +18306,26 @@ __metadata:
   version: 4.4.3
   resolution: "zod@npm:4.4.3"
   checksum: 10c0/7ea31b558e88f9faf44f31dd185e2e1cbf51fed3081787fb96cc2534749b50c0acfc6da7f0922a7353ed092dd358c7d50c28ea96c94d04af64191bd33152eca3
+  languageName: node
+  linkType: hard
+
+"zustand@npm:4.4.0":
+  version: 4.4.0
+  resolution: "zustand@npm:4.4.0"
+  dependencies:
+    use-sync-external-store: "npm:1.2.0"
+  peerDependencies:
+    "@types/react": ">=16.8"
+    immer: ">=9.0"
+    react: ">=16.8"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    immer:
+      optional: true
+    react:
+      optional: true
+  checksum: 10c0/1e6c1e6c27025dd48e4463012056dca158a7cee979b7a4b41522dc44075bc92b241fa516c66daae6de8d5da456f7a9ca4408b3716de2fab95c3762b0d908c8ff
   languageName: node
   linkType: hard
 

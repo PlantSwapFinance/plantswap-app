@@ -20,8 +20,8 @@ const TotalStakedCell: React.FC<TotalStakedCellProps> = ({ verticalGarden }) => 
   const { stakingToken, totalStaked } = verticalGarden
 
   const totalStakedBalance = useMemo(() => {
-    return getBalanceNumber(totalStaked, 18)
-  }, [totalStaked])
+    return getBalanceNumber(totalStaked, stakingToken.decimals)
+  }, [totalStaked, stakingToken.decimals])
 
   return (
     <StyledCell role="cell">
@@ -29,7 +29,7 @@ const TotalStakedCell: React.FC<TotalStakedCellProps> = ({ verticalGarden }) => 
         <Text fontSize="12px" color="textSubtle" textAlign="left">
           {t('Total staked')}
         </Text>
-        {totalStakedBalance > 0 ? (
+        {totalStaked && totalStaked.gte(0) ? (
           <Flex height="20px" alignItems="center">
             <Balance fontSize="16px" value={totalStakedBalance} decimals={0} unit={`${stakingToken.symbol}`} />
           </Flex>

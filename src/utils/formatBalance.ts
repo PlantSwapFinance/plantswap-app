@@ -1,27 +1,39 @@
 import BigNumber from 'bignumber.js'
 import { formatUnits } from 'ethers'
 import { getLanguageCodeFromLS } from 'contexts/Localization/helpers'
-import { BIG_TEN } from './bigNumber'
+import { BIG_TEN, BIG_ZERO } from './bigNumber'
+
+type BigNumberish = BigNumber | string | number | bigint | null | undefined
+
+const toSafeBigNumber = (value: BigNumberish): BigNumber => {
+  if (value === null || value === undefined) {
+    return BIG_ZERO
+  }
+  if (BigNumber.isBigNumber(value)) {
+    return value
+  }
+  return new BigNumber(value)
+}
 
 /**
  * Take a formatted amount, e.g. 15 BNB and convert it to full decimal value, e.g. 15000000000000000
  */
-export const getDecimalAmount = (amount: BigNumber, decimals = 18) => {
-  return new BigNumber(amount).times(BIG_TEN.pow(decimals))
+export const getDecimalAmount = (amount: BigNumberish, decimals = 18) => {
+  return toSafeBigNumber(amount).times(BIG_TEN.pow(decimals))
 }
 
-export const getBalanceAmount = (amount: BigNumber, decimals = 18) => {
-  return new BigNumber(amount).dividedBy(BIG_TEN.pow(decimals))
+export const getBalanceAmount = (amount: BigNumberish, decimals = 18) => {
+  return toSafeBigNumber(amount).dividedBy(BIG_TEN.pow(decimals))
 }
 
 /**
  * This function is not really necessary but is used throughout the site.
  */
-export const getBalanceNumber = (balance: BigNumber, decimals = 18) => {
+export const getBalanceNumber = (balance: BigNumberish, decimals = 18) => {
   return getBalanceAmount(balance, decimals).toNumber()
 }
 
-export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, displayDecimals?: number) => {
+export const getFullDisplayBalance = (balance: BigNumberish, decimals = 18, displayDecimals?: number) => {
   return getBalanceAmount(balance, decimals).toFixed(displayDecimals)
 }
 

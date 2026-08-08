@@ -29,7 +29,7 @@ const TotalStakedCell: React.FC<TotalStakedCellProps> = ({ collectiblesFarm }) =
         <Text fontSize="12px" color="textSubtle" textAlign="left">
           {t('Total collectibles staked')}
         </Text>
-        {totalStakedBalance > 0 ? (
+        {totalStaked && totalStaked.gte(0) ? (
           <Flex height="20px" alignItems="center">
             <Balance fontSize="16px" value={totalStakedBalance} decimals={0} unit={` Nft`} />
           </Flex>

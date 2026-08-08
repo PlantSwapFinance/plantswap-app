@@ -28,23 +28,42 @@ export const useCanClaim = () => {
   const [canClaim, setCanClaim] = useState(false)
   const [refresh, setRefresh] = useState(1)
   const { account } = useActiveWeb3React()
-  const pointsRewardSchoolNftContract = usePointsRewardSchoolNftContract()
 
   const checkClaimStatus = useCallback(() => {
     setRefresh((prevRefresh) => prevRefresh + 1)
-  }, [setRefresh])
+  }, [])
 
   useEffect(() => {
+    let cancelled = false
+
     const fetchClaimStatus = async () => {
-      const walletCanClaim = await pointsRewardSchoolNftContract.canClaim(account)
-      if (walletCanClaim) {
-        setCanClaim(true)
+      if (!account) {
+        setCanClaim(false)
+        return
+      }
+      try {
+        // Use the read-only helper — do not depend on a hook contract instance.
+        // usePointsRewardSchoolNftContract() can change identity every render when
+        // the signer promise recreates, which re-fires this effect → setState loop
+        // (React error #185 / max update depth).
+        const contract = getPointsRewardSchoolNftContract()
+        const walletCanClaim = await contract.canClaim(account)
+        if (!cancelled) {
+          setCanClaim(Boolean(walletCanClaim))
+        }
+      } catch (error) {
+        console.error('Failed to check claim status', error)
+        if (!cancelled) {
+          setCanClaim(false)
+        }
       }
     }
-    if (account) {
-      fetchClaimStatus()
+
+    fetchClaimStatus()
+    return () => {
+      cancelled = true
     }
-  }, [account, pointsRewardSchoolNftContract, refresh, setCanClaim])
+  }, [account, refresh])
 
   return { canClaim, checkClaimStatus }
 }
@@ -71,8 +90,8 @@ const ClaimGift: React.FC<ClaimGiftProps> = ({ onSuccess, onDismiss }) => {
       const userNextChallenge = await pointsRewardSchoolContract.nextPointsToClaim(account)
       const userNextGardenerId = await pointsRewardSchoolContract.nextGardenerId(account)
 
-      setNextPointsMinimum(userNextChallenge.toNumber())
-      setNextGardenerId(userNextGardenerId)
+      setNextPointsMinimum(Number(userNextChallenge))
+      setNextGardenerId(Number(userNextGardenerId))
       if (userNextGardenerId === 91 || userNextGardenerId === 92) {
         setNftCost(new BigNumber(250000000000000000))
       }
@@ -100,12 +119,12 @@ const ClaimGift: React.FC<ClaimGiftProps> = ({ onSuccess, onDismiss }) => {
       const plantContract = getPlantContract()
       const userPlantAllowance = await plantContract.allowance(account, pointsRewardSchoolNftAddress)
       const userPlantBalance = await plantContract.balanceOf(account)
-      const userPlantAllowanceFormated = userPlantAllowance.toJSON()
-      const userPlantBalanceFormated = userPlantBalance.toJSON()
+      const allowance = new BigNumber(userPlantAllowance.toString())
+      const balance = new BigNumber(userPlantBalance.toString())
 
-      if (userPlantAllowanceFormated >= nftCost) {
+      if (allowance.gte(nftCost)) {
         setPlantAllowanceRequired(false)
-        if (userPlantBalanceFormated >= nftCost) {
+        if (balance.gte(nftCost)) {
           setPlantBalanceRequired(false)
         }
       }

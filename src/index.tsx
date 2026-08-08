@@ -5,6 +5,8 @@ import '@fontsource/kanit/400.css'
 import '@fontsource/kanit/600.css'
 // Polyfill Buffer on globalThis so bn.js and @pancakeswap/sdk can read it.
 import { Buffer } from 'buffer'
+// Restore removed SDK helpers (CurrencyAmount.ether / .raw / .token) for legacy call sites.
+import 'utils/sdkCompat'
 import useActiveWeb3React from './hooks/useActiveWeb3React'
 import { BLOCKED_ADDRESSES } from './config/constants'
 import ApplicationUpdater from './state/application/updater'

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import type { Currency } from '@pancakeswap/sdk'
-import { Ether, CurrencyAmount } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
+import { CurrencyAmount } from '@pancakeswap/sdk'
 import JSBI from 'jsbi'
 import { Button, ChevronDownIcon, Text, AddIcon, useModal } from '@plantswap/uikit'
 import styled from 'styled-components'

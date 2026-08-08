@@ -1,5 +1,4 @@
 import { CurrencyAmount, Fraction, Percent, Trade } from '@pancakeswap/sdk'
-import JSBI from 'jsbi'
 import {
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
   ALLOWED_PRICE_IMPACT_HIGH,
@@ -10,8 +9,8 @@ import {
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
 
-const BASE_FEE = new Percent(JSBI.BigInt(25), JSBI.BigInt(10000))
-const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
+const BASE_FEE = new Percent(25n, 10000n)
+const ONE_HUNDRED_PERCENT = new Percent(10000n, 10000n)
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(BASE_FEE)
 
 // computes price breakdown for the trade
@@ -40,11 +39,12 @@ export function computeTradePriceBreakdown(trade?: Trade | null): {
 
   // the amount of the input that accrues to LPs
   const realizedLPFeeAmount =
-    realizedLPFee &&
-    trade &&
-    (trade.inputAmount instanceof CurrencyAmount
-      ? new CurrencyAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-      : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
+    realizedLPFee && trade
+      ? CurrencyAmount.fromRawAmount(
+          trade.inputAmount.currency,
+          realizedLPFee.multiply(trade.inputAmount.quotient).quotient.toString(),
+        )
+      : undefined
 
   return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount }
 }

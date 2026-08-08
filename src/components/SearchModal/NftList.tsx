@@ -1,6 +1,7 @@
 import React, { CSSProperties, MutableRefObject, useMemo } from 'react'
 import type { Currency } from '@pancakeswap/sdk'
-import { CurrencyAmount, Ether, Token } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
+import { CurrencyAmount, Token } from '@pancakeswap/sdk'
 import currencyEquals from './../../utils/currencyEquals'
 import { Text } from '@plantswap/uikit'
 import styled from 'styled-components'

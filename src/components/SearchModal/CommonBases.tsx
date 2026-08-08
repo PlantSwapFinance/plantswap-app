@@ -1,6 +1,7 @@
 import React from 'react'
 import type { Currency } from '@pancakeswap/sdk'
-import { ChainId, Ether, Token } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
+import { ChainId, Token } from '@pancakeswap/sdk'
 import currencyEquals from './../../utils/currencyEquals'
 import { Text } from '@plantswap/uikit'
 import styled from 'styled-components'

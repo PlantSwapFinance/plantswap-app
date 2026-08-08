@@ -1,7 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { decodeBytes32String } from 'ethers'
 import type { Currency } from '@pancakeswap/sdk'
-import { Ether, Token } from '@pancakeswap/sdk'
+import { Token } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
 import currencyEquals from './../utils/currencyEquals'
 import { useMemo } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'

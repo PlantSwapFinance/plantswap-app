@@ -165,6 +165,7 @@ export default function Swap() {
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
   const [singleHopOnly] = useUserSingleHopOnly()
+  const [priceImpactModal, confirmPriceImpactWithoutFee] = useConfirmPriceImpactWithoutFee()
 
   const handleSwap = useExecuteSwap({
     swapCallback,
@@ -285,8 +286,6 @@ export default function Swap() {
     true,
     'confirmSwapModal',
   )
-
-  const [priceImpactModal, confirmPriceImpactWithoutFee] = useConfirmPriceImpactWithoutFee()
 
   return (
     <Page>

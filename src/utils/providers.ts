@@ -1,9 +1,11 @@
-import { JsonRpcProvider } from 'ethers'
+import { JsonRpcProvider, Network } from 'ethers'
 import getRpcUrl from 'utils/getRpcUrl'
 
 const RPC_URL = getRpcUrl()
+const chainId = parseInt(import.meta.env.REACT_APP_CHAIN_ID ?? '56', 10)
+const network = Network.from(chainId)
 
-// JsonRpcProvider is network-aware in v6; the same constructor works for HTTP URLs.
-export const simpleRpcProvider = new JsonRpcProvider(RPC_URL)
+// staticNetwork avoids eth_blockNumber probes on a fixed HTTP seed URL.
+export const simpleRpcProvider = new JsonRpcProvider(RPC_URL, network, { staticNetwork: network })
 
 export default null

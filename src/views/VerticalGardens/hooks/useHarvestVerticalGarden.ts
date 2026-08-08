@@ -6,7 +6,7 @@ import { VERTICALGARDEN_GAS_LIMIT } from 'config'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
-  gasLimit: VERTICALGARDEN_GAS_LIMIT,
+  gasLimit: BigInt(VERTICALGARDEN_GAS_LIMIT),
 }
 
 const harvestVerticalGarden = async (verticalGardenContract) => {

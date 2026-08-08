@@ -20,8 +20,11 @@ const envNodes = [
   import.meta.env.REACT_APP_NODE_3,
 ].filter((url): url is string => Boolean(url) && isBrowserSafeRpc(url))
 
-// Prefer safe env nodes; always keep public seeds as fallbacks.
-export const nodes = [...envNodes, ...DEFAULT_BSC_NODES].filter(
+/**
+ * Prefer public Binance seeds first — Netlify/env overrides have shipped broken
+ * hosts (e.g. llamarpc) that also get pushed into MetaMask via wallet_addEthereumChain.
+ */
+export const nodes = [...DEFAULT_BSC_NODES, ...envNodes].filter(
   (url, index, all) => all.indexOf(url) === index,
 )
 

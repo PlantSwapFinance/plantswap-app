@@ -29,37 +29,36 @@ const Apr: React.FC<AprProps> = ({ verticalGarden, showIcon , ...props }) => {
   const compoundFrequency = 0
 
   
-  const apyBlockCount = new BigNumber(lastRewardUpdateBlock).minus(lastRewardUpdateBlockPrevious)
+  const apyBlockCount = new BigNumber(lastRewardUpdateBlock ?? 0).minus(lastRewardUpdateBlockPrevious ?? 0)
+  const rewardGained = new BigNumber(lastRewardUpdateRewardTokenGained ?? 0)
+  const totalStaked = new BigNumber(lastRewardUpdateTotalStakedToken ?? 0)
+  const canComputeApy = apyBlockCount.gt(0) && totalStaked.gt(0)
 
   let rewardTokenApy = new BigNumber(0)
-  if(stakingRewardToken === stakingToken) {
-    rewardTokenApy = new BigNumber(lastRewardUpdateRewardTokenGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .multipliedBy(new BigNumber(100))
+  if (canComputeApy && stakingRewardToken === stakingToken) {
+    rewardTokenApy = rewardGained.div(apyBlockCount).multipliedBy(10512000).div(totalStaked).multipliedBy(100)
   }
-  if(stakingRewardToken.symbol === 'ODDZ') {
-    rewardTokenApy = new BigNumber(lastRewardUpdateRewardTokenGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .div(new BigNumber(16).div(new BigNumber(0.01)))
-                                        .multipliedBy(new BigNumber(100))
+  if (canComputeApy && stakingRewardToken.symbol === 'ODDZ') {
+    rewardTokenApy = rewardGained
+      .div(apyBlockCount)
+      .multipliedBy(10512000)
+      .div(totalStaked)
+      .div(new BigNumber(16).div(0.01))
+      .multipliedBy(100)
   }
-  if(stakingRewardToken.symbol === 'CHESS') {
-    rewardTokenApy = new BigNumber(lastRewardUpdateRewardTokenGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .div(new BigNumber(16).div(new BigNumber(0.1)))
-                                        .multipliedBy(new BigNumber(100))
+  if (canComputeApy && stakingRewardToken.symbol === 'CHESS') {
+    rewardTokenApy = rewardGained
+      .div(apyBlockCount)
+      .multipliedBy(10512000)
+      .div(totalStaked)
+      .div(new BigNumber(16).div(0.1))
+      .multipliedBy(100)
   }
   const apyModalLink = stakingToken?.address ? `/swap?outputCurrency=${getAddress(stakingToken.address)}` : '/swap'
 
   const [onPresentApyModal] = useModal(
     <ApyCalculatorModal
-      tokenPrice={stakingRewardTokenPrice}
+      tokenPrice={stakingRewardTokenPrice ?? 0}
       apr={rewardTokenApy.toNumber()}
       linkLabel={t('Get %symbol%', { symbol: stakingToken?.symbol })}
       linkHref={apyModalLink}

@@ -1,7 +1,7 @@
 import { parseUnits } from 'ethers'
 import type { Currency } from '@pancakeswap/sdk'
-import { CurrencyAmount, Ether, Token, Trade } from '@pancakeswap/sdk'
-import JSBI from 'jsbi'
+import { CurrencyAmount, Token, Trade } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import useENS from 'hooks/ENS/useENS'
@@ -38,7 +38,7 @@ export function useSwapActionHandlers(): {
   const onCurrencySelection = useCallback((field: Field, currency: Currency) => {
     selectCurrency({
       field,
-      currencyId: currency instanceof Token ? currency.address : currency === Ether ? 'BNB' : '',
+      currencyId: currency instanceof Token ? currency.address : currency.isNative || currency === Ether ? 'BNB' : '',
     })
   }, [])
 
@@ -70,9 +70,7 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
   try {
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
     if (typedValueParsed !== '0') {
-      return currency instanceof Token
-        ? new CurrencyAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+      return CurrencyAmount.fromRawAmount(currency, typedValueParsed)
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)

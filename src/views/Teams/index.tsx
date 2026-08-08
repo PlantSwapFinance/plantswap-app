@@ -10,7 +10,7 @@ import TeamHeader from './components/TeamHeader'
 const Teams = () => {
   const { t } = useTranslation()
   const { teams, isLoading } = useTeams()
-  const teamList = Object.values(teams)
+  const teamList = Object.values(teams ?? {})
   const topTeams = orderBy(teamList, ['points', 'id', 'name'], ['desc', 'asc', 'asc'])
 
   return (

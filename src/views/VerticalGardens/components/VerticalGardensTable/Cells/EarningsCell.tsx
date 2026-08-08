@@ -32,7 +32,7 @@ const EarningsCell: React.FC<EarningsCellProps> = ({ verticalGarden, account, us
   const earnings = userData?.estimateReward ? new BigNumber(userData.estimateReward) : BIG_ZERO
   // These will be reassigned later if its Auto PLANT vault
   const stakingRewardTokenBalance = getBalanceNumber(earnings)
-  const stakingRewardTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(stakingRewardTokenPrice))
+  const stakingRewardTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(stakingRewardTokenPrice ?? 0))
   const hasEarnings = account && earnings.gt(0)
   const fullBalance = getFullDisplayBalance(earnings)
   const formattedBalance = formatNumber(stakingRewardTokenBalance, 3, 3)

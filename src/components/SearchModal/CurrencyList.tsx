@@ -1,6 +1,7 @@
 import React, { CSSProperties, MutableRefObject, useMemo } from 'react'
 import type { Currency } from '@pancakeswap/sdk'
-import { CurrencyAmount, Ether, Token } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
+import { CurrencyAmount, Token } from '@pancakeswap/sdk'
 import currencyEquals from './../../utils/currencyEquals'
 import { Text } from '@plantswap/uikit'
 import styled from 'styled-components'
@@ -181,7 +182,7 @@ export default function CurrencyList({
   breakIndex: number | undefined
 }) {
   const itemData: (Currency | undefined)[] = useMemo(() => {
-    let formatted: (Currency | undefined)[] = showETH ? [Currency.Ether, ...currencies] : currencies
+    let formatted: (Currency | undefined)[] = showETH ? [Ether, ...currencies] : currencies
     if (breakIndex !== undefined) {
       formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
     }

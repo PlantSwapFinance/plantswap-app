@@ -18,57 +18,59 @@ type PublicFarmData = {
   multiplier: string
 }
 
+const toBn = (value: unknown): BigNumber => {
+  if (value === null || value === undefined) {
+    return BIG_ZERO
+  }
+  if (BigNumber.isBigNumber(value)) {
+    return value
+  }
+  // ethers Result / bigint / number / string
+  return new BigNumber(value.toString())
+}
+
 const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
   const { pid, lpAddresses, token, quoteToken, isTokenOnly } = farm
   const lpAddress = getAddress(lpAddresses)
 
-  let calls
-  let lpTokenRatio
-  let tokenAmountTotal
-  let quoteTokenAmountTotal
-  let lpTotalSupplyCount
-  let tokenAmountMc
-  let quoteTokenAmountMc
-  let lpTotalInQuoteToken
-  let tokenPriceVsQuote
-  let allocPoint
-  let poolWeight
+  let lpTokenRatio = BIG_ZERO
+  let tokenAmountTotal = BIG_ZERO
+  let quoteTokenAmountTotal = BIG_ZERO
+  let lpTotalSupplyCount = BIG_ZERO
+  let tokenAmountMc = BIG_ZERO
+  let quoteTokenAmountMc = BIG_ZERO
+  let lpTotalInQuoteToken = BIG_ZERO
+  let tokenPriceVsQuote = BIG_ZERO
+  let allocPoint = BIG_ZERO
+  let poolWeight = BIG_ZERO
 
-  if(isTokenOnly === true) {
-    calls = [
-      // Balance of LP tokens in the master chef contract
+  if (isTokenOnly === true) {
+    const calls = [
       {
         address: lpAddress,
         name: 'balanceOf',
         params: [getMasterGardenerAddress()],
       },
-      // Token decimals
       {
         address: getAddress(token.address),
         name: 'decimals',
       },
     ]
 
-    const [lpTokenBalanceMC, tokenDecimals] =
-      await multicall(erc20, calls)
+    const [lpTokenBalanceMC, tokenDecimals] = await multicall(erc20, calls)
+    const decimals = Number(tokenDecimals?.toString?.() ?? tokenDecimals ?? 18)
+    const balance = toBn(lpTokenBalanceMC).div(BIG_TEN.pow(decimals))
 
-    // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
     lpTokenRatio = new BigNumber(100)
-
-    // Raw amount of token in the LP, including those not staked
-    tokenAmountTotal = new BigNumber(lpTokenBalanceMC.toString()).div(BIG_TEN.pow(Number(tokenDecimals)))
-    quoteTokenAmountTotal = new BigNumber(lpTokenBalanceMC.toString()).div(BIG_TEN.pow(Number(tokenDecimals)))
-
-    // Amount of token in the LP that are staked in the MC (i.e amount of token * lp ratio)
+    tokenAmountTotal = balance
+    quoteTokenAmountTotal = balance
     tokenAmountMc = tokenAmountTotal.times(lpTokenRatio)
     quoteTokenAmountMc = quoteTokenAmountTotal.times(lpTokenRatio)
-
-    // Total staked in LP, in quote token value
-    lpTotalInQuoteToken = new BigNumber(lpTokenBalanceMC.toString()).div(BIG_TEN.pow(Number(tokenDecimals)))
-
+    lpTotalInQuoteToken = balance
+    // Token-only pools have no LP supply; keep zero rather than reading an unset var.
+    lpTotalSupplyCount = BIG_ZERO
     tokenPriceVsQuote = tokenAmountTotal
 
-    // Only make masterchef calls if farm has pid
     const [info, totalAllocPoint] =
       pid || pid === 0
         ? await multicall(masterchefABI, [
@@ -84,40 +86,33 @@ const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
           ])
         : [null, null]
 
-    allocPoint = info ? new BigNumber(info.allocPoint.toString()) : BIG_ZERO
-    poolWeight = totalAllocPoint ? allocPoint.div(new BigNumber(totalAllocPoint.toString())) : BIG_ZERO
-  }
-  else {
-    calls = [
-      // Balance of token in the LP contract
+    allocPoint = info ? toBn(info.allocPoint ?? info[1]) : BIG_ZERO
+    poolWeight = totalAllocPoint ? allocPoint.div(toBn(totalAllocPoint)) : BIG_ZERO
+  } else {
+    const calls = [
       {
         address: getAddress(token.address),
         name: 'balanceOf',
         params: [lpAddress],
       },
-      // Balance of quote token on LP contract
       {
         address: getAddress(quoteToken.address),
         name: 'balanceOf',
         params: [lpAddress],
       },
-      // Balance of LP tokens in the master chef contract
       {
         address: lpAddress,
         name: 'balanceOf',
         params: [getMasterGardenerAddress()],
       },
-      // Total supply of LP tokens
       {
         address: lpAddress,
         name: 'totalSupply',
       },
-      // Token decimals
       {
         address: getAddress(token.address),
         name: 'decimals',
       },
-      // Quote token decimals
       {
         address: getAddress(quoteToken.address),
         name: 'decimals',
@@ -127,23 +122,19 @@ const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
     const [tokenBalanceLP, quoteTokenBalanceLP, lpTokenBalanceMC, lpTotalSupply, tokenDecimals, quoteTokenDecimals] =
       await multicall(erc20, calls)
 
-    // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
-    lpTokenRatio = new BigNumber(lpTokenBalanceMC.toString()).div(new BigNumber(lpTotalSupply.toString()))
+    const tokenDec = Number(tokenDecimals?.toString?.() ?? tokenDecimals ?? 18)
+    const quoteDec = Number(quoteTokenDecimals?.toString?.() ?? quoteTokenDecimals ?? 18)
+    lpTotalSupplyCount = toBn(lpTotalSupply)
+    const lpBalanceMc = toBn(lpTokenBalanceMC)
+    lpTokenRatio = lpTotalSupplyCount.gt(0) ? lpBalanceMc.div(lpTotalSupplyCount) : BIG_ZERO
 
-    // Raw amount of token in the LP, including those not staked
-    tokenAmountTotal = new BigNumber(tokenBalanceLP.toString()).div(BIG_TEN.pow(Number(tokenDecimals)))
-    quoteTokenAmountTotal = new BigNumber(quoteTokenBalanceLP.toString()).div(BIG_TEN.pow(Number(quoteTokenDecimals)))
-    lpTotalSupplyCount = lpTotalSupply
-    // Amount of token in the LP that are staked in the MC (i.e amount of token * lp ratio)
+    tokenAmountTotal = toBn(tokenBalanceLP).div(BIG_TEN.pow(tokenDec))
+    quoteTokenAmountTotal = toBn(quoteTokenBalanceLP).div(BIG_TEN.pow(quoteDec))
     tokenAmountMc = tokenAmountTotal.times(lpTokenRatio)
     quoteTokenAmountMc = quoteTokenAmountTotal.times(lpTokenRatio)
+    lpTotalInQuoteToken = quoteTokenAmountMc.times(2)
+    tokenPriceVsQuote = tokenAmountTotal.gt(0) ? quoteTokenAmountTotal.div(tokenAmountTotal) : BIG_ZERO
 
-    // Total staked in LP, in quote token value
-    lpTotalInQuoteToken = quoteTokenAmountMc.times(new BigNumber(2))
-
-    tokenPriceVsQuote = quoteTokenAmountTotal.div(tokenAmountTotal)
-
-    // Only make masterchef calls if farm has pid
     const [info, totalAllocPoint] =
       pid || pid === 0
         ? await multicall(masterchefABI, [
@@ -159,8 +150,8 @@ const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
           ])
         : [null, null]
 
-    allocPoint = info ? new BigNumber(info.allocPoint.toString()) : BIG_ZERO
-    poolWeight = totalAllocPoint ? allocPoint.div(new BigNumber(totalAllocPoint.toString())) : BIG_ZERO
+    allocPoint = info ? toBn(info.allocPoint ?? info[1]) : BIG_ZERO
+    poolWeight = totalAllocPoint ? allocPoint.div(toBn(totalAllocPoint)) : BIG_ZERO
   }
 
   return {
@@ -168,7 +159,7 @@ const fetchFarm = async (farm: Farm): Promise<PublicFarmData> => {
     quoteTokenAmountMc: quoteTokenAmountMc.toJSON(),
     tokenAmountTotal: tokenAmountTotal.toJSON(),
     quoteTokenAmountTotal: quoteTokenAmountTotal.toJSON(),
-    lpTotalSupply: new BigNumber(lpTotalSupplyCount.toString()).toJSON(),
+    lpTotalSupply: lpTotalSupplyCount.toJSON(),
     lpTotalInQuoteToken: lpTotalInQuoteToken.toJSON(),
     tokenPriceVsQuote: tokenPriceVsQuote.toJSON(),
     poolWeight: poolWeight.toJSON(),

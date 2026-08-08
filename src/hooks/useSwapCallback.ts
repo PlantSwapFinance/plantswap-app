@@ -1,7 +1,6 @@
 import { Contract, TransactionResponse } from 'ethers'
 import { Percent, Router, SwapParameters, Trade, TradeType } from '@pancakeswap/sdk'
-import JSBI from 'jsbi'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../config/constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -49,21 +48,40 @@ function useSwapCallArguments(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
+  const [routerContract, setRouterContract] = useState<Contract | null>(null)
 
-  return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+  useEffect(() => {
+    let cancelled = false
 
-    const contract: Contract | null = getRouterContract(chainId, library, account)
-    if (!contract) {
-      return []
+    if (!library || !account || !chainId) {
+      setRouterContract(null)
+      return undefined
     }
 
+    getRouterContract(chainId, library, account)
+      .then((contract) => {
+        if (!cancelled) setRouterContract(contract)
+      })
+      .catch((error) => {
+        console.error('Failed to get router contract', error)
+        if (!cancelled) setRouterContract(null)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [account, chainId, library])
+
+  return useMemo(() => {
+    if (!trade || !recipient || !routerContract || !deadline) return []
+
     const swapMethods = []
+    const slippage = new Percent(BigInt(allowedSlippage), BIPS_BASE)
 
     swapMethods.push(
       Router.swapCallParameters(trade, {
         feeOnTransfer: false,
-        allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+        allowedSlippage: slippage,
         recipient,
         deadline: Number(deadline),
       }),
@@ -73,15 +91,15 @@ function useSwapCallArguments(
       swapMethods.push(
         Router.swapCallParameters(trade, {
           feeOnTransfer: true,
-          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          allowedSlippage: slippage,
           recipient,
           deadline: Number(deadline),
         }),
       )
     }
 
-    return swapMethods.map((parameters) => ({ parameters, contract }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
+    return swapMethods.map((parameters) => ({ parameters, contract: routerContract }))
+  }, [allowedSlippage, deadline, recipient, routerContract, trade])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid

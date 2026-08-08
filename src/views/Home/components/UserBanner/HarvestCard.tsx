@@ -22,7 +22,7 @@ const HarvestCard = () => {
   const { farmsWithStakedBalance, earningsSum } = useFarmsWithBalance()
   const masterChefContract = useMasterchef()
   const plantPriceBusd = usePricePlantBusd()
-  const earningsBusd = new BigNumber(earningsSum).multipliedBy(plantPriceBusd)
+  const earningsBusd = new BigNumber(earningsSum ?? 0).multipliedBy(plantPriceBusd)
   const numFarmsToCollect = farmsWithStakedBalance.length
 
   const earningsText = t('%earningsBusd% to collect from %count% %farms%', {

@@ -270,9 +270,29 @@ export const acceptListUpdate = (payload: string): void => {
     'lists/acceptListUpdate',
   )
 }
+
+/** Sync persisted byUrl with DEFAULT_LIST_OF_LISTS (add new defaults, drop removed). */
+export const updateListsVersion = (): void => {
+  useListsStore.setState(
+    (state) => listsReducer(state, { type: 'global/updateVersion' }),
+    false,
+    'global/updateVersion',
+  )
+}
+
 // rejectVersionUpdate is exported for backwards compat but isn't wired into
 // the reducer (matches pre-migration behaviour).
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const rejectVersionUpdate = (_payload: Version): void => {
   // no-op
+}
+
+// After localStorage rehydration, drop obsolete default list URLs (e.g. the
+// retired tokens.plantswap.finance host) and add any new defaults.
+useListsStore.persist.onFinishHydration(() => {
+  updateListsVersion()
+})
+// Also run immediately when already hydrated (HMR / sync storage).
+if (useListsStore.persist.hasHydrated()) {
+  updateListsVersion()
 }

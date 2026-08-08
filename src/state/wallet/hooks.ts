@@ -1,8 +1,8 @@
 import type { Currency } from '@pancakeswap/sdk'
-import { CurrencyAmount, Ether, Token } from '@pancakeswap/sdk'
-import JSBI from 'jsbi'
+import { CurrencyAmount, Token } from '@pancakeswap/sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from 'config/abi/erc20'
+import { Ether } from 'constants/ether'
 import { useAllTokens } from 'hooks/Tokens'
 import { useMulticallContract } from 'hooks/useContract'
 import { isAddress } from 'utils'
@@ -38,7 +38,7 @@ export function useBNBBalances(uncheckedAddresses?: (string | undefined)[]): {
     () =>
       addresses.reduce<{ [address: string]: CurrencyAmount }>((memo, address, i) => {
         const value = results?.[i]?.result?.[0]
-        if (value) memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()))
+        if (value) memo[address] = CurrencyAmount.fromRawAmount(Ether, value.toString())
         return memo
       }, {}),
     [addresses, results],
@@ -69,9 +69,8 @@ export function useTokenBalancesWithLoadingIndicator(
         address && validatedTokens.length > 0
           ? validatedTokens.reduce<{ [tokenAddress: string]: CurrencyAmount | undefined }>((memo, token, i) => {
               const value = balances?.[i]?.result?.[0]
-              const amount = value ? JSBI.BigInt(value.toString()) : undefined
-              if (amount) {
-                memo[token.address] = new CurrencyAmount(token, amount)
+              if (value) {
+                memo[token.address] = CurrencyAmount.fromRawAmount(token, value.toString())
               }
               return memo
             }, {})
@@ -106,7 +105,10 @@ export function useCurrencyBalances(
   )
 
   const tokenBalances = useTokenBalances(account, tokens)
-  const containsBNB: boolean = useMemo(() => currencies?.some((currency) => currency === Ether) ?? false, [currencies])
+  const containsBNB: boolean = useMemo(
+    () => currencies?.some((currency) => currency?.isNative) ?? false,
+    [currencies],
+  )
   const ethBalance = useBNBBalances(containsBNB ? [account] : [])
 
   return useMemo(
@@ -114,7 +116,7 @@ export function useCurrencyBalances(
       currencies?.map((currency) => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === Ether) return ethBalance[account]
+        if (currency.isNative) return ethBalance[account]
         return undefined
       }) ?? [],
     [account, currencies, ethBalance, tokenBalances],

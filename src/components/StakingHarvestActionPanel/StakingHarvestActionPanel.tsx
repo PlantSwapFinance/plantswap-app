@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Button, Flex, Heading, Skeleton, Text, useModal } from '@plantswap/uikit'
 import BigNumber from 'bignumber.js'
 import { Token } from 'config/constants/types'
-import { getBalanceNumber } from 'utils/formatBalance'
+import { getBalanceNumber, toSafeBigNumber } from 'utils/formatBalance'
 import { useTranslation } from 'contexts/Localization'
 import Balance from 'components/Balance'
 import useActiveWeb3React from '../../hooks/useActiveWeb3React'
@@ -51,7 +51,8 @@ const ActionContent = styled.div`
 interface StakingHarvestActionPanelProps {
   earnings: BigNumber
   earningsToken: Token
-  earningsTokenPrice: number
+  /** USD price; callers may pass number, BigNumber, or undefined while prices load. */
+  earningsTokenPrice: number | BigNumber | undefined
   isCompoundPool: boolean
   userDataLoaded: boolean
   collectModalNode: React.ReactNode
@@ -74,9 +75,13 @@ const StakingHarvestActionPanel: React.FC<StakingHarvestActionPanelProps> = ({
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
 
-  const earningsTokenBalance = getBalanceNumber(earnings, earningsToken.decimals)
-  const earningsTokenDollarBalance = getBalanceNumber(earnings.multipliedBy(earningsTokenPrice), earningsToken.decimals)
-  const hasEarnings = earnings.gt(0)
+  const safeEarnings = toSafeBigNumber(earnings)
+  const safePrice = toSafeBigNumber(earningsTokenPrice)
+  const decimals = earningsToken?.decimals ?? 18
+  const earningsTokenBalance = getBalanceNumber(safeEarnings, decimals)
+  const earningsTokenDollarBalance = getBalanceNumber(safeEarnings.multipliedBy(safePrice), decimals)
+  const hasEarnings = safeEarnings.gt(0)
+  const showUsd = safePrice.gt(0)
 
   const [onPresentCollect] = useModal(collectModalNode ?? null)
 
@@ -97,7 +102,7 @@ const StakingHarvestActionPanel: React.FC<StakingHarvestActionPanelProps> = ({
               {hasEarnings ? (
                 <>
                   <Balance lineHeight="1" bold fontSize="20px" decimals={5} value={earningsTokenBalance} />
-                  {earningsTokenPrice > 0 && (
+                  {showUsd && (
                     <Balance
                       display="inline"
                       fontSize="12px"

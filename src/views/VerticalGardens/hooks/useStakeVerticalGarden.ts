@@ -7,7 +7,7 @@ import { useVerticalGarden } from 'hooks/useContract'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
-  gasLimit: VERTICALGARDEN_GAS_LIMIT,
+  gasLimit: BigInt(VERTICALGARDEN_GAS_LIMIT),
 }
 const verticalDeposit = async (verticalGardenContract, amount) => {
   const tx = await verticalGardenContract.deposit(

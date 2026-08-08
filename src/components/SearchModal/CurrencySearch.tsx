@@ -1,6 +1,7 @@
 import React, { KeyboardEvent, RefObject, useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import type { Currency } from '@pancakeswap/sdk'
-import { Ether, Token } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
+import { Token } from '@pancakeswap/sdk'
 import { Text, Input, Box } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import type { ListImperativeAPI } from 'react-window'

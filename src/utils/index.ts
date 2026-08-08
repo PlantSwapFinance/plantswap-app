@@ -1,7 +1,8 @@
 import { Contract, getAddress, ZeroAddress, BrowserProvider, JsonRpcSigner } from 'ethers'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import type { Currency } from '@pancakeswap/sdk'
-import { ChainId, Percent, Token, CurrencyAmount, Ether } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
+import { ChainId, Percent, Token, CurrencyAmount } from '@pancakeswap/sdk'
 import JSBI from 'jsbi'
 import { ROUTER_ADDRESS } from '../config/constants'
 import { BASE_BSC_SCAN_URLS } from '../config'
@@ -71,29 +72,40 @@ export function calculateSlippageAmount(value: CurrencyAmount, slippage: number)
 
 // account is not optional
 export function getSigner(library: BrowserProvider, account: string): Promise<JsonRpcSigner> {
-  // v6's BrowserProvider.getSigner returns a Promise; we keep the same contract
-  // here so callers can either await it or chain directly. The v5
-  // `connectUnchecked()` helper is no longer needed — async estimation works
-  // directly off the signer.
+  // v6's BrowserProvider.getSigner returns a Promise — callers must await it
+  // before passing the result into `new Contract(...)`.
   return library.getSigner(account)
 }
 
 // account is optional
-export function getProviderOrSigner(library: BrowserProvider, account?: string): BrowserProvider | Promise<JsonRpcSigner> {
-  return account ? getSigner(library, account) : (library as BrowserProvider | Promise<JsonRpcSigner>)
+export async function getProviderOrSigner(
+  library: BrowserProvider,
+  account?: string,
+): Promise<BrowserProvider | JsonRpcSigner> {
+  return account ? getSigner(library, account) : library
 }
 
-// account is optional
-export function getContract(address: string, ABI: any, library: BrowserProvider, account?: string): Contract {
+// account is optional — async because the signer must be resolved in ethers v6
+export async function getContract(
+  address: string,
+  ABI: any,
+  library: BrowserProvider,
+  account?: string,
+): Promise<Contract> {
   if (!isAddress(address) || address === ZeroAddress) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
-  return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
+  const runner = await getProviderOrSigner(library, account)
+  return new Contract(address, ABI, runner)
 }
 
 // account is optional
-export function getRouterContract(_: number, library: BrowserProvider, account?: string): Contract {
+export async function getRouterContract(
+  _: number,
+  library: BrowserProvider,
+  account?: string,
+): Promise<Contract> {
   return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
 }
 

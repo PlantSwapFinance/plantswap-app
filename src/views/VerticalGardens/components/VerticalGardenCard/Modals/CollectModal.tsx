@@ -16,6 +16,8 @@ import useTheme from 'hooks/useTheme'
 import useToast from 'hooks/useToast'
 import { Token } from 'config/constants/types'
 import { formatNumber } from 'utils/formatBalance'
+import { getTxErrorToast, isWalletRpcError } from 'utils/txError'
+import { setupNetwork } from 'utils/wallet'
 import useHarvestVerticalGarden from '../../../hooks/useHarvestVerticalGarden'
 import useStakeVerticalGarden from '../../../hooks/useStakeVerticalGarden'
 
@@ -54,6 +56,17 @@ const CollectModal: React.FC<CollectModalProps> = ({
     { placement: 'bottom-end', tooltipOffset: [20, 10] },
   )
 
+  const handleTxError = async (e: unknown) => {
+    console.error(e)
+    if (isWalletRpcError(e)) {
+      // Push known-good BSC RPC URLs into the wallet when possible (helps new /
+      // misconfigured networks; MetaMask may ignore updates to an existing chain).
+      await setupNetwork()
+    }
+    const { title, description } = getTxErrorToast(e)
+    toastError(t(title), t(description))
+  }
+
   const handleHarvestConfirm = async () => {
     setPendingTx(true)
     // compounding
@@ -67,8 +80,7 @@ const CollectModal: React.FC<CollectModalProps> = ({
         setPendingTx(false)
         onDismiss()
       } catch (e) {
-        toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
-        console.error(e)
+        await handleTxError(e)
         setPendingTx(false)
       }
     } else {
@@ -82,8 +94,7 @@ const CollectModal: React.FC<CollectModalProps> = ({
         setPendingTx(false)
         onDismiss()
       } catch (e) {
-        toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
-        console.error(e)
+        await handleTxError(e)
         setPendingTx(false)
       }
     }

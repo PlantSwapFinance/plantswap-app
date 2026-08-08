@@ -1,6 +1,18 @@
-import { parseCallKey, toCallKey } from './actions'
+import { isValidCall, parseCallKey, toCallKey } from './actions'
 
 describe('actions', () => {
+  describe('#isValidCall', () => {
+    it('accepts a valid call', () => {
+      expect(
+        isValidCall({ address: '0x6b175474e89094c44da98b954eedeac495271d0f', callData: '0xabcd' }),
+      ).toBe(true)
+    })
+    it('rejects undefined address', () => {
+      expect(isValidCall({ address: undefined as unknown as string, callData: '0x' })).toBe(false)
+      expect(isValidCall(undefined)).toBe(false)
+    })
+  })
+
   describe('#parseCallKey', () => {
     it('does not throw for invalid address', () => {
       expect(parseCallKey('0x-0x')).toEqual({ address: '0x', callData: '0x' })

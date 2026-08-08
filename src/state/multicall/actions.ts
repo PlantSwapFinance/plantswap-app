@@ -6,6 +6,10 @@ export interface Call {
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
 const LOWER_HEX_REGEX = /^0x[a-f0-9]*$/
 
+export function isValidCall(call: Call | undefined | null): call is Call {
+  return Boolean(call && ADDRESS_REGEX.test(call.address) && LOWER_HEX_REGEX.test(call.callData))
+}
+
 export function toCallKey(call: Call): string {
   if (!ADDRESS_REGEX.test(call.address)) {
     throw new Error(`Invalid address: ${call.address}`)

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { CurrencyAmount, Token } from '@pancakeswap/sdk'
-import JSBI from 'jsbi'
 import { Button, Text, ArrowDownIcon, Box, useModal } from '@plantswap/uikit'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/UnsupportedCurrencyFooter'
@@ -139,7 +138,7 @@ export default function Swap() {
 
   const route = trade?.route
   const userHasSpecifiedInputOutput = Boolean(
-    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0)),
+    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(0n),
   )
   const noRoute = !route
 
@@ -165,6 +164,7 @@ export default function Swap() {
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
   const [singleHopOnly] = useUserSingleHopOnly()
+  const [priceImpactModal, confirmPriceImpactWithoutFee] = useConfirmPriceImpactWithoutFee()
 
   const handleSwap = useExecuteSwap({
     swapCallback,
@@ -285,8 +285,6 @@ export default function Swap() {
     true,
     'confirmSwapModal',
   )
-
-  const [priceImpactModal, confirmPriceImpactWithoutFee] = useConfirmPriceImpactWithoutFee()
 
   return (
     <Page>

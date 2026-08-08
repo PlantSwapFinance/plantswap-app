@@ -15,7 +15,7 @@ export interface FarmWithBalance extends FarmConfig {
 
 const useFarmsWithBalance = () => {
   const [farmsWithStakedBalance, setFarmsWithStakedBalance] = useState<FarmWithBalance[]>([])
-  const [earningsSum, setEarningsSum] = useState<number>(null)
+  const [earningsSum, setEarningsSum] = useState(0)
   const { account } = useActiveWeb3React()
   const { fastRefresh } = useRefresh()
 
@@ -44,6 +44,9 @@ const useFarmsWithBalance = () => {
 
     if (account) {
       fetchBalances()
+    } else {
+      setFarmsWithStakedBalance([])
+      setEarningsSum(0)
     }
   }, [account, fastRefresh])
 

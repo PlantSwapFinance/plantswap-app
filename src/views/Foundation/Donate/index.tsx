@@ -129,6 +129,7 @@ export default function FoundationDonate() {
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
   const [singleHopOnly] = useUserSingleHopOnly()
+  const [priceImpactModal, confirmPriceImpactWithoutFee] = useConfirmPriceImpactWithoutFee()
 
   const handleSwap = useExecuteSwap({
     swapCallback,
@@ -198,8 +199,6 @@ export default function FoundationDonate() {
     true,
     'confirmSwapModal',
   )
-
-  const [priceImpactModal, confirmPriceImpactWithoutFee] = useConfirmPriceImpactWithoutFee()
 
   return (
     <Donation>

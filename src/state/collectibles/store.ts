@@ -28,6 +28,15 @@ type NftSourceItem = [number, string]
  * store. Behaviour matches the original `fetchWalletNfts` exactly.
  */
 export const fetchWalletNfts = async (account: string): Promise<void> => {
+  if (!account) {
+    useCollectiblesStore.setState(
+      { isLoading: false, isInitialized: true, data: {} },
+      false,
+      'collectibles/fetchWalletNfts/skipped',
+    )
+    return
+  }
+
   useCollectiblesStore.setState({ isLoading: true }, false, 'collectibles/fetchWalletNfts/pending')
 
   const nftSourcePromises = Object.keys(nftSources).map(async (nftSourceType) => {
@@ -38,49 +47,62 @@ export const fetchWalletNfts = async (account: string): Promise<void> => {
     const getTokenIdAndData = async (index: number) => {
       try {
         const tokenIdBn: bigint = await contract.tokenOfOwnerByIndex(account, index)
-        // Ethers v6 returns native bigint; casting to Number is safe for tokenIds in practice.
         const tokenId = Number(tokenIdBn)
-
         const walletNft = await getNftByTokenId(address, tokenId)
-        return [tokenId, walletNft.identifier]
+        if (!walletNft?.identifier) {
+          return null
+        }
+        return [tokenId, walletNft.identifier] as NftSourceItem
       } catch (error) {
         console.error('getTokenIdAndData', error)
         return null
       }
     }
 
-    const balanceOfResponse: bigint = await contract.balanceOf(account)
-    const balanceOf = Number(balanceOfResponse)
+    try {
+      const balanceOfResponse: bigint = await contract.balanceOf(account)
+      const balanceOf = Number(balanceOfResponse)
 
-    if (balanceOf === 0) {
+      if (balanceOf === 0) {
+        return []
+      }
+
+      const nftDataFetchPromises = []
+      for (let i = 0; i < balanceOf; i++) {
+        nftDataFetchPromises.push(getTokenIdAndData(i))
+      }
+      return Promise.all(nftDataFetchPromises)
+    } catch (error) {
+      console.error('Failed to fetch NFTs for source', nftSourceType, error)
       return []
     }
-
-    const nftDataFetchPromises = []
-    for (let i = 0; i < balanceOf; i++) {
-      nftDataFetchPromises.push(getTokenIdAndData(i))
-    }
-    const nftData = await Promise.all(nftDataFetchPromises)
-    return nftData
   })
 
-  const nftSourceData = await Promise.all(nftSourcePromises)
-  const flat = nftSourceData.flat()
+  try {
+    const nftSourceData = await Promise.all(nftSourcePromises)
+    const flat = nftSourceData.flat().filter(Boolean) as NftSourceItem[]
 
-  useCollectiblesStore.setState(
-    (state) => ({
-      isLoading: false,
-      isInitialized: true,
-      data: flat.reduce<CollectiblesState['data']>((accum, association) => {
-        if (!association) return accum
-        const [tokenId, identifier] = association as NftSourceItem
-        return {
-          ...accum,
-          [identifier]: accum[identifier] ? [...accum[identifier], tokenId] : [tokenId],
-        }
-      }, state.data),
-    }),
-    false,
-    'collectibles/fetchWalletNfts/fulfilled',
-  )
+    useCollectiblesStore.setState(
+      {
+        isLoading: false,
+        isInitialized: true,
+        data: flat.reduce<CollectiblesState['data']>((accum, association) => {
+          const [tokenId, identifier] = association
+          return {
+            ...accum,
+            [identifier]: accum[identifier] ? [...accum[identifier], tokenId] : [tokenId],
+          }
+        }, {}),
+      },
+      false,
+      'collectibles/fetchWalletNfts/fulfilled',
+    )
+  } catch (error) {
+    console.error('Failed to fetch wallet NFTs', error)
+    useCollectiblesStore.setState(
+      { isLoading: false, isInitialized: true },
+      false,
+      'collectibles/fetchWalletNfts/rejected',
+    )
+  }
 }

@@ -50,7 +50,8 @@ const StakeModal: React.FC<StakeModalProps> = ({
     return stakingLimit.gt(0) && stakingTokenBalance.gt(stakingLimit) ? stakingLimit : stakingTokenBalance
   }
 
-  const usdValueStaked = stakeAmount && formatNumber(new BigNumber(stakeAmount).times(stakingTokenPrice).toNumber())
+  const usdValueStaked =
+    stakeAmount && formatNumber(new BigNumber(stakeAmount).times(stakingTokenPrice ?? 0).toNumber())
 
   useEffect(() => {
     if (stakingLimit.gt(0) && !isRemovingStake) {

@@ -7,7 +7,13 @@ import useWeb3Provider from 'hooks/useActiveWeb3React'
 import useFetchListCallback from 'hooks/useFetchListCallback'
 import useInterval from 'hooks/useInterval'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { acceptListUpdate, fetchTokenListPending, fetchTokenListFulfilled, fetchTokenListRejected } from './store'
+import {
+  acceptListUpdate,
+  fetchTokenListPending,
+  fetchTokenListFulfilled,
+  fetchTokenListRejected,
+  updateListsVersion,
+} from './store'
 import { useActiveListUrls } from './hooks'
 
 export default function Updater(): null {
@@ -17,6 +23,11 @@ export default function Updater(): null {
   // get all loaded lists, and the active urls
   const lists = useAllLists()
   const activeListUrls = useActiveListUrls()
+
+  // Drop retired default list URLs from persisted state before fetching.
+  useEffect(() => {
+    updateListsVersion()
+  }, [])
 
   // initiate loading
   useAllInactiveTokens()

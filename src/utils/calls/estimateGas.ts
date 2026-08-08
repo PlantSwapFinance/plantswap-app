@@ -15,7 +15,7 @@ export const estimateGas = async (
   gasMarginPer10000: number,
 ) => {
   if (!contract[methodName]) {
-    throw new Error(`Method ${methodName} doesn't exist on ${contract.address}`)
+    throw new Error(`Method ${methodName} doesn't exist on ${String(contract.target)}`)
   }
   const rawGasEstimation: bigint = await contract[methodName].estimateGas(...methodArgs)
   // Multiply by the (10000 + margin) / 10000 ratio using native bigint arithmetic.

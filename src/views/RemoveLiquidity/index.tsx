@@ -2,7 +2,8 @@ import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Contract, Signature, TransactionResponse } from 'ethers'
 import type { Currency } from '@pancakeswap/sdk'
-import { Ether, Percent, WETH9 } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
+import { Percent, WETH9 } from '@pancakeswap/sdk'
 import currencyEquals from './../../utils/currencyEquals'
 import { Button, Text, AddIcon, ArrowDownIcon, CardBody, Slider, Box, Flex, useModal } from '@plantswap/uikit'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -178,7 +179,7 @@ export default function RemoveLiquidity() {
     if (!currencyAmountA || !currencyAmountB) {
       throw new Error('missing currency amounts')
     }
-    const router = getRouterContract(chainId, library, account)
+    const router = await getRouterContract(chainId, library, account)
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],

@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react'
 import { TransactionResponse } from 'ethers'
 import type { Currency } from '@pancakeswap/sdk'
-import { Ether, CurrencyAmount, WETH9 } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
+import { CurrencyAmount, WETH9 } from '@pancakeswap/sdk'
 import currencyEquals from './../../utils/currencyEquals'
 import { Button, Text, Flex, AddIcon, CardBody, Message, useModal } from '@plantswap/uikit'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -118,7 +119,7 @@ export default function AddLiquidity() {
 
   async function onAdd() {
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
+    const router = await getRouterContract(chainId, library, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {

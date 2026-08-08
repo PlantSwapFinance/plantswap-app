@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { Contract, Provider, Signer } from 'ethers'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import {
@@ -21,7 +21,8 @@ import {
 } from 'utils/contractHelpers'
 
 // Imports below migrated from Exchange useContract.ts
-import { ChainId, WETH9 } from '@pancakeswap/sdk'
+import { ChainId } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import ENS_PUBLIC_RESOLVER_ABI from '../config/abi/ens-public-resolver.json'
 import ENS_ABI from '../config/abi/ens-registrar.json'
@@ -37,11 +38,13 @@ type SignerArg = Signer | Provider
  * Returns a contract bound to a signer when the user is connected, or to the
  * provider (simpleRpcProvider fallback when no wallet) when they're not.
  *
- * Avoids the `UNSUPPORTED_OPERATION` error that fires from
- * `library.getSigner()` on direct page loads for disconnected users, and keeps
- * read-only calls working before wallet connection. Write methods on the
- * returned contract will throw when there's no signer — that's intentional,
- * because every write path in the app is gated behind a connected-wallet UI.
+ * ethers v6 `BrowserProvider.getSigner()` is async — passing the Promise into
+ * `new Contract(...)` leaves the runner unable to send transactions
+ * (`UNSUPPORTED_OPERATION: contract runner does not support sending
+ * transactions`). Resolve the signer before constructing the contract.
+ *
+ * Write methods still throw when there's no signer; write UIs are gated behind
+ * a connected wallet.
  *
  * The getter must accept `signerOrProvider` as its final argument, matching the
  * shape of the helpers in `src/utils/contractHelpers.ts`.
@@ -51,16 +54,35 @@ function useContractWithOptionalSigner<A extends unknown[], R>(
   ...args: A
 ): R {
   const { library, account } = useActiveWeb3React()
+  const [contract, setContract] = useState<R>(() => getContractFn(...args, library as SignerArg))
 
-  const signerOrProvider = useMemo(
-    () => (account ? getSigner(library, account) : library),
-    [library, account],
-  )
+  useEffect(() => {
+    let cancelled = false
 
-  // `args` is variadic and intentionally spread into the deps array. The getter
-  // is a module-level import whose identity never changes, so we exclude it.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useMemo(() => getContractFn(...args, signerOrProvider as SignerArg), [signerOrProvider, ...args])
+    const bind = async () => {
+      try {
+        const runner: SignerArg = account ? await getSigner(library, account) : (library as SignerArg)
+        if (!cancelled) {
+          setContract(getContractFn(...args, runner))
+        }
+      } catch (error) {
+        console.error('Failed to bind contract signer', error)
+        if (!cancelled) {
+          setContract(getContractFn(...args, library as SignerArg))
+        }
+      }
+    }
+
+    void bind()
+    return () => {
+      cancelled = true
+    }
+    // `args` is variadic and intentionally spread into the deps array. The getter
+    // is a module-level import whose identity never changes, so we exclude it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [library, account, ...args])
+
+  return contract
 }
 
 // Plant token
@@ -121,16 +143,38 @@ export const useERC721 = (address: string) => useContractWithOptionalSigner(getE
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
   const { library, account } = useActiveWeb3React()
+  const [contract, setContract] = useState<Contract | null>(null)
 
-  return useMemo(() => {
-    if (!address || !ABI || !library) return null
-    try {
-      return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
-    } catch (error) {
-      console.error('Failed to get contract', error)
-      return null
+  useEffect(() => {
+    let cancelled = false
+
+    if (!address || !ABI || !library) {
+      setContract(null)
+      return undefined
+    }
+
+    const bind = async () => {
+      try {
+        const next = await getContract(
+          address,
+          ABI,
+          library,
+          withSignerIfPossible && account ? account : undefined,
+        )
+        if (!cancelled) setContract(next)
+      } catch (error) {
+        console.error('Failed to get contract', error)
+        if (!cancelled) setContract(null)
+      }
+    }
+
+    void bind()
+    return () => {
+      cancelled = true
     }
   }, [address, ABI, library, withSignerIfPossible, account])
+
+  return contract
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -139,7 +183,8 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? WETH9[chainId].address : undefined, WETH_ABI, withSignerIfPossible)
+  // SDK v5 WETH9[BSC] is pegged ETH; native wrap target is WBNB via Native.wrapped.
+  return useContract(chainId ? Ether.wrapped.address : undefined, WETH_ABI, withSignerIfPossible)
 }
 
 export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contract | null {

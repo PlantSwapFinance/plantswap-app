@@ -1,5 +1,6 @@
 import type { Currency } from '@pancakeswap/sdk'
-import { Ether, Token } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
+import { Token } from '@pancakeswap/sdk'
 import { BinanceIcon } from '@plantswap/uikit'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
@@ -25,7 +26,7 @@ export default function CurrencyLogo({
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
-    if (currency === Ether) return []
+    if (currency === Ether || currency?.isNative) return []
 
     if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
@@ -36,7 +37,7 @@ export default function CurrencyLogo({
     return []
   }, [currency, uriLocations])
 
-  if (currency === Ether) {
+  if (currency === Ether || currency?.isNative) {
     return <BinanceIcon width={size} style={style} />
   }
 

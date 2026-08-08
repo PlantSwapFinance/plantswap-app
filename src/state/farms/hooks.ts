@@ -77,7 +77,7 @@ export const useFarmUser = (pid) => {
 // Return the base token price for a farm, from a given pid
 export const useBusdPriceFromPid = (pid: number): BigNumber => {
   const farm = useFarmFromPid(pid)
-  return farm && new BigNumber(farm.token.busdPrice)
+  return new BigNumber(farm?.token.busdPrice ?? '0')
 }
 
 export const useLpTokenPrice = (symbol: string) => {
@@ -102,7 +102,7 @@ export const useLpTokenPrice = (symbol: string) => {
 
 export const usePriceBnbBusd = (): BigNumber => {
   const bnbBusdFarm = useFarmFromPid(28)
-  return new BigNumber(bnbBusdFarm.token.busdPrice)
+  return new BigNumber(bnbBusdFarm?.token.busdPrice ?? '0')
 }
 
 export const usePricePlantBusd = (): BigNumber => {
@@ -160,6 +160,6 @@ export const usePricePlantBusd = (): BigNumber => {
 }
 
 export const usePriceCakeBusd = (): BigNumber => {
-  const plantBnbFarm = useFarmFromPid(29)
-  return new BigNumber(plantBnbFarm.token.busdPrice)
+  const cakeFarm = useFarmFromPid(29)
+  return new BigNumber(cakeFarm?.token.busdPrice ?? '0')
 }

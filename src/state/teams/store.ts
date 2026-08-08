@@ -86,7 +86,11 @@ export const fetchTeams = async (): Promise<void> => {
   try {
     fetchStart()
     const teams = await getTeams()
-    teamsFetchSucceeded(teams)
+    if (teams) {
+      teamsFetchSucceeded(teams)
+    } else {
+      fetchFailed()
+    }
   } catch (error) {
     fetchFailed()
   }

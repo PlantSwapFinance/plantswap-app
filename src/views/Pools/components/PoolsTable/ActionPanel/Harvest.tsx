@@ -28,7 +28,7 @@ const HarvestAction: React.FunctionComponent<HarvestActionProps> = ({
   const earnings = userData?.pendingReward ? new BigNumber(userData.pendingReward) : BIG_ZERO
   const earningTokenBalance = getBalanceNumber(earnings, earningToken.decimals)
   const earningTokenDollarBalance = getBalanceNumber(
-    earnings.multipliedBy(earningTokenPrice),
+    earnings.multipliedBy(earningTokenPrice ?? 0),
     earningToken.decimals,
   )
   const fullBalance = getFullDisplayBalance(earnings, earningToken.decimals)

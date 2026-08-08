@@ -1,5 +1,5 @@
 import type { Currency } from '@pancakeswap/sdk'
-import { Ether, WETH9 } from '@pancakeswap/sdk'
+import { Ether } from 'constants/ether'
 import currencyEquals from './../utils/currencyEquals'
 import { useMemo } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -38,14 +38,16 @@ export default function useWrapCallback(
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency === Ether && currencyEquals(WETH9[chainId], outputCurrency)) {
+    if (inputCurrency === Ether && currencyEquals(Ether.wrapped, outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
         execute:
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
+                  const txReceipt = await wethContract.deposit({
+                    value: `0x${inputAmount.quotient.toString(16)}`,
+                  })
                   addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} BNB to WBNB` })
                 } catch (error) {
                   console.error('Could not deposit', error)
@@ -55,14 +57,14 @@ export default function useWrapCallback(
         inputError: sufficientBalance ? undefined : 'Insufficient BNB balance',
       }
     }
-    if (currencyEquals(WETH9[chainId], inputCurrency) && outputCurrency === Ether) {
+    if (currencyEquals(Ether.wrapped, inputCurrency) && outputCurrency === Ether) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`)
                   addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WBNB to BNB` })
                 } catch (error) {
                   console.error('Could not withdraw', error)

@@ -2,7 +2,13 @@ import { Contract, FunctionFragment, Interface } from 'ethers'
 import { useEffect, useMemo } from 'react'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useBlockNumber } from '../application/hooks'
-import { Call, ListenerOptions, parseCallKey, toCallKey } from './actions'
+import { Call, ListenerOptions, isValidCall, parseCallKey, toCallKey } from './actions'
+
+// ethers v6: address lives on `target` (v5 used `address`)
+function getContractAddress(contract: Contract): string | undefined {
+  const { target } = contract
+  return typeof target === 'string' ? target : undefined
+}
 import { addMulticallListeners, removeMulticallListeners, useMulticallStore } from './store'
 
 export interface Result extends ReadonlyArray<any> {
@@ -47,7 +53,7 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
     () =>
       JSON.stringify(
         calls
-          ?.filter((c): c is Call => Boolean(c))
+          ?.filter(isValidCall)
           ?.map(toCallKey)
           ?.sort() ?? [],
       ),
@@ -154,15 +160,17 @@ export function useSingleContractMultipleData(
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
   const calls = useMemo(
-    () =>
-      contract && fragment && callInputs && callInputs.length > 0
+    () => {
+      const address = contract ? getContractAddress(contract) : undefined
+      return contract && address && fragment && callInputs && callInputs.length > 0
         ? callInputs.map<Call>((inputs) => {
             return {
-              address: contract.address,
+              address,
               callData: contract.interface.encodeFunctionData(fragment, inputs),
             }
           })
-        : [],
+        : []
+    },
     [callInputs, contract, fragment],
   )
 
@@ -224,10 +232,11 @@ export function useSingleCallResult(
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
   const calls = useMemo<Call[]>(() => {
-    return contract && fragment && isValidMethodArgs(inputs)
+    const address = contract ? getContractAddress(contract) : undefined
+    return contract && address && fragment && isValidMethodArgs(inputs)
       ? [
           {
-            address: contract.address,
+            address,
             callData: contract.interface.encodeFunctionData(fragment, inputs),
           },
         ]

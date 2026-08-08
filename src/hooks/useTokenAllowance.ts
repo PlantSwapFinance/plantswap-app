@@ -11,7 +11,7 @@ function useTokenAllowance(token?: Token, owner?: string, spender?: string): Cur
   const allowance = useSingleCallResult(contract, 'allowance', inputs).result
 
   return useMemo(
-    () => (token && allowance ? new CurrencyAmount(token, allowance.toString()) : undefined),
+    () => (token && allowance ? CurrencyAmount.fromRawAmount(token, allowance.toString()) : undefined),
     [token, allowance],
   )
 }

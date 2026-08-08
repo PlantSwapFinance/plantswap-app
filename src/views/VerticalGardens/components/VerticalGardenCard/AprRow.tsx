@@ -36,7 +36,7 @@ const AprRow: React.FC<AprRowProps> = ({ verticalGarden }) => {
 
   const { targetRef, tooltip, tooltipVisible } = useTooltip(tooltipContent, { placement: 'bottom-start' })
 
-  const stakingTokenPriceBigNum = new BigNumber(stakingTokenPrice)
+  const stakingTokenPriceBigNum = new BigNumber(stakingTokenPrice ?? 0)
   const plantPrice = usePricePlantBusd()
   const cakePrice = usePriceCakeBusd()
 
@@ -44,45 +44,50 @@ const AprRow: React.FC<AprRowProps> = ({ verticalGarden }) => {
   const compoundFrequency = 0
   const performanceFee = 0
 
-  const apyBlockCount = new BigNumber(lastRewardUpdateBlock).minus(lastRewardUpdateBlockPrevious)
+  const apyBlockCount = new BigNumber(lastRewardUpdateBlock ?? 0).minus(lastRewardUpdateBlockPrevious ?? 0)
+  const rewardGained = new BigNumber(lastRewardUpdateRewardTokenGained ?? 0)
+  const plantGained = new BigNumber(lastRewardUpdatePlantGained ?? 0)
+  const totalStaked = new BigNumber(lastRewardUpdateTotalStakedToken ?? 0)
+  const canComputeApy = apyBlockCount.gt(0) && totalStaked.gt(0)
 
-  let rewardTokenApy = new BigNumber(lastRewardUpdateRewardTokenGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .multipliedBy(new BigNumber(100))
-  
-  if(stakingRewardToken.symbol === 'ODDZ') {
-    rewardTokenApy = new BigNumber(lastRewardUpdateRewardTokenGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .div(new BigNumber(cakePrice).div(new BigNumber(0.1)))
-                                        .multipliedBy(new BigNumber(100))
-  }
-  if(stakingRewardToken.symbol === 'CHESS') {
-    rewardTokenApy = new BigNumber(lastRewardUpdateRewardTokenGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .div(new BigNumber(cakePrice).div(new BigNumber(0.2)))
-                                        .multipliedBy(new BigNumber(100))
-  }
+  let rewardTokenApy = new BigNumber(0)
+  let plantTokenApy = new BigNumber(0)
 
-  let plantTokenApy = new BigNumber(lastRewardUpdatePlantGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .div(new BigNumber(stakingTokenPriceBigNum).div(new BigNumber(plantPrice)))
-                                        .multipliedBy(new BigNumber(100))
+  if (canComputeApy) {
+    rewardTokenApy = rewardGained.div(apyBlockCount).multipliedBy(10512000).div(totalStaked).multipliedBy(100)
 
-  if(stakingToken.symbol === 'CAKE') {
-    plantTokenApy = new BigNumber(lastRewardUpdatePlantGained)
-                                        .div(apyBlockCount)
-                                        .multipliedBy(new BigNumber(10512000))
-                                        .div(lastRewardUpdateTotalStakedToken)
-                                        .div(new BigNumber(cakePrice).div(new BigNumber(plantPrice)))
-                                        .multipliedBy(new BigNumber(100))
+    if (stakingRewardToken.symbol === 'ODDZ') {
+      rewardTokenApy = rewardGained
+        .div(apyBlockCount)
+        .multipliedBy(10512000)
+        .div(totalStaked)
+        .div(cakePrice.div(0.1))
+        .multipliedBy(100)
+    }
+    if (stakingRewardToken.symbol === 'CHESS') {
+      rewardTokenApy = rewardGained
+        .div(apyBlockCount)
+        .multipliedBy(10512000)
+        .div(totalStaked)
+        .div(cakePrice.div(0.2))
+        .multipliedBy(100)
+    }
+
+    if (stakingToken.symbol === 'CAKE') {
+      plantTokenApy = plantGained
+        .div(apyBlockCount)
+        .multipliedBy(10512000)
+        .div(totalStaked)
+        .div(cakePrice.div(plantPrice))
+        .multipliedBy(100)
+    } else if (stakingTokenPriceBigNum.gt(0)) {
+      plantTokenApy = plantGained
+        .div(apyBlockCount)
+        .multipliedBy(10512000)
+        .div(totalStaked)
+        .div(stakingTokenPriceBigNum.div(plantPrice))
+        .multipliedBy(100)
+    }
   }
 
   const apyModalLink = stakingToken.address ? `/swap?outputCurrency=${getAddress(stakingToken.address)}` : '/swap'
@@ -101,7 +106,7 @@ const AprRow: React.FC<AprRowProps> = ({ verticalGarden }) => {
   )
   const [onPresentApyModal] = useModal(
     <ApyCalculatorModal
-      tokenPrice={stakingRewardTokenPrice}
+      tokenPrice={stakingRewardTokenPrice ?? 0}
       apr={rewardTokenApy.toNumber()}
       linkLabel={t('Get %symbol%', { symbol: stakingRewardToken.symbol })}
       linkHref={apyModalLink}

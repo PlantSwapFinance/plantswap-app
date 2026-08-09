@@ -3309,17 +3309,17 @@ __metadata:
   linkType: hard
 
 "@react-three/postprocessing@npm:^3.0.0":
-  version: 3.0.4
-  resolution: "@react-three/postprocessing@npm:3.0.4"
+  version: 3.0.5
+  resolution: "@react-three/postprocessing@npm:3.0.5"
   dependencies:
-    maath: "npm:^0.6.0"
-    n8ao: "npm:^1.9.4"
-    postprocessing: "npm:^6.36.6"
+    maath: "npm:^0.10.8"
+    n8ao: "npm:^2.0.0"
   peerDependencies:
-    "@react-three/fiber": ^9.0.0
-    react: ^19.0
-    three: ">= 0.156.0"
-  checksum: 10c0/7a9f6af37da29af6844bd8ad781ceafa2c2cee29954ccf6c41633b2afd4cf7da41eb668a62b3a942a35e400ac8c7685800394a96eed95dde9ec582decfdade5b
+    "@react-three/fiber": ">=9.7.0"
+    postprocessing: ^6.36.0
+    react: ^19.2.0
+    three: ">= 0.182.0"
+  checksum: 10c0/e3bf5b5012da4400a0f26c3d4832f258acafda55b4d4554194893d8b38e6d996c229835d36daf438650adbe06b917c4f32d440d1497cc5598ed7cdf5fc1ed627
   languageName: node
   linkType: hard
 
@@ -11824,16 +11824,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"maath@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "maath@npm:0.6.0"
-  peerDependencies:
-    "@types/three": ">=0.144.0"
-    three: ">=0.144.0"
-  checksum: 10c0/a9b716841d225338339fbe776c94e99f98136f24360e34c06698e2f1658bffc9b09321d2463e730810940de9801b73154de9afa6647595ae1d7b7662f4da6ef6
-  languageName: node
-  linkType: hard
-
 "macos-release@npm:^3.3.0":
   version: 3.5.1
   resolution: "macos-release@npm:3.5.1"
@@ -12802,13 +12792,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"n8ao@npm:^1.9.4":
-  version: 1.10.3
-  resolution: "n8ao@npm:1.10.3"
+"n8ao@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "n8ao@npm:2.0.0"
   peerDependencies:
     postprocessing: ">=6.30.0"
     three: ">=0.137"
-  checksum: 10c0/2bc0c71540406953a237302729e81e9cd3d38db38231b395d38b1c34bb32be711212c67d3b0213cff414f9c12f21f4e8d71a5bee94b6cb9934c7b8f3ef58f397
+  checksum: 10c0/d01a9ada6bb82c0a1fecf61d7b052f7702efc97dfa969106d70919972bba7580d205d3a246aaaa5049966a99c4eea92c90fc79814a45679a262d8eda053edf1d
   languageName: node
   linkType: hard
 
@@ -14175,15 +14165,6 @@ __metadata:
   dependencies:
     xtend: "npm:^4.0.0"
   checksum: 10c0/c1734c3cb79e7f22579af0b268a463b1fa1d084e742a02a7a290c4f041e349456f3bee3b4ee0bb3f226828597f7b76deb615c1b857db9a742c45520100456272
-  languageName: node
-  linkType: hard
-
-"postprocessing@npm:^6.36.6":
-  version: 6.39.3
-  resolution: "postprocessing@npm:6.39.3"
-  peerDependencies:
-    three: ">= 0.168.0 < 0.186.0"
-  checksum: 10c0/e2fb2ea0198d15a489826c4bb9c7abd01ff7d652f35cdf29259e743af29739966bb183addee318f00c5e3996aabef42fe13a0708aa29530485a19f4f3abb2099
   languageName: node
   linkType: hard
 

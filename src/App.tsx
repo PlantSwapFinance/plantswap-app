@@ -249,6 +249,7 @@ const App: React.FC = () => {
               <Route path="/roadmap" element={<Roadmap />} />
               <Route path="/tree" element={<Tree />} />
               <Route path="/vote" element={<Vote />} />
+              <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/documentation" element={<Documentation />} />
 
               {/* These components read their route params/navigation via hooks */}

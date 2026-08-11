@@ -96,6 +96,10 @@ const config: (t: ContextApi['t']) => MenuEntry[] = (t) => [
     icon: 'MoreIcon',
     items: [
       {
+        label: t('Contact'),
+        href: '/contact-us',
+      },
+      {
         label: t('Github'),
         href: 'https://github.com/plantswapfinance',
       },

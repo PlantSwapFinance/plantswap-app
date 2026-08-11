@@ -1,61 +1,61 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import emailjs from '@emailjs/browser'
 import Page from 'components/Layout/Page'
 import PageHeader from 'components/PageHeader'
 import { Heading, Flex, EndPage, Text, Input, Button } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
+import contactApi from 'utils/calls/contact'
 import Divider from './components/Divider'
-import { getContactFormErrors, FormErrors } from './helper'
 
 interface ContactFormState {
   clientName: string
   email: string
   sujet: string
   message: string
+  honeypot: string
+}
+
+const initialState: ContactFormState = {
+  clientName: '',
+  email: '',
+  sujet: '',
+  message: '',
+  honeypot: '',
 }
 
 const ContactUs = () => {
   const { t } = useTranslation()
+  const [state, setState] = useState<ContactFormState>(initialState)
   const [send, setSend] = useState(false)
-  const [state, setState] = useState<ContactFormState>({
-    clientName: '',
-    email: '',
-    sujet: '',
-    message: '',
-  })
-  // eslint-disable-next-line
-  const { clientName, email, sujet, message } = state
-  // eslint-disable-next-line
-  const [fieldsState, setFieldsState] = useState<{ [key: string]: boolean }>({})
-  const formErrors = getContactFormErrors(state)
+  const [sending, setSending] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setState((prevState) => ({ ...prevState, [name]: value }))
   }
 
-  const clearState = () =>
-    setState({
-      clientName: '',
-      email: '',
-      sujet: '',
-      message: '',
-    })
+  const clearState = () => setState(initialState)
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    emailjs
-      .sendForm('service_2heraoe', 'template_revj3os', e.target, { publicKey: 'user_LncbCjsg709omIRnMnAH3' })
-      .then(
-      () => {
+    if (sending) return
+    setSending(true)
+    setErrorMessage(null)
+    try {
+      const result = await contactApi.submitContact(state)
+      if (result && result.ok) {
         clearState()
         setSend(true)
-      },
-      (error) => {
-        console.error(error.text)
-      },
-    )
+      } else {
+        setErrorMessage(result && result.error ? result.error : 'Failed to send your message')
+      }
+    } catch (err) {
+      console.error('contact-us submit failed', err)
+      setErrorMessage('Failed to send your message')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -85,32 +85,43 @@ const ContactUs = () => {
             </Text>
           </Flex>
         )}
+        {errorMessage && (
+          <Flex alignItems="center" mb="16px">
+            <Text color="failure" mr="16px">
+              {t(errorMessage)}
+            </Text>
+          </Flex>
+        )}
         <form id="form" onSubmit={handleSubmit}>
+          <HoneypotField>
+            <label htmlFor="honeypot">Leave this field empty</label>
+            <input
+              type="text"
+              id="honeypot"
+              name="honeypot"
+              value={state.honeypot}
+              onChange={handleChange}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
+          </HoneypotField>
+
           <Flex mb="16px">
             <Text color="textSubtle" mr="16px">
               {t('Your name')}
             </Text>
-            <Input
-              type="hidden"
-              name="emailSubject"
-              id="emailSubject"
-              value={`Subject: ${sujet} From: ${clientName}`}
-            />
-            <Input
-              type="hidden"
-              name="emailBody"
-              id="emailBody"
-              value={`Subject: ${sujet}\n
-              From: ${clientName}\n
-              Email: ${email}\n
-              Message: ${message}\n
-              \n\n\n
-              Sent from ESportsCentral.ca`}
-            />
           </Flex>
           <Flex mb="16px">
-            <Input type="text" name="clientName" id="clientName" required onChange={handleChange} />
-            {formErrors.clientName && fieldsState.clientName && <FormErrors errors={formErrors.clientName} />}
+            <Input
+              type="text"
+              name="clientName"
+              id="clientName"
+              value={state.clientName}
+              required
+              onChange={handleChange}
+              disabled={sending}
+            />
           </Flex>
           <Flex mb="16px">
             <Text color="textSubtle" mr="16px">
@@ -118,8 +129,15 @@ const ContactUs = () => {
             </Text>
           </Flex>
           <Flex mb="16px">
-            <Input type="text" name="email" id="email" required onChange={handleChange} />
-            {formErrors.email && fieldsState.email && <FormErrors errors={formErrors.email} />}
+            <Input
+              type="email"
+              name="email"
+              id="email"
+              value={state.email}
+              required
+              onChange={handleChange}
+              disabled={sending}
+            />
           </Flex>
           <Flex mb="16px">
             <Text color="textSubtle" mr="16px">
@@ -127,34 +145,36 @@ const ContactUs = () => {
             </Text>
           </Flex>
           <Flex mb="16px">
-            <Input type="text" name="sujet" id="sujet" required onChange={handleChange} />
-            {formErrors.sujet && fieldsState.sujet && <FormErrors errors={formErrors.sujet} />}
+            <Input
+              type="text"
+              name="sujet"
+              id="sujet"
+              value={state.sujet}
+              required
+              onChange={handleChange}
+              disabled={sending}
+            />
           </Flex>
-          {clientName && (
-            <>
-              <Flex mb="16px">
-                <Text color="textSubtle" mr="16px">
-                  {t('Message')}
-                </Text>
-              </Flex>
-              <Flex mb="16px">
-                <Textarea name="message" id="message" value={message} required onChange={handleChange} />
-                {formErrors.message && fieldsState.message && <FormErrors errors={formErrors.message} />}
-              </Flex>
-              <Flex alignItems="center" mb="16px">
-                <Button type="submit" id="button" value="Send Email" onClick={() => handleSubmit} disabled={send}>
-                  {t('Send your message')}
-                </Button>
-              </Flex>
-            </>
-          )}
-          {send && (
-            <Flex alignItems="center" mb="16px">
-              <Text color="success" mr="16px">
-                {t('Your message has been sent!')}
-              </Text>
-            </Flex>
-          )}
+          <Flex mb="16px">
+            <Text color="textSubtle" mr="16px">
+              {t('Message')}
+            </Text>
+          </Flex>
+          <Flex mb="16px">
+            <Textarea
+              name="message"
+              id="message"
+              value={state.message}
+              required
+              onChange={handleChange}
+              disabled={sending}
+            />
+          </Flex>
+          <Flex alignItems="center" mb="16px">
+            <Button type="submit" id="button" value="Send Email" disabled={sending || send}>
+              {sending ? t('Sending...') : t('Send your message')}
+            </Button>
+          </Flex>
         </form>
         <Divider />
         <EndPage />
@@ -174,9 +194,10 @@ const Textarea = styled.textarea`
   height: 200px;
   font-size: 16px;
   outline: 0;
-  padding: 0 16px;
+  padding: 16px;
   width: 100%;
   border: 1px solid ${({ theme }) => theme.colors.inputSecondary};
+  resize: vertical;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.textSubtle};
@@ -192,4 +213,14 @@ const Textarea = styled.textarea`
   &:focus:not(:disabled) {
     box-shadow: ${({ theme }) => theme.shadows.focus};
   }
+`
+
+const HoneypotField = styled.div`
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
 `

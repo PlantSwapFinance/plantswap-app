@@ -91,7 +91,7 @@ const ContactUs = () => {
             </Text>
           </Flex>
           <Flex flex="1" height="fit-content" justifyContent="center" alignItems="center" mt={['24px', null, '0']}>
-            <img src="/images/plant-question.svg" alt="Contact" width={400} height={400} loading="lazy" decoding="async" />
+            <img src="/images/roadmap.svg" alt="Contact" width={400} height={400} loading="lazy" decoding="async" />
           </Flex>
         </Flex>
       </PageHeader>

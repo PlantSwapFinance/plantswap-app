@@ -83,8 +83,7 @@ const config: (t: ContextApi['t']) => MenuEntry[] = (t) => [
     items: [
       {
         label: t('Contact'),
-        href: 'https://plantswap.finance/contact-us',
-        target: '_blank',
+        href: '/contact-us',
       },
       {
         label: t('Github'),

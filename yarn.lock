@@ -1896,7 +1896,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/build@npm:^36.4.1":
+"@netlify/build@npm:^36.4.2":
   version: 36.4.2
   resolution: "@netlify/build@npm:36.4.2"
   dependencies:
@@ -12808,14 +12808,14 @@ __metadata:
   linkType: hard
 
 "netlify-cli@npm:^27.0.0":
-  version: 27.3.0
-  resolution: "netlify-cli@npm:27.3.0"
+  version: 27.4.0
+  resolution: "netlify-cli@npm:27.4.0"
   dependencies:
     "@fastify/static": "npm:^10.0.0"
     "@netlify/ai": "npm:^1.0.0"
     "@netlify/api": "npm:^15.1.2"
     "@netlify/blobs": "npm:^11.0.1"
-    "@netlify/build": "npm:^36.4.1"
+    "@netlify/build": "npm:^36.4.2"
     "@netlify/build-info": "npm:^11.3.0"
     "@netlify/config": "npm:^25.2.3"
     "@netlify/dev": "npm:^5.0.1"
@@ -12910,7 +12910,7 @@ __metadata:
   bin:
     netlify: bin/run.js
     ntl: bin/run.js
-  checksum: 10c0/6a32d2653707588a335739cc2d61847fafc2add68b768232f5455b3dfd067e420f913adc5f8a95408cee7fb202faae017fe3e0fc7e078a1db1479c6cebb403a5
+  checksum: 10c0/7fa56535334b5668a3f4fe82a6643b05dc9c51cb170ab8eb6ad16d7662ebcd39872f658bfdedf90535c086e6713c767da48a772db648c5aadf29cc921d8b5e68
   languageName: node
   linkType: hard
 

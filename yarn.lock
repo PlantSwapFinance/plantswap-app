@@ -3306,17 +3306,17 @@ __metadata:
   linkType: hard
 
 "@react-three/postprocessing@npm:^3.0.0":
-  version: 3.1.0
-  resolution: "@react-three/postprocessing@npm:3.1.0"
+  version: 3.1.1
+  resolution: "@react-three/postprocessing@npm:3.1.1"
   dependencies:
     maath: "npm:^0.10.8"
     n8ao: "npm:^2.0.0"
   peerDependencies:
     "@react-three/fiber": ">=9.7.0"
     postprocessing: ^6.36.0
-    react: ^19.2.0
-    three: ">= 0.182.0"
-  checksum: 10c0/6bf140a2b2ee6bdbe82f3ee44a1916fa3d74a248ef884b17e83c13897b28fd795089b3c80179073e5e42b2234a4dfc7dd15d342b2044d2e07f62294cdfad5795
+    react: ^19.0.0
+    three: ">= 0.156.0"
+  checksum: 10c0/3aa4a9a5667755e571d92f9690a06fe2f8bf3fc6f90623946b9553ef41c24c499b7d73f46f80aa9e65d3766ae3669f855bdb98266244f73143d29ec9e099e1a4
   languageName: node
   linkType: hard
 

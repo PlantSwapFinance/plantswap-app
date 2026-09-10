@@ -88,7 +88,7 @@
     "split-grid": "^1.0.11",
     "styled-components": "^6.0.0",
     "swiper": "^14.0.0",
-    "three": "^0.185.0",
+    "three": "^0.186.0",
     "typescript": "^7.0.0",
     "zustand": "^5.0.0"
   },

@@ -2995,22 +2995,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pancakeswap/sdk@npm:5.9.1":
-  version: 5.9.1
-  resolution: "@pancakeswap/sdk@npm:5.9.1"
+"@pancakeswap/sdk@npm:5.9.2":
+  version: 5.9.2
+  resolution: "@pancakeswap/sdk@npm:5.9.2"
   dependencies:
     "@pancakeswap/chains": "npm:^0.9.0"
-    "@pancakeswap/swap-sdk-core": "npm:1.6.0"
-    "@pancakeswap/swap-sdk-evm": "npm:1.2.1"
-    "@pancakeswap/swap-sdk-solana": "npm:1.1.8"
-    "@pancakeswap/v2-sdk": "npm:1.2.1"
+    "@pancakeswap/swap-sdk-core": "npm:1.6.1"
+    "@pancakeswap/swap-sdk-evm": "npm:1.2.2"
+    "@pancakeswap/swap-sdk-solana": "npm:1.1.9"
+    "@pancakeswap/v2-sdk": "npm:1.2.2"
     big.js: "npm:^5.2.2"
     decimal.js-light: "npm:^2.5.0"
     tiny-invariant: "npm:^1.3.0"
     tiny-warning: "npm:^1.0.3"
     toformat: "npm:^2.0.0"
     viem: "npm:2.37.13"
-  checksum: 10c0/849f01be5adebb45d407c5e774ea0e25dcf763f66205eec261ddf1227846e6c8c86f1a1025d3e9e9725679ee6d07183da36cc9a4b12158df8a07af6d9df2b2e7
+  checksum: 10c0/88f9678bf945a560b3d7eff38f2e70000a40c32433ac154cc4036c058bb2777f66db0d90c4331a5c871f2157fc4de85c6af2d009edded8962b99bb04f23b8ac8
   languageName: node
   linkType: hard
 
@@ -3029,43 +3029,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pancakeswap/swap-sdk-evm@npm:1.2.1":
-  version: 1.2.1
-  resolution: "@pancakeswap/swap-sdk-evm@npm:1.2.1"
+"@pancakeswap/swap-sdk-evm@npm:1.2.2":
+  version: 1.2.2
+  resolution: "@pancakeswap/swap-sdk-evm@npm:1.2.2"
   dependencies:
     "@pancakeswap/chains": "npm:0.9.0"
-    "@pancakeswap/swap-sdk-core": "npm:1.6.0"
+    "@pancakeswap/swap-sdk-core": "npm:1.6.1"
     tiny-invariant: "npm:^1.3.0"
     tiny-warning: "npm:^1.0.3"
     viem: "npm:2.37.13"
-  checksum: 10c0/0db53d6d33659c8be97400c5c8c9e08cd19594479f9d37c6bf2b5965014bac9ddf0d0c13bda33762950b4f63d52c43a5ee58b6f0b8c37874491709129d3baa8d
+  checksum: 10c0/cd0877846ba2e9bed347700627ecf1d70e0d5665006d4cae25452f536ed4dadc39550b7d375f445ead87a879cc383ab38793f8ba0acf78e0d8bd3b564c4a4cb1
   languageName: node
   linkType: hard
 
-"@pancakeswap/swap-sdk-solana@npm:1.1.8":
-  version: 1.1.8
-  resolution: "@pancakeswap/swap-sdk-solana@npm:1.1.8"
+"@pancakeswap/swap-sdk-solana@npm:1.1.9":
+  version: 1.1.9
+  resolution: "@pancakeswap/swap-sdk-solana@npm:1.1.9"
   dependencies:
     "@pancakeswap/chains": "npm:0.9.0"
-    "@pancakeswap/swap-sdk-core": "npm:1.6.0"
+    "@pancakeswap/swap-sdk-core": "npm:1.6.1"
     "@solana/spl-token": "npm:~0.4.9"
     "@solana/web3.js": "npm:1.98.4"
     tiny-invariant: "npm:^1.3.0"
     tiny-warning: "npm:^1.0.3"
-  checksum: 10c0/b43085d4716bdf8e112d5067aac3840160e6f26caf2caefd6540f602f0ed0182672eddc862375e228656c0848bdccdfd597281cd5a4193529b7ba9e184fc357e
+  checksum: 10c0/37cea93e193bebff243d694a2986f00bbb4b38adcc555a3b444385907084422ef247e9d61767853d6ce7cefdf54268f9b182d96b9057f62d99054f6360c7cb7d
   languageName: node
   linkType: hard
 
-"@pancakeswap/v2-sdk@npm:1.2.1":
-  version: 1.2.1
-  resolution: "@pancakeswap/v2-sdk@npm:1.2.1"
+"@pancakeswap/v2-sdk@npm:1.2.2":
+  version: 1.2.2
+  resolution: "@pancakeswap/v2-sdk@npm:1.2.2"
   dependencies:
     "@pancakeswap/chains": "npm:0.9.0"
-    "@pancakeswap/swap-sdk-core": "npm:1.6.0"
-    "@pancakeswap/swap-sdk-evm": "npm:1.2.1"
+    "@pancakeswap/swap-sdk-core": "npm:1.6.1"
+    "@pancakeswap/swap-sdk-evm": "npm:1.2.2"
     tiny-invariant: "npm:^1.3.0"
     viem: "npm:2.37.13"
-  checksum: 10c0/86b598e6b815682d34f53173d851531004a802ae1a7dfcab2dcb995ff8b2fe857a508aecd8aa9910175ca525db8fecdfba7fc5cf76648d455881630ee46fad15
+  checksum: 10c0/d71284a1e0a822acc53cf52b9e4b58e73c8627688bdaeaf95f6e55232a116828302a1d2ae82cc8f03efee638e77876b63a6d70fb14f856d40243d97c5b964d45
   languageName: node
   linkType: hard
 
@@ -13886,7 +13886,7 @@ __metadata:
     "@fontsource/kanit": "npm:^5.2.8"
     "@neondatabase/serverless": "npm:^1.0.2"
     "@pancakeswap/eslint-config-pancake": "npm:^1.1.0"
-    "@pancakeswap/sdk": "npm:5.9.1"
+    "@pancakeswap/sdk": "npm:5.9.2"
     "@plantswap/uikit": "npm:1.1.0"
     "@react-three/cannon": "npm:^6.0.0"
     "@react-three/drei": "npm:^10.0.0"

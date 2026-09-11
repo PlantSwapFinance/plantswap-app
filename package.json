@@ -33,7 +33,7 @@
     "@ethersproject/experimental": "^5.0.1",
     "@fontsource/kanit": "^5.2.8",
     "@neondatabase/serverless": "^1.0.2",
-    "@pancakeswap/sdk": "5.9.1",
+    "@pancakeswap/sdk": "5.9.2",
     "@plantswap/uikit": "1.1.0",
     "@react-three/cannon": "^6.0.0",
     "@react-three/drei": "^10.0.0",

@@ -12674,8 +12674,8 @@ __metadata:
   linkType: hard
 
 "netlify-cli@npm:^27.0.0":
-  version: 27.8.0
-  resolution: "netlify-cli@npm:27.8.0"
+  version: 27.8.1
+  resolution: "netlify-cli@npm:27.8.1"
   dependencies:
     "@fastify/static": "npm:^10.0.0"
     "@netlify/ai": "npm:^1.0.1"
@@ -12777,7 +12777,7 @@ __metadata:
   bin:
     netlify: bin/run.js
     ntl: bin/run.js
-  checksum: 10c0/486976636a5134640217f0bcadcb9eef5e81b497abf937609233b0317b8c025c9f71142a5f4b22e94051fe023e22a0529af931d9d360d5d14cb284165a178130
+  checksum: 10c0/bc1354e9a4f0f2b0507c90d863d151574b2b87fb3da35db0c1b843083df6f8ae3f360c55349708964915835fc7a28bdf185e54d012b850378a3902c94de0586a
   languageName: node
   linkType: hard
 

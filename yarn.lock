@@ -421,9 +421,9 @@ __metadata:
   linkType: hard
 
 "@emailjs/browser@npm:^5.0.0":
-  version: 5.0.2
-  resolution: "@emailjs/browser@npm:5.0.2"
-  checksum: 10c0/1b403493c02eb5fff5a361c220665dd713e4613eba16c8c3e7f3c16852dd75d08825f27e01c293dc43c7d190cc874f6cbb848bd558d9cf89cf7f4c62b969e870
+  version: 5.0.3
+  resolution: "@emailjs/browser@npm:5.0.3"
+  checksum: 10c0/6d33c55044b6db8f5b1c00da95e16a265adc3e270dbc4aed018fb4d2444f097b3ee589533e3ed7a44097c61bf2393fae5c4b434abb4ffbc1989168b02795b610
   languageName: node
   linkType: hard
 

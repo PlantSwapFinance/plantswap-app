@@ -12716,8 +12716,8 @@ __metadata:
   linkType: hard
 
 "netlify-cli@npm:^27.0.0":
-  version: 27.12.1
-  resolution: "netlify-cli@npm:27.12.1"
+  version: 27.13.0
+  resolution: "netlify-cli@npm:27.13.0"
   dependencies:
     "@fastify/static": "npm:^10.0.0"
     "@inquirer/prompts": "npm:^8.7.2"
@@ -12816,7 +12816,7 @@ __metadata:
   bin:
     netlify: bin/run.js
     ntl: bin/run.js
-  checksum: 10c0/f0eceb498415c71eb5c9731174ba78d63513a0647609acdebc3e8a96ca8e34833849b9a92e7c02b079706c0302661562bd0c2c3d054b9479f4fc0b4965704f7f
+  checksum: 10c0/5408b35c287af9e542d9aaf988f2a6befddc4e241279cf3845d953e51d0ee7de188bd0b5124427ce05df94a0796f7702f60dd90498188e4892565a10b7dfccec
   languageName: node
   linkType: hard
 

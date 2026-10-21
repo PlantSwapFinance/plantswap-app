@@ -3442,8 +3442,8 @@ __metadata:
   linkType: hard
 
 "@react-three/postprocessing@npm:^3.0.0":
-  version: 3.2.0
-  resolution: "@react-three/postprocessing@npm:3.2.0"
+  version: 3.2.1
+  resolution: "@react-three/postprocessing@npm:3.2.1"
   dependencies:
     maath: "npm:^0.10.8"
     n8ao: "npm:^2.0.0"
@@ -3452,7 +3452,7 @@ __metadata:
     postprocessing: ^6.36.0
     react: ^19.0.0
     three: ">= 0.156.0"
-  checksum: 10c0/e6af3641a6709ffd35c10f29a12f4ecb4a384e4eec9b426474ca46dae71d3fd5eb10374e3004369b735624927abc0c2da86079a8592496f5bd7e1fad3f4c6973
+  checksum: 10c0/bbc555fbc3994b97dacf71428e16f754ab1cee224212d58f69bfafd4533b1ba6d5959ca56f652f0b4aebe18e5a59e57f202b7382f9aeb20bf754fbe115556ec0
   languageName: node
   linkType: hard
 

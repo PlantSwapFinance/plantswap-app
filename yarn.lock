@@ -14588,12 +14588,12 @@ __metadata:
   linkType: hard
 
 "react-window@npm:^2.0.0":
-  version: 2.4.1
-  resolution: "react-window@npm:2.4.1"
+  version: 2.5.0
+  resolution: "react-window@npm:2.5.0"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0
     react-dom: ^18.0.0 || ^19.0.0
-  checksum: 10c0/b7756a3dd367f012753590e80cda65303c78fd1dc6f380025ab4017103c8561f67d635be09732902ac212ff5140ac10d19daddd4d07086828dda20b5851baa40
+  checksum: 10c0/5859643f85297fad68dcf801f0d844370e0486d41d5e6d13b3d018785636adb69bb97378f15d15218e295c0104092c922979ad996a80c4a8dc464047114ef825
   languageName: node
   linkType: hard
 

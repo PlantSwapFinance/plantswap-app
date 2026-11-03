@@ -14266,8 +14266,8 @@ __metadata:
   linkType: hard
 
 "react-window@npm:^2.0.0":
-  version: 2.5.2
-  resolution: "react-window@npm:2.5.2"
+  version: 2.5.3
+  resolution: "react-window@npm:2.5.3"
   peerDependencies:
     "@types/react": ^18.2.6 || ^19.0.0
     react: ^18.0.0 || ^19.0.0
@@ -14275,7 +14275,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/4c2698721134e03d1ab560dc5897dbd6c95f747e52548509a50464f4b871113ab533a59c5c1b84c744ffffcb62c3cccb6a7a38b97411be03c13d8d20c52da9b9
+  checksum: 10c0/f491036d005ba570b1abb904179d27bfd4b8faac59514f278f0552f7eb61404e96f2c41173a8e52f0b631d46f67984dfe666e8da1c07904cc86f05d3dbc5530e
   languageName: node
   linkType: hard
 

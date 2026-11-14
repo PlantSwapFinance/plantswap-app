@@ -6,12 +6,13 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/assets/*.js'",
     "start": "vite",
-    "build": "vite build && yarn sitemap:generate",
+    "build": "vite build && yarn sitemap:generate && yarn prerender",
     "preview": "vite preview",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
     "format:write": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "sitemap:generate": "tsx scripts/generateSitemap.ts",
+    "prerender": "tsx scripts/prerender.ts",
     "updateLPsAPR": "tsx scripts/updateLPsAPR.ts",
     "postinstall": "node scripts/patch-uikit-jsx-runtime.cjs"
   },

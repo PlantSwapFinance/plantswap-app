@@ -38,6 +38,10 @@ function Blocklist({ children }: { children: ReactNode }) {
   return <>{children}</>
 }
 
+// Static head tags written by scripts/prerender.ts for crawlers. PageMeta
+// renders the live ones, so drop these to avoid duplicate titles and metas.
+document.querySelectorAll('[data-prerender]').forEach((node) => node.remove())
+
 const container = document.getElementById('root')
 const root = createRoot(container as HTMLElement)
 root.render(

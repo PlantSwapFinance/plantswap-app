@@ -8,6 +8,7 @@ import {
   getCustomMeta,
   getNoIndexPaths,
   getCanonicalUrl,
+  getPageSchemas,
   isKnownRoute,
 } from 'config/constants/meta'
 
@@ -16,7 +17,9 @@ const PageMeta = () => {
   const { pathname } = useLocation()
 
   const pageMeta = getCustomMeta(pathname, t) || {}
-  const { title, description, image, noindex, schema } = { ...DEFAULT_META, ...pageMeta }
+  const meta = { ...DEFAULT_META, ...pageMeta }
+  const { title, description, image, noindex } = meta
+  const schemas = getPageSchemas(pathname, meta)
 
   const robots = useMemo(() => {
     if (noindex || getNoIndexPaths(pathname) || !isKnownRoute(pathname)) return 'noindex, nofollow'
@@ -46,7 +49,11 @@ const PageMeta = () => {
       <meta name="twitter:image" content={image} />
       <meta name="twitter:site" content="@plantswap" />
 
-      {schema && <script type="application/ld+json">{JSON.stringify(schema)}</script>}
+      {schemas.map((schema) => (
+        <script key={String(schema['@type'])} type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      ))}
     </Helmet>
   )
 }

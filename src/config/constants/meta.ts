@@ -8,23 +8,26 @@ const og = (filename: string) => `${SITE_URL}/images/${filename}`
 
 export const DEFAULT_OG_IMAGE = og('plantswap.jpg')
 
+// X, Facebook, LinkedIn, Slack and most chat apps do not render SVG share
+// images, so every section points at the raster default until a dedicated
+// 1200x630 JPG/PNG card exists for it.
 export const OG_IMAGES = {
-  farms: og('farms.svg'),
-  garden: og('garden.svg'),
-  verticalGardens: og('verticalGardens.svg'),
-  collectibles: og('collectibles.svg'),
-  foundation: og('developmentFund.svg'),
-  developmentFund: og('developmentFund.svg'),
-  project: og('project.svg'),
-  roadmap: og('roadmap.svg'),
-  tree: og('TREE.svg'),
-  teams: og('teams.svg'),
+  farms: DEFAULT_OG_IMAGE,
+  garden: DEFAULT_OG_IMAGE,
+  verticalGardens: DEFAULT_OG_IMAGE,
+  collectibles: DEFAULT_OG_IMAGE,
+  foundation: DEFAULT_OG_IMAGE,
+  developmentFund: DEFAULT_OG_IMAGE,
+  project: DEFAULT_OG_IMAGE,
+  roadmap: DEFAULT_OG_IMAGE,
+  tree: DEFAULT_OG_IMAGE,
+  teams: DEFAULT_OG_IMAGE,
 }
 
 export const DEFAULT_META: PageMeta = {
   title: 'PlantSwap',
   description:
-    'PlantSwap is a DeFi platform on Binance Smart Chain (BSC) where you can farm $PLANT, stake in gardens, swap tokens, and support environmental causes like planting trees and protecting rainforests.',
+    'PlantSwap is a DeFi platform on Binance Smart Chain: swap tokens, farm $PLANT, stake in gardens, and fund tree planting and rainforest protection.',
   image: DEFAULT_OG_IMAGE,
 }
 
@@ -72,7 +75,7 @@ const proposalSchema = (path: string, section: 'Foundation' | 'Voting', parent: 
 export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null => {
   if (path === '/') {
     return {
-      title: joinTitle(t('Home'), 'PlantSwap'),
+      title: t('PlantSwap — Farm $PLANT on BSC and Help Plant Trees'),
       description:
         'Farm $PLANT, stake in gardens, swap tokens on BSC, and help plant trees. PlantSwap is the DeFi platform that puts the planet first.',
       image: DEFAULT_OG_IMAGE,
@@ -85,7 +88,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Foundation'),
+        t('Foundation — Community Environmental Funding'),
         'PlantSwap Foundation — community proposals funding rainforest protection, tree planting, and wildlife conservation.',
         OG_IMAGES.foundation,
       ),
@@ -96,7 +99,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Donate'),
+        t('Donate to Environmental Non-Profits'),
         'Donate to PlantSwap Foundation environmental partners — rainforest protection, tree planting, wildlife conservation.',
         OG_IMAGES.foundation,
       ),
@@ -160,7 +163,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Leaderboard'),
+        t('Teams Leaderboard'),
         'PlantSwap teams leaderboard — climb the rankings and earn rewards.',
         OG_IMAGES.teams,
       ),
@@ -208,7 +211,11 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
   // Marketing pages
   if (path === '/swap') {
     return withMetaPath(
-      buildMeta(path, t('Swap'), 'Swap tokens on PlantSwap — a fast, low-fee AMM on Binance Smart Chain.'),
+      buildMeta(
+        path,
+        t('Swap BEP-20 Tokens on BSC'),
+        'Swap tokens on PlantSwap — a fast, low-fee AMM on Binance Smart Chain.',
+      ),
       path,
     )
   }
@@ -216,7 +223,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Farms'),
+        t('Yield Farms — Earn $PLANT with LP Tokens'),
         'Earn $PLANT and other rewards by providing liquidity to PlantSwap farms on BSC.',
         OG_IMAGES.farms,
       ),
@@ -227,7 +234,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Gardens'),
+        t('Gardens — Stake Single Tokens to Earn $PLANT'),
         'Stake single tokens in PlantSwap gardens to earn $PLANT. Auto-compounding yield farming on BSC.',
         OG_IMAGES.garden,
       ),
@@ -238,7 +245,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Vertical Gardens'),
+        t('Vertical Gardens — Earn Yield on Partner Tokens'),
         'PlantSwap vertical gardens let you earn yield on partner tokens while supporting environmental causes.',
         OG_IMAGES.verticalGardens,
       ),
@@ -249,7 +256,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Collectibles Farms'),
+        t('Collectibles Farms — Stake NFTs for Rewards'),
         'Stake PlantSwap collectible NFTs to earn $PLANT and partner token rewards.',
         OG_IMAGES.collectibles,
       ),
@@ -258,7 +265,11 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
   }
   if (path === '/pools') {
     return withMetaPath(
-      buildMeta(path, t('Pools'), 'Stake $PLANT in PlantSwap pools to earn more tokens from new projects.'),
+      buildMeta(
+        path,
+        t('Pools — Stake $PLANT to Earn New Tokens'),
+        'Stake $PLANT in PlantSwap pools to earn more tokens from new projects.',
+      ),
       path,
     )
   }
@@ -266,7 +277,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Collectibles'),
+        t('Collectibles — NFTs for Gamified Farming'),
         'PlantSwap collectibles — NFTs for the community, gamified farming, and more.',
         OG_IMAGES.collectibles,
       ),
@@ -277,7 +288,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Market'),
+        t('NFT Market — Buy, Sell and Auction NFTs'),
         'Trade PlantSwap NFTs on the peer-to-peer marketplace. Buy, sell, auction, and make offers.',
       ),
       path,
@@ -305,7 +316,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Project'),
+        t('About the Project — DeFi That Plants Trees'),
         'PlantSwap mission — a BSC DeFi platform that funds tree planting, rainforest protection, and wildlife conservation through yield farming.',
         OG_IMAGES.project,
       ),
@@ -316,7 +327,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Roadmap'),
+        t('Roadmap — Milestones and What Is Next'),
         'The PlantSwap roadmap — past milestones and what is next for $PLANT, farms, and the foundation.',
         OG_IMAGES.roadmap,
       ),
@@ -327,7 +338,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Tree'),
+        t('Tree of Life — Trees Planted On-Chain'),
         'PlantSwap tree of life — every tree planted by the Development Fund, recorded on-chain.',
         OG_IMAGES.tree,
       ),
@@ -338,7 +349,7 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
     return withMetaPath(
       buildMeta(
         path,
-        t('Development Fund'),
+        t('Development Fund — Burns and Donations'),
         'The PlantSwap Development Fund — proof of burn and donations to environmental non-profits like the Rainforest Foundation.',
         OG_IMAGES.developmentFund,
       ),
@@ -347,7 +358,11 @@ export const getCustomMeta = (path: string, t: ContextApi['t']): PageMeta | null
   }
   if (path === '/contact-us') {
     return withMetaPath(
-      buildMeta(path, t('Contact us'), 'Get in touch with the PlantSwap team — partnerships, support, and press.'),
+      buildMeta(
+        path,
+        t('Contact Us — Partnerships, Support, Press'),
+        'Get in touch with the PlantSwap team — partnerships, support, and press.',
+      ),
       path,
     )
   }
@@ -456,4 +471,101 @@ export const getCanonicalUrl = (path: string): string => {
   const trimmed = path.split('?')[0].replace(/\/+$/, '') || '/'
   const normalized = trimmed === '/' ? '/' : trimmed
   return `${SITE_URL}${normalized}`
+}
+
+export type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
+
+export interface IndexableRoute {
+  path: string
+  // Short label used for navigation, breadcrumbs and llms.txt.
+  name: string
+  changefreq: ChangeFreq
+  priority: number
+  // Files whose last git commit date becomes the sitemap <lastmod>.
+  sources: string[]
+}
+
+// Public, canonical pages that search engines and AI crawlers should index.
+// Read by scripts/generateSitemap.ts (sitemap.xml) and scripts/prerender.ts
+// (per-route static HTML and llms.txt). Dynamic routes such as
+// /foundation/proposal/:id are intentionally left out.
+export const INDEXABLE_ROUTES: IndexableRoute[] = [
+  { path: '/', name: 'Home', changefreq: 'daily', priority: 1.0, sources: ['src/views/Home'] },
+  { path: '/swap', name: 'Swap', changefreq: 'daily', priority: 0.9, sources: ['src/views/Swap'] },
+  { path: '/farms', name: 'Farms', changefreq: 'hourly', priority: 0.9, sources: ['src/views/Farms'] },
+  { path: '/gardens', name: 'Gardens', changefreq: 'hourly', priority: 0.9, sources: ['src/views/Gardens'] },
+  { path: '/pools', name: 'Pools', changefreq: 'hourly', priority: 0.9, sources: ['src/views/Pools'] },
+  {
+    path: '/verticalGardens',
+    name: 'Vertical Gardens',
+    changefreq: 'daily',
+    priority: 0.8,
+    sources: ['src/views/VerticalGardens'],
+  },
+  {
+    path: '/collectiblesFarms',
+    name: 'Collectibles Farms',
+    changefreq: 'daily',
+    priority: 0.8,
+    sources: ['src/views/CollectiblesFarms'],
+  },
+  {
+    path: '/collectibles',
+    name: 'Collectibles',
+    changefreq: 'daily',
+    priority: 0.8,
+    sources: ['src/views/Collectibles'],
+  },
+  { path: '/market', name: 'NFT Market', changefreq: 'daily', priority: 0.8, sources: ['src/views/Market'] },
+  { path: '/foundation', name: 'Foundation', changefreq: 'daily', priority: 0.8, sources: ['src/views/Foundation'] },
+  {
+    path: '/foundation/donate',
+    name: 'Donate',
+    changefreq: 'weekly',
+    priority: 0.7,
+    sources: ['src/views/Donation.tsx'],
+  },
+  {
+    path: '/project',
+    name: 'Project',
+    changefreq: 'monthly',
+    priority: 0.7,
+    sources: ['src/views/Project', 'src/config/constants/faq.ts'],
+  },
+  { path: '/roadmap', name: 'Roadmap', changefreq: 'monthly', priority: 0.7, sources: ['src/views/Roadmap'] },
+  {
+    path: '/developmentFund',
+    name: 'Development Fund',
+    changefreq: 'weekly',
+    priority: 0.7,
+    sources: ['src/views/DevelopmentFund'],
+  },
+  { path: '/tree', name: 'Tree of Life', changefreq: 'weekly', priority: 0.7, sources: ['src/views/Tree'] },
+  { path: '/teams', name: 'Teams', changefreq: 'daily', priority: 0.5, sources: ['src/views/Teams'] },
+  { path: '/contact-us', name: 'Contact Us', changefreq: 'yearly', priority: 0.4, sources: ['src/views/ContactUs'] },
+]
+
+// JSON-LD blocks for a page: the page's own schema when it defines one,
+// otherwise WebPage + BreadcrumbList for indexable routes. Shared by PageMeta
+// (rendered app) and scripts/prerender.ts (static HTML) so both stay identical.
+export const getPageSchemas = (path: string, meta: PageMeta): Record<string, unknown>[] => {
+  if (meta.schema) return [meta.schema]
+  const route = INDEXABLE_ROUTES.find((r) => r.path === path)
+  if (!route || route.path === '/') return []
+  const url = getCanonicalUrl(path)
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: meta.title,
+      description: meta.description,
+      url,
+      inLanguage: 'en',
+      isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: `${SITE_URL}/` },
+    },
+    breadcrumb(path, [
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: route.name, item: url },
+    ]),
+  ]
 }

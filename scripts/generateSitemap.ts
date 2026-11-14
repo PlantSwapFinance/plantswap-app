@@ -4,63 +4,55 @@
  * Run automatically after `vite build` via the chained `build` script
  * in package.json. Also runnable directly via `yarn sitemap:generate`.
  *
- * Source of truth for which URLs to include is the INDEXABLE_ROUTES table
- * below. Update it when adding/removing public routes. Dynamic routes (e.g.
- * /foundation/proposal/:id) are intentionally NOT listed — the sitemap spec
- * only covers canonical pages.
+ * Source of truth for which URLs to include is INDEXABLE_ROUTES in
+ * src/config/constants/meta.ts. Update it when adding/removing public routes.
+ * Dynamic routes (e.g. /foundation/proposal/:id) are intentionally NOT listed —
+ * the sitemap spec only covers canonical pages.
+ *
+ * <lastmod> is the last git commit date of each route's source files, so it
+ * only moves when the page actually changes. If git history is unavailable the
+ * tag is omitted rather than faked with the build date.
  */
 
+import { execFileSync } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { INDEXABLE_ROUTES, SITE_URL } from '../src/config/constants/meta'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const SITE_URL = 'https://plantswap.finance'
-const OUTPUT = path.join(__dirname, '..', 'build', 'sitemap.xml')
+const ROOT = path.join(__dirname, '..')
+const OUTPUT = path.join(ROOT, 'build', 'sitemap.xml')
 
-type ChangeFreq = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
-
-interface Route {
-  loc: string
-  changefreq: ChangeFreq
-  priority: number
+const lastCommitDate = (sources: string[]): string | null => {
+  try {
+    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', ...sources], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim()
+    return /^\d{4}-\d{2}-\d{2}$/.test(out) ? out : null
+  } catch {
+    return null
+  }
 }
-
-const INDEXABLE_ROUTES: Route[] = [
-  { loc: '/', changefreq: 'daily', priority: 1.0 },
-  { loc: '/swap', changefreq: 'daily', priority: 0.9 },
-  { loc: '/farms', changefreq: 'hourly', priority: 0.9 },
-  { loc: '/gardens', changefreq: 'hourly', priority: 0.9 },
-  { loc: '/pools', changefreq: 'hourly', priority: 0.9 },
-  { loc: '/verticalGardens', changefreq: 'daily', priority: 0.8 },
-  { loc: '/collectiblesFarms', changefreq: 'daily', priority: 0.8 },
-  { loc: '/collectibles', changefreq: 'daily', priority: 0.8 },
-  { loc: '/market', changefreq: 'daily', priority: 0.8 },
-  { loc: '/foundation', changefreq: 'daily', priority: 0.8 },
-  { loc: '/foundation/donate', changefreq: 'weekly', priority: 0.7 },
-  { loc: '/project', changefreq: 'monthly', priority: 0.7 },
-  { loc: '/roadmap', changefreq: 'monthly', priority: 0.7 },
-  { loc: '/developmentFund', changefreq: 'weekly', priority: 0.7 },
-  { loc: '/tree', changefreq: 'weekly', priority: 0.7 },
-  { loc: '/teams', changefreq: 'daily', priority: 0.5 },
-  { loc: '/contact-us', changefreq: 'yearly', priority: 0.4 },
-]
-
-const lastmod = new Date().toISOString().slice(0, 10)
 
 const escapeXml = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
 
 const body = INDEXABLE_ROUTES.map((r) => {
-  const loc = escapeXml(`${SITE_URL}${r.loc}`)
-  return `  <url>
-    <loc>${loc}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>${r.changefreq}</changefreq>
-    <priority>${r.priority.toFixed(1)}</priority>
-  </url>`
+  const loc = escapeXml(`${SITE_URL}${r.path}`)
+  const lastmod = lastCommitDate(r.sources)
+  return [
+    '  <url>',
+    `    <loc>${loc}</loc>`,
+    ...(lastmod ? [`    <lastmod>${lastmod}</lastmod>`] : []),
+    `    <changefreq>${r.changefreq}</changefreq>`,
+    `    <priority>${r.priority.toFixed(1)}</priority>`,
+    '  </url>',
+  ].join('\n')
 }).join('\n')
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -72,4 +64,4 @@ ${body}
 fs.mkdirSync(path.dirname(OUTPUT), { recursive: true })
 fs.writeFileSync(OUTPUT, xml, 'utf8')
 // eslint-disable-next-line no-console
-console.log(`[sitemap] wrote ${INDEXABLE_ROUTES.length} URLs to ${OUTPUT} (lastmod=${lastmod})`)
+console.log(`[sitemap] wrote ${INDEXABLE_ROUTES.length} URLs to ${OUTPUT}`)

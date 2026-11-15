@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import { Flex, Text, Button, Link } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import CompositeImage, { CompositeImageProps } from '../CompositeImage'
@@ -46,16 +47,28 @@ const SalesSection: React.FC<SalesSectionProps> = (props) => {
             {bodyTranslatedText}
           </Text>
           <Flex>
-            <Link mr="16px" external={primaryButton.external} href={primaryButton.to}>
-              <Button>
+            {primaryButton.external ? (
+              <Button as="a" href={primaryButton.to} target="_blank" rel="noreferrer noopener" mr="16px">
                 <Text color="card" bold fontSize="16px">
                   {t(primaryButton.text)}
                 </Text>
               </Button>
-            </Link>
-            <Link external={secondaryButton.external} href={secondaryButton.to}>
-              {t(secondaryButton.text)}
-            </Link>
+            ) : (
+              <Button as={RouterLink} to={primaryButton.to} mr="16px">
+                <Text color="card" bold fontSize="16px">
+                  {t(primaryButton.text)}
+                </Text>
+              </Button>
+            )}
+            {secondaryButton.external ? (
+              <Link external href={secondaryButton.to}>
+                {t(secondaryButton.text)}
+              </Link>
+            ) : (
+              <Link as={RouterLink} to={secondaryButton.to}>
+                {t(secondaryButton.text)}
+              </Link>
+            )}
           </Flex>
         </Flex>
         <Flex

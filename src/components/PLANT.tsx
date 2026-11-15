@@ -28,10 +28,13 @@ function Model(props: JSX.IntrinsicElements['group']) {
   )
 }
 
+// three r155+ removed legacy lighting: intensities are no longer implicitly
+// scaled by PI and point lights fall off with distance squared (decay = 2).
+// Scale by PI and disable decay to keep the original look of the scene.
 const Plant: React.FC = () => (
   <Canvas style={CanvaStyle}>
-    <ambientLight intensity={0.25} />
-    <pointLight castShadow intensity={0.7} position={[0, 0, 12]} />
+    <ambientLight intensity={0.25 * Math.PI} />
+    <pointLight castShadow intensity={0.7 * Math.PI} decay={0} position={[0, 0, 12]} />
     <Model />
   </Canvas>
 )

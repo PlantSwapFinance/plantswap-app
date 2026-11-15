@@ -72,10 +72,6 @@ const config: (t: ContextApi['t']) => MenuEntry[] = (t) => [
     label: t('Collectibles'),
     icon: 'NftIcon',
     href: '/collectibles',
-    status: {
-      text: 'NEW',
-      color: 'success',
-    },
   },
   {
     label: t('More'),
@@ -105,7 +101,7 @@ const config: (t: ContextApi['t']) => MenuEntry[] = (t) => [
       },
       {
         label: t('Project'),
-        href: 'project',
+        href: '/project',
       },
       {
         label: t('dex.guru'),

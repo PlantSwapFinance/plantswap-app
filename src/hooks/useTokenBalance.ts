@@ -50,38 +50,52 @@ const useTokenBalance = (tokenAddress: string) => {
   return balanceState
 }
 
-export const useTotalSupply = () => {
+type UseOnChainAmountState = {
+  /** Last successfully fetched amount; undefined until the first fetch succeeds */
+  value?: BigNumber
+  fetchStatus: FetchStatus
+}
+
+/**
+ * Polls an on-chain amount on every slow refresh. Keeps the last good value when a later
+ * refresh fails so the UI does not flicker back to a loading/failed state.
+ */
+const useSlowRefreshAmount = (fetcher: () => Promise<bigint>, deps: unknown[]): UseOnChainAmountState => {
   const { slowRefresh } = useRefresh()
-  const [totalSupply, setTotalSupply] = useState<BigNumber>()
+  const [state, setState] = useState<UseOnChainAmountState>({ fetchStatus: FetchStatus.NOT_FETCHED })
 
   useEffect(() => {
-    async function fetchTotalSupply() {
-      const plantContract = getPlantContract()
-      const supply = await plantContract.totalSupply()
-      setTotalSupply(new BigNumber(supply.toString()))
+    let cancelled = false
+    fetcher()
+      .then((res) => {
+        if (!cancelled) setState({ value: new BigNumber(res.toString()), fetchStatus: FetchStatus.SUCCESS })
+      })
+      .catch((e) => {
+        console.error(e)
+        if (!cancelled) {
+          setState((prev) => (prev.value ? prev : { value: undefined, fetchStatus: FetchStatus.FAILED }))
+        }
+      })
+    return () => {
+      cancelled = true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slowRefresh, ...deps])
 
-    fetchTotalSupply()
-  }, [slowRefresh])
+  return state
+}
 
-  return totalSupply
+export const useTotalSupply = () => {
+  const { value, fetchStatus } = useSlowRefreshAmount(() => getPlantContract().totalSupply(), [])
+  return { totalSupply: value, fetchStatus }
 }
 
 export const useBurnedBalance = (tokenAddress: string) => {
-  const [balance, setBalance] = useState(BIG_ZERO)
-  const { slowRefresh } = useRefresh()
-
-  useEffect(() => {
-    const fetchBalance = async () => {
-      const contract = getBep20Contract(tokenAddress)
-      const res = await contract.balanceOf('0x000000000000000000000000000000000000dEaD')
-      setBalance(new BigNumber(res.toString()))
-    }
-
-    fetchBalance()
-  }, [tokenAddress, slowRefresh])
-
-  return balance
+  const { value, fetchStatus } = useSlowRefreshAmount(
+    () => getBep20Contract(tokenAddress).balanceOf('0x000000000000000000000000000000000000dEaD'),
+    [tokenAddress],
+  )
+  return { balance: value, fetchStatus }
 }
 
 export const useGetBnbBalance = () => {

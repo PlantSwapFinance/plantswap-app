@@ -62,3 +62,26 @@ export const registerToken = async (tokenAddress: string, tokenSymbol: string, t
 
   return tokenAdded
 }
+
+/**
+ * Resolve once a browser wallet has injected `window.ethereum`, or after `timeout` ms.
+ * Some wallets inject after the page scripts run and fire `ethereum#initialized` when ready.
+ * @returns {boolean} true if an injected provider is available
+ */
+export const waitForInjectedProvider = (timeout = 3000): Promise<boolean> =>
+  new Promise((resolve) => {
+    if (window.ethereum) {
+      resolve(true)
+      return
+    }
+
+    let timer: ReturnType<typeof setTimeout>
+    const onInitialized = () => {
+      clearTimeout(timer)
+      window.removeEventListener('ethereum#initialized', onInitialized)
+      resolve(Boolean(window.ethereum))
+    }
+
+    window.addEventListener('ethereum#initialized', onInitialized, { once: true })
+    timer = setTimeout(onInitialized, timeout)
+  })

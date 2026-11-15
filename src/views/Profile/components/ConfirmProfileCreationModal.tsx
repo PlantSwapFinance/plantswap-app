@@ -39,10 +39,10 @@ const ConfirmProfileCreationModal: React.FC<Props> = ({
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({
       onRequiresApproval: async () => {
-        return hasSufficientAllowance(plantContract, account, profileContract.address, minimumPlantRequired)
+        return hasSufficientAllowance(plantContract, account, String(profileContract.target), minimumPlantRequired)
       },
       onApprove: () => {
-        return plantContract.approve(profileContract.address, allowance.toJSON())
+        return plantContract.approve(String(profileContract.target), allowance.toJSON())
       },
       onConfirm: () => {
         return profileContract.createProfile(teamId, plantswapGardenersContract, selectedNft.tokenId)

@@ -55,8 +55,8 @@ const WalletModal: React.FC<WalletModalProps> = ({ initialView = WalletView.WALL
         <ModalTitle>
           <Heading>{t('Your Wallet')}</Heading>
         </ModalTitle>
-        <IconButton variant="text" onClick={onDismiss}>
-          <CloseIcon width="24px" color="text" />
+        <IconButton variant="text" onClick={onDismiss} aria-label={t('Close')}>
+          <CloseIcon width="24px" color="text" aria-hidden="true" />
         </IconButton>
       </ModalHeader>
       <Tabs>

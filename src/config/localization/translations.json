@@ -1282,5 +1282,9 @@
   "Master gardener pid": "Master gardener pid",
   "Edit": "Edit",
   "Add a pool": "Add a pool",
-  "Share": "Share"
+  "Share": "Share",
+  "Something went wrong": "Something went wrong",
+  "This page could not be displayed. Try again, or go back to the home page.": "This page could not be displayed. Try again, or go back to the home page.",
+  "Retry": "Retry",
+  "Go home": "Go home"
 }

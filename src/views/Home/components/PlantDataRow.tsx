@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTotalSupply, useBurnedBalance } from 'hooks/useTokenBalance'
+import { useTotalSupply, useBurnedBalance, FetchStatus } from 'hooks/useTokenBalance'
 import { getPlantAddress } from 'utils/addressHelpers'
 import { getBalanceNumber, formatLocalisedCompactNumber } from 'utils/formatBalance'
 import { usePricePlantBusd } from 'state/farms/hooks'
@@ -43,32 +43,49 @@ const Grid = styled.div`
 
 const emissionsPerBlock = 0.02
 
+const ValueSkeleton = () => <Skeleton height={24} width={126} my="4px" />
+
+const Unavailable = () => (
+  <Heading scale="lg" color="textSubtle" title="Unavailable">
+    —
+  </Heading>
+)
+
 const PlantDataRow = () => {
   const { t } = useTranslation()
-  const totalSupply = useTotalSupply()
-  const burnedBalance = getBalanceNumber(useBurnedBalance(getPlantAddress()))
-  const plantSupply = totalSupply ? getBalanceNumber(totalSupply) - burnedBalance : 0
+  const { totalSupply, fetchStatus: supplyStatus } = useTotalSupply()
+  const { balance: burned, fetchStatus: burnedStatus } = useBurnedBalance(getPlantAddress())
+  const burnedBalance = burned ? getBalanceNumber(burned) : undefined
+  // Circulating supply needs both reads; undefined while either is still loading or failed
+  const plantSupply =
+    totalSupply && burnedBalance !== undefined ? getBalanceNumber(totalSupply) - burnedBalance : undefined
+  const supplyFailed = supplyStatus === FetchStatus.FAILED || burnedStatus === FetchStatus.FAILED
+  const burnedFailed = burnedStatus === FetchStatus.FAILED
   const plantPriceBusd = usePricePlantBusd()
-  const mcap = plantPriceBusd.times(plantSupply)
-  const mcapString = formatLocalisedCompactNumber(mcap.toNumber())
+  const mcap = plantSupply !== undefined ? plantPriceBusd.times(plantSupply) : undefined
+  const mcapString = mcap ? formatLocalisedCompactNumber(mcap.toNumber()) : ''
   const ecologicalContributionString = formatLocalisedCompactNumber(10500)
 
   return (
     <Grid>
       <Flex flexDirection="column">
         <Text color="textSubtle">{t('Total supply')}</Text>
-        {plantSupply ? (
+        {plantSupply !== undefined ? (
           <Balance decimals={0} lineHeight="1.1" fontSize="24px" bold value={plantSupply} />
+        ) : supplyFailed ? (
+          <Unavailable />
         ) : (
-          <Skeleton height={24} width={126} my="4px" />
+          <ValueSkeleton />
         )}
       </Flex>
       <StyledColumn>
         <Text color="textSubtle">{t('Burned to date')}</Text>
-        {burnedBalance ? (
+        {burnedBalance !== undefined ? (
           <Balance decimals={0} lineHeight="1.1" fontSize="24px" bold value={burnedBalance} />
+        ) : burnedFailed ? (
+          <Unavailable />
         ) : (
-          <Skeleton height={24} width={126} my="4px" />
+          <ValueSkeleton />
         )}
       </StyledColumn>
       <StyledColumn noMobileBorder>
@@ -76,15 +93,17 @@ const PlantDataRow = () => {
         {ecologicalContributionString ? (
           <Heading scale="lg">{t('$%ecologicalContribution%', { ecologicalContribution: ecologicalContributionString })}</Heading>
         ) : (
-          <Skeleton height={24} width={126} my="4px" />
+          <ValueSkeleton />
         )}
       </StyledColumn>
       <StyledColumn noMobileBorder>
         <Text color="textSubtle">{t('Market cap')}</Text>
         {mcap?.gt(0) && mcapString ? (
           <Heading scale="lg">{t('$%marketCap%', { marketCap: mcapString })}</Heading>
+        ) : supplyFailed ? (
+          <Unavailable />
         ) : (
-          <Skeleton height={24} width={126} my="4px" />
+          <ValueSkeleton />
         )}
       </StyledColumn>
       <StyledColumn>

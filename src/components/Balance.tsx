@@ -14,7 +14,7 @@ interface CountUpProps {
 
 const CountUp: React.FC<CountUpProps> = ({ start, end, decimals, duration, prefix, suffix, separator }) => {
   const containerRef = useRef<HTMLSpanElement>(null)
-  useCountUp({
+  const { update } = useCountUp({
     ref: containerRef as unknown as React.RefObject<HTMLElement>,
     start,
     end,
@@ -26,6 +26,14 @@ const CountUp: React.FC<CountUpProps> = ({ start, end, decimals, duration, prefi
     enableReinitialize: false,
     startOnMount: true,
   })
+
+  // With enableReinitialize off, react-countup ignores later `end` changes, and React
+  // StrictMode's mount/unmount/remount resets the counter to `start` (0) without restarting
+  // it. Push `end` explicitly so the displayed number always converges to the latest value.
+  useEffect(() => {
+    update(end)
+  }, [end, update])
+
   return (
     <span ref={containerRef}>
       {prefix}

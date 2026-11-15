@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
-import { Flex, Heading, Link, Button } from '@plantswap/uikit'
+import { Flex, Heading, Button } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import useTheme from 'hooks/useTheme'
@@ -71,9 +72,9 @@ const Hero = () => {
           </Heading>
           <Flex>
             {!account && <ConnectWalletButton mr="8px" />}
-            <Link mr="16px" href="/swap">
-              <Button variant="secondary">{t('Trade Now')}</Button>
-            </Link>
+            <Button as={RouterLink} to="/swap" variant="secondary" mr="16px">
+              {t('Trade Now')}
+            </Button>
           </Flex>
         </Flex>
         <Flex

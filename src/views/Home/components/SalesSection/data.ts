@@ -13,7 +13,7 @@ export const plantSectionData: SalesSectionProps = {
   secondaryButton: {
     to: '/farms',
     text: 'Farm PLANT',
-    external: true,
+    external: false,
   },
 
   images: {

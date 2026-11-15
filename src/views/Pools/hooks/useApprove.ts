@@ -18,7 +18,7 @@ export const useApprovePool = (lpContract: Contract, sousId, earningTokenSymbol)
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)
-      const tx = await lpContract.approve(sousChefContract.address, MaxUint256)
+      const tx = await lpContract.approve(String(sousChefContract.target), MaxUint256)
       const receipt = await tx.wait()
 
       dispatch(updateUserAllowance(sousId, account))

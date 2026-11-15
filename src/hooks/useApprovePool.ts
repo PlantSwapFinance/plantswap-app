@@ -6,7 +6,7 @@ const useApprovePool = (lpContract: Contract) => {
   const masterGardenerContract = useMasterchef()
   const handleApprove = useCallback(async () => {
     try {
-      const tx = await lpContract.approve(masterGardenerContract.address, MaxUint256)
+      const tx = await lpContract.approve(String(masterGardenerContract.target), MaxUint256)
       const receipt = await tx.wait()
       return receipt.status
     } catch (e) {

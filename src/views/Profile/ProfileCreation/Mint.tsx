@@ -31,10 +31,15 @@ const Mint: React.FC = () => {
   const { isApproving, isApproved, isConfirmed, isConfirming, handleApprove, handleConfirm } =
     useApproveConfirmTransaction({
       onRequiresApproval: async () => {
-        return hasSufficientAllowance(plantContract, account, gardeningSchoolContract.address, minimumPlantRequired)
+        return hasSufficientAllowance(
+          plantContract,
+          account,
+          String(gardeningSchoolContract.target),
+          minimumPlantRequired,
+        )
       },
       onApprove: () => {
-        return plantContract.approve(gardeningSchoolContract.address, allowance.toJSON())
+        return plantContract.approve(String(gardeningSchoolContract.target), allowance.toJSON())
       },
       onConfirm: () => {
         return gardeningSchoolContract.mintGardener(variationId)

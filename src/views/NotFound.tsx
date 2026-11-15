@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { Button, Heading, Text, LogoIcon } from '@plantswap/uikit'
 import Page from 'components/Layout/Page'
@@ -21,7 +22,7 @@ const NotFound = () => {
         <LogoIcon width="64px" mb="8px" />
         <Heading scale="xxl">404</Heading>
         <Text mb="16px">{t('Oops, page not found.')}</Text>
-        <Button as="a" href="/" scale="sm">
+        <Button as={RouterLink} to="/" scale="sm">
           {t('Back Home')}
         </Button>
       </StyledNotFound>

@@ -67,7 +67,7 @@ const Hero = () => {
       >
         <Flex flex="1" flexDirection="column">
           <Heading as="h1" scale="xxl" color="secondary" mb="24px">
-            {t('DeFi Help the Planet')}
+            {t('DeFi that helps the planet')}
           </Heading>
           <Heading scale="md" mb="24px">
             {t(

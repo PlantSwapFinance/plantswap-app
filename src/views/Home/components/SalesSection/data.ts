@@ -1,9 +1,8 @@
 import { SalesSectionProps } from '.'
 
 export const plantSectionData: SalesSectionProps = {
-  headingText: 'Farm $PLANT with us and save the planet🌱',
-  bodyText:
-    'Stake and Farm $PLANT token in our farms and gardens.🌱',
+  headingText: 'Farm $PLANT with us and save the planet',
+  bodyText: 'Stake and Farm $PLANT token in our farms and gardens.',
   reverse: false,
   primaryButton: {
     to: '/swap?outputCurrency=0x58BA5Bd8872ec18BD360a9592149daed2fC57c69',
@@ -18,8 +17,6 @@ export const plantSectionData: SalesSectionProps = {
 
   images: {
     path: '/images/home/plant/',
-    attributes: [
-      { src: 'top-right', alt: 'Small 3d plant' },
-    ],
+    attributes: [{ src: 'top-right', alt: 'Small 3d plant' }],
   },
 }

@@ -13,8 +13,7 @@
     "format:write": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "sitemap:generate": "tsx scripts/generateSitemap.ts",
     "prerender": "tsx scripts/prerender.ts",
-    "updateLPsAPR": "tsx scripts/updateLPsAPR.ts",
-    "postinstall": "node scripts/patch-uikit-jsx-runtime.cjs"
+    "updateLPsAPR": "tsx scripts/updateLPsAPR.ts"
   },
   "browserslist": {
     "production": [
@@ -35,7 +34,7 @@
     "@fontsource/kanit": "^5.2.8",
     "@neondatabase/serverless": "^1.0.2",
     "@pancakeswap/sdk": "5.9.4",
-    "@plantswap/uikit": "1.1.0",
+    "@plantswap/uikit": "1.2.1",
     "@react-three/cannon": "^6.0.0",
     "@react-three/drei": "^10.0.0",
     "@react-three/fiber": "^9.0.0",

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Heading } from '@plantswap/uikit'
+import { Link as RouterLink } from 'react-router-dom'
+import { Flex, Text, Heading, Link } from '@plantswap/uikit'
 
 const Grid = styled.div`
   display: grid;
@@ -29,7 +30,7 @@ const DevelopmentFund = () => {
     <Grid>
       <Flex flexDirection="column" mb="32px">
         <Heading as="h2" size="xl" mb="32px">
-          🌲The PlantSwap Development Fund will help plant trees and other environmental causes
+          The PlantSwap Development Fund will help plant trees and other environmental causes
         </Heading>
         <Text mb="24px">
           Some pools will have deposit fees as well as some of the transactions with the Master Gardener smart contract
@@ -40,12 +41,14 @@ const DevelopmentFund = () => {
           <Text as="li">45%🔥 will be burned to lower the total supply 🔥</Text>
           <Text as="li">10%💸 will be kept in treasury to cover operating expenses 💸</Text>
         </AllocationList>
-        <Text>A governance token to choose the right organizations and causes to support</Text>
+        <Text>Community governance chooses the organizations and causes to support</Text>
         <Text>
-          Later this year, when the community around Plant Swap finance will have grown, we will release a governance
-          token to decentralize the decision making on which causes to support, what goals to focus on and regulate the
-          different economic incentives of this eco-system. More on this later…
+          PlantSwap governance is live on Snapshot. PLANT holders vote on which causes to support, what goals to focus
+          on, and how the economic incentives of this ecosystem are set.
         </Text>
+        <Link as={RouterLink} to="/voting" mt="8px">
+          Vote on proposals
+        </Link>
       </Flex>
     </Grid>
   )

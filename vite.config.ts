@@ -16,9 +16,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 //   that swap-sdk-core@1.6.0 was meant to ship but does not. The shim
 //   re-exports the real package and adds the missing exports — see
 //   shims/swap-sdk-core.mjs.
-// - optimizeDeps.pre-bundles @plantswap/uikit so the postinstall
-//   patch (`scripts/patch-uikit-jsx-runtime.cjs`) and its JSX-runtime
-//   imports end up in the same optimized chunk in dev.
+// - optimizeDeps pre-bundles @plantswap/uikit up front so dev doesn't
+//   discover it on first load and force a page reload.
 export default defineConfig({
   plugins: [react()],
   envPrefix: ['VITE_', 'REACT_APP_'],

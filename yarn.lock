@@ -3508,9 +3508,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@plantswap/uikit@npm:1.2.1":
-  version: 1.2.1
-  resolution: "@plantswap/uikit@npm:1.2.1"
+"@plantswap/uikit@npm:1.2.2":
+  version: 1.2.2
+  resolution: "@plantswap/uikit@npm:1.2.2"
   dependencies:
     "@emotion/is-prop-valid": "npm:^1.4.0"
     "@popperjs/core": "npm:^2.9.2"
@@ -3523,7 +3523,7 @@ __metadata:
     react-dom: ^17.0.2 || ^18.0.0 || ^19.0.0
     react-router-dom: ^5.2.0 || ^6.0.0 || ^7.0.0
     styled-components: ^5.2.3 || ^6.0.0
-  checksum: 10c0/68f3057d5603207fb8cd4f2edb306185aa3809bdb46a35a192404912fc8ead3fd947a7de143d10961d7714f44a21b9bf63765db74640ea47921b5a5380ab107b
+  checksum: 10c0/4bf2e0cb1ae96af0c4f41588054458a6b985f13af5d32b7ed45fa4e7fb695618edc34e2b670253e72183f3eae72d0f0e383f98d5b8abd387bf288e12d987a844
   languageName: node
   linkType: hard
 
@@ -13682,7 +13682,7 @@ __metadata:
     "@neondatabase/serverless": "npm:^1.0.2"
     "@pancakeswap/eslint-config-pancake": "npm:^1.1.0"
     "@pancakeswap/sdk": "npm:5.9.4"
-    "@plantswap/uikit": "npm:1.2.1"
+    "@plantswap/uikit": "npm:1.2.2"
     "@react-three/cannon": "npm:^6.0.0"
     "@react-three/drei": "npm:^10.0.0"
     "@react-three/fiber": "npm:^9.0.0"

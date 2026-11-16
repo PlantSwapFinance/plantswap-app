@@ -13,8 +13,7 @@
     "format:write": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "sitemap:generate": "tsx scripts/generateSitemap.ts",
     "prerender": "tsx scripts/prerender.ts",
-    "updateLPsAPR": "tsx scripts/updateLPsAPR.ts",
-    "postinstall": "node scripts/patch-uikit-jsx-runtime.cjs"
+    "updateLPsAPR": "tsx scripts/updateLPsAPR.ts"
   },
   "browserslist": {
     "production": [

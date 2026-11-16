@@ -38,7 +38,7 @@ const UserMenu = () => {
       <UserMenuItem as="button" onClick={logout}>
         <Flex alignItems="center" justifyContent="space-between" width="100%">
           {t('Disconnect')}
-          <LogoutIcon />
+          <LogoutIcon aria-hidden="true" />
         </Flex>
       </UserMenuItem>
     </UIKitUserMenu>

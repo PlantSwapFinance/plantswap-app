@@ -3,6 +3,7 @@ import React, { useRef } from 'react'
 import { Canvas, useFrame  } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import usePrefersReducedMotion from 'hooks/usePrefersReducedMotion'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -13,11 +14,12 @@ type GLTFResult = GLTF & {
   }
 }
 
-function Model(props: JSX.IntrinsicElements['group']) {
+function Model({ animate = true, ...props }: JSX.IntrinsicElements['group'] & { animate?: boolean }) {
   const group = useRef<THREE.Group>()
   const { nodes, materials } = useGLTF('/PLANT.glb') as GLTFResult
   const mesh = useRef<THREE.Mesh>()
   useFrame(() => {
+    if (!animate || !mesh.current) return
     mesh.current.rotation.z += 0.01
     mesh.current.rotation.x += 0.001
   })
@@ -31,13 +33,23 @@ function Model(props: JSX.IntrinsicElements['group']) {
 // three r155+ removed legacy lighting: intensities are no longer implicitly
 // scaled by PI and point lights fall off with distance squared (decay = 2).
 // Scale by PI and disable decay to keep the original look of the scene.
-const Plant: React.FC = () => (
-  <Canvas style={CanvaStyle}>
-    <ambientLight intensity={0.25 * Math.PI} />
-    <pointLight castShadow intensity={0.7 * Math.PI} decay={0} position={[0, 0, 12]} />
-    <Model />
-  </Canvas>
-)
+const Plant: React.FC = () => {
+  const prefersReducedMotion = usePrefersReducedMotion()
+
+  return (
+    // With reduced motion, the coin stays still and the scene only renders when it changes.
+    <Canvas
+      style={CanvaStyle}
+      frameloop={prefersReducedMotion ? 'demand' : 'always'}
+      role="img"
+      aria-label="PLANT token"
+    >
+      <ambientLight intensity={0.25 * Math.PI} />
+      <pointLight castShadow intensity={0.7 * Math.PI} decay={0} position={[0, 0, 12]} />
+      <Model animate={!prefersReducedMotion} />
+    </Canvas>
+  )
+}
 
 const CanvaStyle = {
   "width": "100%",

@@ -1287,5 +1287,10 @@
   "Something went wrong": "Something went wrong",
   "This page could not be displayed. Try again, or go back to the home page.": "This page could not be displayed. Try again, or go back to the home page.",
   "Retry": "Retry",
-  "Go home": "Go home"
+  "Go home": "Go home",
+  "Copy address": "Copy address",
+  "Low BNB balance": "Low BNB balance",
+  "Transaction pending": "Transaction pending",
+  "Transaction confirmed": "Transaction confirmed",
+  "Transaction failed": "Transaction failed"
 }

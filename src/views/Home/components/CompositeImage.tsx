@@ -38,6 +38,12 @@ const Wrapper = styled(Box)<{ maxHeight: string }>`
     animation: ${floatingAnim('4px', '12px')} 3s ease-in-out infinite;
     animation-delay: 0s;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    & :nth-child(n) {
+      animation: none;
+    }
+  }
 `
 
 const DummyImg = styled.img<{ maxHeight: string }>`

@@ -19,23 +19,28 @@ const Grid = styled.div`
   }
 `
 
+const AllocationList = styled.ul`
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+`
+
 const DevelopmentFund = () => {
   return (
     <Grid>
-      <Flex flexDirection="column">
-        <Heading as="h2" size="xl" mb="16px">
+      <Flex flexDirection="column" mb="32px">
+        <Heading as="h2" size="xl" mb="32px">
           The PlantSwap Development Fund will help plant trees and other environmental causes
         </Heading>
-        <br />
-        <Text>
+        <Text mb="24px">
           Some pools will have deposit fees as well as some of the transactions with the Master Gardener smart contract
           results in PLANT being created and sent to the Development Fund address. What will we do with the fund?
         </Text>
-        <br />
-        <Text>45%🌲 will go to plant trees 🌲</Text>
-        <Text>45%🔥 will be burned to lower the total supply 🔥</Text>
-        <Text>10%💸 will be kept in treasury to cover operating expenses 💸</Text>
-        <br />
+        <AllocationList>
+          <Text as="li">45%🌲 will go to plant trees 🌲</Text>
+          <Text as="li">45%🔥 will be burned to lower the total supply 🔥</Text>
+          <Text as="li">10%💸 will be kept in treasury to cover operating expenses 💸</Text>
+        </AllocationList>
         <Text>Community governance chooses the organizations and causes to support</Text>
         <Text>
           PlantSwap governance is live on Snapshot. PLANT holders vote on which causes to support, what goals to focus
@@ -44,8 +49,6 @@ const DevelopmentFund = () => {
         <Link as={RouterLink} to="/voting" mt="8px">
           Vote on proposals
         </Link>
-        <br />
-        <br />
       </Flex>
     </Grid>
   )

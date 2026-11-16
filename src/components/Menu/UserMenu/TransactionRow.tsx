@@ -3,6 +3,8 @@ import { BlockIcon, CheckmarkCircleIcon, Flex, Link, OpenNewIcon, RefreshIcon } 
 import styled from 'styled-components'
 import { TransactionDetails } from 'state/transactions/store'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useTranslation } from 'contexts/Localization'
+import { ContextApi } from 'contexts/Localization/types'
 import { getBscScanLink } from 'utils'
 
 interface TransactionRowProps {
@@ -32,20 +34,21 @@ const TxnLink = styled(Link)`
   }
 `
 
-const renderIcon = (txn: TransactionDetails) => {
+const renderIcon = (txn: TransactionDetails, t: ContextApi['t']) => {
   if (!txn.receipt) {
-    return <RefreshIcon spin width="24px" />
+    return <RefreshIcon spin width="24px" role="img" aria-label={t('Transaction pending')} />
   }
 
   return txn.receipt?.status === 1 || typeof txn.receipt?.status === 'undefined' ? (
-    <CheckmarkCircleIcon color="success" width="24px" />
+    <CheckmarkCircleIcon color="success" width="24px" role="img" aria-label={t('Transaction confirmed')} />
   ) : (
-    <BlockIcon color="failure" width="24px" />
+    <BlockIcon color="failure" width="24px" role="img" aria-label={t('Transaction failed')} />
   )
 }
 
 const TransactionRow: React.FC<TransactionRowProps> = ({ txn }) => {
   const { chainId } = useActiveWeb3React()
+  const { t } = useTranslation()
 
   if (!txn) {
     return null
@@ -53,10 +56,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ txn }) => {
 
   return (
     <TxnLink href={getBscScanLink(txn.hash, 'transaction', chainId)} external>
-      <TxnIcon>{renderIcon(txn)}</TxnIcon>
+      <TxnIcon>{renderIcon(txn, t)}</TxnIcon>
       <Summary>{txn.summary ?? txn.hash}</Summary>
       <TxnIcon>
-        <OpenNewIcon width="24px" color="primary" />
+        <OpenNewIcon width="24px" color="primary" aria-hidden="true" />
       </TxnIcon>
     </TxnLink>
   )

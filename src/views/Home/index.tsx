@@ -10,6 +10,7 @@ import PlantDataRow from './components/PlantDataRow'
 import UserBanner from './components/UserBanner'
 import { WedgeTopLeft, InnerWedgeWrapper, OuterWedgeWrapper } from './components/WedgeSvgs'
 import DevelopmentFund from './components/DevelopmentFund'
+import SiteFooter from './components/SiteFooter'
 import useActiveWeb3React from '../../hooks/useActiveWeb3React'
 
 const StyledHeroSection = styled(PageSection)`
@@ -87,6 +88,7 @@ const Home: React.FC = () => {
         </OuterWedgeWrapper>
         <DevelopmentFund />
       </PageSection>
+      <SiteFooter />
     </>
   )
 }

@@ -718,6 +718,8 @@
   "An error occurred approving transaction": "An error occurred approving transaction",
   "Provider Error": "Provider Error",
   "No provider was found": "No provider was found",
+  "No wallet detected": "No wallet detected",
+  "Install a browser wallet such as MetaMask, or open PlantSwap in your wallet app’s browser.": "Install a browser wallet such as MetaMask, or open PlantSwap in your wallet app’s browser.",
   "Authorization Error": "Authorization Error",
   "Please authorize to access your account": "Please authorize to access your account",
   "Unable to find connector": "Unable to find connector",

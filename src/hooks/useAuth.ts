@@ -36,7 +36,10 @@ const useAuth = () => {
             window.localStorage.removeItem(connectorLocalStorageKey)
             if (error instanceof NoEthereumProviderError) {
               // || error instanceof NoBscProviderError
-              toastError(t('Provider Error'), t('No provider was found'))
+              toastError(
+                t('No wallet detected'),
+                t('Install a browser wallet such as MetaMask, or open PlantSwap in your wallet app’s browser.'),
+              )
             } else if (
               error instanceof UserRejectedRequestErrorInjected ||
               error instanceof UserRejectedRequestErrorWalletConnect

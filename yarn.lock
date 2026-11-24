@@ -12542,9 +12542,9 @@ __metadata:
   linkType: hard
 
 "multiformats@npm:^14.0.0":
-  version: 14.0.6
-  resolution: "multiformats@npm:14.0.6"
-  checksum: 10c0/9f0f932b13bdb119959aab253c9ae438818690cb12953e2debdb55647b2e990f14cf0d21770f09cd9996d839ed59ceb51dfa45cceff4bd7d0842ad5bfed8de3f
+  version: 14.0.7
+  resolution: "multiformats@npm:14.0.7"
+  checksum: 10c0/944f2ac1f0b4bfe8c2fccf70f4697222348c53461631ff919a3cb6758ef6032035dc0b9089359ecfe75a52921be428d444b7794115f2e4e2d976ffb7b4d64420
   languageName: node
   linkType: hard
 

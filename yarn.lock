@@ -14260,13 +14260,13 @@ __metadata:
   linkType: hard
 
 "react-helmet-async@npm:^3.0.0":
-  version: 3.1.0
-  resolution: "react-helmet-async@npm:3.1.0"
+  version: 3.2.0
+  resolution: "react-helmet-async@npm:3.2.0"
   dependencies:
     react-fast-compare: "npm:^3.2.2"
   peerDependencies:
     react: ^16.6.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/5c5bc2c4ac74c6389ec8f5d60edaa98cd8bee398301f1f874091189f197434f6be7cbca680243dcd38d931db942c0e2d4c683a2e87e05a0b88b67697ac9255d7
+  checksum: 10c0/c8316faa3f9d65ae7cdf6761d31416560bb5f50aef99fc96e1157b492dbfc93f93157a4f05b6f2ce83a97299e0a63d081daa9a6087e7df382e7e0e3c6c240dec
   languageName: node
   linkType: hard
 

@@ -1,0 +1,20 @@
+{
+  "name": "@plantswap/eslint-config-local",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Lint dependencies with their own TypeScript 5.x: typescript-eslint needs the TypeScript JS API, which TypeScript 7 (the app's compiler) no longer ships.",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.74.0"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.0"
+  }
+}

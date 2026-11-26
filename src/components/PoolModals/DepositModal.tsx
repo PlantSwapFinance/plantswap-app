@@ -5,6 +5,7 @@ import { ModalActions, ModalInput } from 'components/Modal'
 import { useTranslation } from 'contexts/Localization'
 import { getFullDisplayBalance, toSafeBigNumber } from 'utils/formatBalance'
 import useToast from 'hooks/useToast'
+import { getTxErrorToast } from 'utils/txError'
 
 export interface PoolDepositModalProps {
   max: BigNumber
@@ -64,7 +65,14 @@ const PoolDepositModal: React.FC<PoolDepositModalProps> = ({
 
   return (
     <Modal title={title} onDismiss={onDismiss}>
-      {depositFee > 0 && <Text>This {featureLabel} has a {depositFee / 100}% deposit fee!</Text>}
+      {depositFee > 0 && (
+        <Text>
+          {t('This %featureLabel% has a %depositFee% deposit fee!', {
+            featureLabel,
+            depositFee: `${depositFee / 100}%`,
+          })}
+        </Text>
+      )}
       <ModalInput
         value={val}
         onSelectMax={handleSelectMax}
@@ -88,10 +96,8 @@ const PoolDepositModal: React.FC<PoolDepositModalProps> = ({
               toastSuccess(t('Staked!'), t(`Your funds have been staked in the ${featureLabel}`))
               onDismiss()
             } catch (e) {
-              toastError(
-                t('Error'),
-                t('Please try again. Confirm the transaction and make sure you are paying enough gas!'),
-              )
+              const { title: errorTitle, description } = getTxErrorToast(e)
+              toastError(t(errorTitle), t(description))
               console.error(e)
             } finally {
               setPendingTx(false)

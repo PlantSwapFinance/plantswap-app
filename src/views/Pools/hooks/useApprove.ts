@@ -5,6 +5,7 @@ import { updateUserAllowance } from 'state/actions'
 import { useTranslation } from 'contexts/Localization'
 import { useSousChef } from 'hooks/useContract'
 import useToast from 'hooks/useToast'
+import { getTxErrorToast } from 'utils/txError'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 export const useApprovePool = (lpContract: Contract, sousId, earningTokenSymbol) => {
@@ -27,15 +28,16 @@ export const useApprovePool = (lpContract: Contract, sousId, earningTokenSymbol)
           t('Contract Enabled'),
           t('You can now stake in the %symbol% pool!', { symbol: earningTokenSymbol }),
         )
-        setRequestedApproval(false)
       } else {
-        // user rejected tx or didn't go thru
+        // tx didn't go thru
         toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
-        setRequestedApproval(false)
       }
     } catch (e) {
       console.error(e)
-      toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
+      const { title, description } = getTxErrorToast(e)
+      toastError(t(title), t(description))
+    } finally {
+      setRequestedApproval(false)
     }
   }, [account, dispatch, lpContract, sousChefContract, sousId, earningTokenSymbol, t, toastError, toastSuccess])
 

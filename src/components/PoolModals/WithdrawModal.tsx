@@ -5,6 +5,7 @@ import { ModalActions, ModalInput } from 'components/Modal'
 import { useTranslation } from 'contexts/Localization'
 import { getFullDisplayBalance, toSafeBigNumber } from 'utils/formatBalance'
 import useToast from 'hooks/useToast'
+import { getTxErrorToast } from 'utils/txError'
 
 export interface PoolWithdrawModalProps {
   max: BigNumber
@@ -75,10 +76,8 @@ const PoolWithdrawModal: React.FC<PoolWithdrawModalProps> = ({
               toastSuccess(t('Unstaked!'), t('Your earnings have also been harvested to your wallet'))
               onDismiss()
             } catch (e) {
-              toastError(
-                t('Error'),
-                t('Please try again. Confirm the transaction and make sure you are paying enough gas!'),
-              )
+              const { title: errorTitle, description } = getTxErrorToast(e)
+              toastError(t(errorTitle), t(description))
               console.error(e)
             } finally {
               setPendingTx(false)

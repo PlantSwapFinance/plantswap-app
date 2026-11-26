@@ -6,6 +6,7 @@ import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../config/constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
+import { isUserRejected } from '../utils/txError'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './ENS/useENS'
 
@@ -216,7 +217,7 @@ export function useSwapCallback(
           })
           .catch((error: any) => {
             // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
+            if (isUserRejected(error)) {
               throw new Error('Transaction rejected.')
             } else {
               // otherwise, the error was unexpected and we need to convey that

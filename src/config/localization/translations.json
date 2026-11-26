@@ -1298,5 +1298,8 @@
   "Low BNB balance": "Low BNB balance",
   "Transaction pending": "Transaction pending",
   "Transaction confirmed": "Transaction confirmed",
-  "Transaction failed": "Transaction failed"
+  "Transaction failed": "Transaction failed",
+  "Transaction cancelled": "Transaction cancelled",
+  "You rejected the request in your wallet. Nothing was sent.": "You rejected the request in your wallet. Nothing was sent.",
+  "This %featureLabel% has a %depositFee% deposit fee!": "This %featureLabel% has a %depositFee% deposit fee!"
 }

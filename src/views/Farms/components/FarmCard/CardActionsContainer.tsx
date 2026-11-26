@@ -43,7 +43,8 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, account, addLiquidi
   const isApproved = account && allowance && allowance.isGreaterThan(0)
   const { userDataLoaded } = useFarms()
   // Only steer to "Get LP" once balances are known, so it never flashes before user data loads.
-  const hasNothingToStake = userDataLoaded && tokenBalance.isZero() && stakedBalance.isZero()
+  const hasNothingToStake =
+    farm.multiplier !== '0X' && userDataLoaded && tokenBalance.isZero() && stakedBalance.isZero()
 
   const { handleApprove, requestedApproval } = useFarmApprove(lpAddress, pid, farm.lpSymbol, account)
 

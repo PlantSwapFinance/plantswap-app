@@ -45,6 +45,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   token,
   depositFee,
   isTokenOnly,
+  multiplier,
   userDataReady,
 }) => {
   const { t } = useTranslation()
@@ -197,7 +198,8 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
     )
   }
 
-  if (tokenBalance.isZero() && stakedBalance.isZero()) {
+  // Finished farms (0X) should not steer users to acquire tokens they cannot farm.
+  if (multiplier !== '0X' && tokenBalance.isZero() && stakedBalance.isZero()) {
     return (
       <ApprovalActionContainer>
         <ActionTitles>

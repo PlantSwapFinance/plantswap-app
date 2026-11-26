@@ -13,6 +13,7 @@ import {
 import { ConnectorNames, connectorLocalStorageKey } from '@plantswap/uikit'
 import { connectorsByName } from 'utils/web3React'
 import { setupNetwork } from 'utils/wallet'
+import { setPendingWalletConnect, trackEvent } from 'utils/analytics'
 import useToast from 'hooks/useToast'
 import { profileClear } from 'state/profile/store'
 import { useTranslation } from 'contexts/Localization'
@@ -26,13 +27,20 @@ const useAuth = () => {
   const login = useCallback(
     (connectorID: ConnectorNames) => {
       const connector = connectorsByName[connectorID]
+      const trackError = (reason: string) => {
+        setPendingWalletConnect(null)
+        trackEvent('wallet_connect_error', { connector: connectorID, reason })
+      }
       if (connector) {
+        trackEvent('wallet_connect_attempt', { connector: connectorID })
+        setPendingWalletConnect(connectorID)
         activate(connector, async (error: Error) => {
           if (error instanceof UnsupportedChainIdError) {
             const hasSetup = await setupNetwork()
             if (hasSetup) {
               activate(connector)
             } else {
+              trackEvent('wallet_connect_error', { connector: connectorID, reason: 'wrong_network' })
               toastError(t('Wrong network'), t('Please switch your wallet to BNB Smart Chain to use PlantSwap.'))
               if (connector instanceof InjectedConnector) {
                 // Activate without an error callback so web3-react keeps the connector in its
@@ -41,12 +49,15 @@ const useAuth = () => {
                 // first drops the wallet listeners so re-activation does not register them twice.
                 connector.deactivate()
                 activate(connector)
+              } else {
+                setPendingWalletConnect(null)
               }
             }
           } else {
             window.localStorage.removeItem(connectorLocalStorageKey)
             if (error instanceof NoEthereumProviderError) {
               // || error instanceof NoBscProviderError
+              trackError('no_wallet')
               toastError(
                 t('No wallet detected'),
                 t('Install a browser wallet such as MetaMask, or open PlantSwap in your wallet app’s browser.'),
@@ -55,17 +66,20 @@ const useAuth = () => {
               error instanceof UserRejectedRequestErrorInjected ||
               error instanceof UserRejectedRequestErrorWalletConnect
             ) {
+              trackError('user_rejected')
               if (connector instanceof WalletConnectConnector) {
                 const walletConnector = connector as WalletConnectConnector
                 walletConnector.walletConnectProvider = null
               }
               toastError(t('Authorization Error'), t('Please authorize to access your wallet'))
             } else {
+              trackError(error.name || 'unknown')
               toastError(error.name, error.message)
             }
           }
         })
       } else {
+        trackEvent('wallet_connect_error', { connector: connectorID, reason: 'unsupported_wallet' })
         toastError(t('Wallet not supported'), t('This wallet option is not available. Please choose another wallet.'))
       }
     },

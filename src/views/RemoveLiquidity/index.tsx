@@ -28,6 +28,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import StyledInternalLink from '../../components/Links'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
+import { isUserRejected } from '../../utils/txError'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
@@ -151,8 +152,8 @@ export default function RemoveLiquidity() {
         })
       })
       .catch((err) => {
-        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
-        if (err?.code !== 4001) {
+        // for all errors other than the user rejecting the signature, fall back to manual approve
+        if (!isUserRejected(err)) {
           approveCallback()
         }
       })

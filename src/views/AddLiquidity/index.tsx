@@ -32,6 +32,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { isUserRejected } from '../../utils/txError'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import Dots from '../../components/Loader/Dots'
 import ConfirmAddModalBottom from './ConfirmAddModalBottom'
@@ -185,7 +186,7 @@ export default function AddLiquidity() {
       .catch((err) => {
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
-        if (err?.code !== 4001) {
+        if (!isUserRejected(err)) {
           console.error(err)
         }
       })

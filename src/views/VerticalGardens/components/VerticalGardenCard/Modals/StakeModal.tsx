@@ -96,7 +96,7 @@ const StakeModal: React.FC<StakeModalProps> = ({
     } else {
       try {
         // staking
-        await onStake(stakeAmount)
+        await onStake(stakeAmount, stakingToken.decimals)
         toastSuccess(
           `${t('Staked')}!`,
           t('Your %symbol% funds have been staked in the vertical Garden!', {

@@ -57,8 +57,9 @@ export default function Updater(): null {
                   from: receipt.from,
                   status: receipt.status,
                   to: receipt.to,
-                  transactionHash: receipt.transactionHash,
-                  transactionIndex: receipt.transactionIndex,
+                  // ethers v6 receipts expose these as `.hash` / `.index` (v5: `.transactionHash` / `.transactionIndex`)
+                  transactionHash: receipt.hash,
+                  transactionIndex: receipt.index,
                 },
               })
 

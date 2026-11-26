@@ -4,6 +4,7 @@ import { Button, useModal, IconButton, AddIcon, MinusIcon, Skeleton, Text, Headi
 import { Link, useLocation } from 'react-router-dom'
 import { BigNumber } from 'bignumber.js'
 import ConnectWalletButton from 'components/ConnectWalletButton'
+import LowBnbBalanceNotice from 'components/LowBnbBalanceNotice'
 import Balance from 'components/Balance'
 import { useFarmUser, useLpTokenPrice } from 'state/farms/hooks'
 import { fetchFarmUserDataAsync } from 'state/farms'
@@ -236,6 +237,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
           symbol: lpSymbol,
         })}
       </Text>
+      <LowBnbBalanceNotice compact mt="4px" />
     </ApprovalActionContainer>
   )
 }

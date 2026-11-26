@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, AutoRenewIcon, Skeleton } from '@plantswap/uikit'
 import { useTranslation } from 'contexts/Localization'
+import LowBnbBalanceNotice from 'components/LowBnbBalanceNotice'
 import { useERC20 } from 'hooks/useContract'
 import { getAddress } from 'utils/addressHelpers'
 import { Pool } from 'state/types'
@@ -32,6 +33,7 @@ const ApprovalAction: React.FC<ApprovalActionProps> = ({ pool, isLoading = false
           {t('Enable')}
         </Button>
       )}
+      {!isLoading && <LowBnbBalanceNotice compact mt="4px" />}
     </>
   )
 }

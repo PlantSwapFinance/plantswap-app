@@ -8,6 +8,7 @@ import { Farm } from 'state/types'
 import { useFarms } from 'state/farms/hooks'
 import { useTranslation } from 'contexts/Localization'
 import ConnectWalletButton from 'components/ConnectWalletButton'
+import LowBnbBalanceNotice from 'components/LowBnbBalanceNotice'
 import useFarmApprove from '../../hooks/useFarmApprove'
 import getFarmTokenPath from '../../getFarmTokenPath'
 import StakeAction from './StakeAction'
@@ -71,6 +72,7 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, account, addLiquidi
             symbol: farm.lpSymbol,
           })}
         </Text>
+        <LowBnbBalanceNotice compact mt="4px" />
       </>
     )
   }

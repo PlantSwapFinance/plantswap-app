@@ -13,6 +13,7 @@ import { latinise } from 'utils/latinise'
 import FlexLayout from 'components/Layout/Flex'
 import Page from 'components/Layout/Page'
 import PageHeader from 'components/PageHeader'
+import LowBnbBalanceNotice from 'components/LowBnbBalanceNotice'
 import SearchInput from 'components/SearchInput'
 import Select, { OptionProps } from 'components/Select/Select'
 import { Pool } from 'state/types'
@@ -256,6 +257,7 @@ const Pools: React.FC = () => {
             </LabelWrapper>
           </FilterContainer>
         </PoolControls>
+        <LowBnbBalanceNotice mb="24px" />
         {showFinishedPools && (
           <Text fontSize="20px" color="failure" pb="32px">
             {t('These pools are no longer distributing rewards. Please unstake your tokens.')}

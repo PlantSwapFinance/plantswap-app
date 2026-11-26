@@ -23,6 +23,7 @@ import TradePrice from './components/TradePrice'
 import ImportTokenWarningModal from './components/ImportTokenWarningModal'
 import { AppHeader, AppBody } from '../../components/App'
 import ConnectWalletButton from '../../components/ConnectWalletButton'
+import LowBnbBalanceNotice from '../../components/LowBnbBalanceNotice'
 
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../config/constants'
 import useActiveWeb3React from '../../hooks/useActiveWeb3React'
@@ -132,8 +133,8 @@ export default function Swap() {
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: showWrap
-      ? parsedAmounts[independentField]?.toExact() ?? ''
-      : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+      ? (parsedAmounts[independentField]?.toExact() ?? '')
+      : (parsedAmounts[dependentField]?.toSignificant(6) ?? ''),
   }
 
   const route = trade?.route
@@ -371,6 +372,7 @@ export default function Swap() {
             )}
           </AutoColumn>
           <Box mt="1rem">
+            {!swapIsUnsupported && <LowBnbBalanceNotice mb="12px" />}
             {swapIsUnsupported ? (
               <Button width="100%" disabled mb="4px">
                 {t('Unsupported Asset')}
@@ -435,8 +437,8 @@ export default function Swap() {
                   {priceImpactSeverity > 3 && !isExpertMode
                     ? t('Price Impact High')
                     : priceImpactSeverity > 2
-                    ? t('Swap Anyway')
-                    : t('Swap')}
+                      ? t('Swap Anyway')
+                      : t('Swap')}
                 </Button>
               </RowBetween>
             ) : (
@@ -463,8 +465,8 @@ export default function Swap() {
                   (priceImpactSeverity > 3 && !isExpertMode
                     ? `Price Impact Too High`
                     : priceImpactSeverity > 2
-                    ? t('Swap Anyway')
-                    : t('Swap'))}
+                      ? t('Swap Anyway')
+                      : t('Swap'))}
               </Button>
             )}
             {showApproveFlow && (

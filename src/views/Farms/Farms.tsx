@@ -16,6 +16,7 @@ import { orderBy } from 'lodash'
 import isArchivedPid from 'utils/farmHelpers'
 import { latinise } from 'utils/latinise'
 import PageHeader from 'components/PageHeader'
+import LowBnbBalanceNotice from 'components/LowBnbBalanceNotice'
 import SearchInput from 'components/SearchInput'
 import Select, { OptionProps } from 'components/Select/Select'
 import Loading from 'components/Loading'
@@ -480,6 +481,7 @@ const Farms: React.FC<FarmsProps> = (farmsProps) => {
             )}
           </FilterContainer>
         </ControlContainer>
+        <LowBnbBalanceNotice mb="24px" />
         {renderContent()}
         <EndPage />
         {account && !userDataLoaded && stakedOnly && (

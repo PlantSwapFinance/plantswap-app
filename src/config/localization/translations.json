@@ -1301,5 +1301,12 @@
   "Transaction failed": "Transaction failed",
   "Transaction cancelled": "Transaction cancelled",
   "You rejected the request in your wallet. Nothing was sent.": "You rejected the request in your wallet. Nothing was sent.",
-  "This %featureLabel% has a %depositFee% deposit fee!": "This %featureLabel% has a %depositFee% deposit fee!"
+  "This %featureLabel% has a %depositFee% deposit fee!": "This %featureLabel% has a %depositFee% deposit fee!",
+  "Wrong network": "Wrong network",
+  "Please switch your wallet to BNB Smart Chain to use PlantSwap.": "Please switch your wallet to BNB Smart Chain to use PlantSwap.",
+  "Wallet not supported": "Wallet not supported",
+  "This wallet option is not available. Please choose another wallet.": "This wallet option is not available. Please choose another wallet.",
+  "You’re connected to an unsupported network.": "You’re connected to an unsupported network.",
+  "Switch to BNB Smart Chain": "Switch to BNB Smart Chain",
+  "Switching…": "Switching…"
 }

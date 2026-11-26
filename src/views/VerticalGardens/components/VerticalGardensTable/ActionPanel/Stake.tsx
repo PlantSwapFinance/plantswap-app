@@ -27,14 +27,27 @@ interface StackedActionProps {
 }
 
 const Staked: React.FunctionComponent<StackedActionProps> = ({ verticalGarden, userDataLoaded }) => {
-  const { vgId, stakingToken, isFinished, verticalGardenCategory, userData, stakingTokenPrice, isAutoVault } =
-    verticalGarden
+  const {
+    vgId,
+    stakingToken,
+    isFinished,
+    verticalGardenCategory,
+    userData,
+    stakingTokenPrice,
+    isAutoVault,
+    verticalGardenContractAddress,
+  } = verticalGarden
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
 
   const stakingTokenContract = useERC20(stakingToken.address ? getAddress(stakingToken.address) : '')
   const { handleApprove: handleVerticalGardenApprove, requestedApproval: requestedVerticalGardenApproval } =
-    useApproveVerticalGarden(stakingTokenContract, vgId)
+    useApproveVerticalGarden(
+      stakingTokenContract,
+      getAddress(verticalGardenContractAddress),
+      vgId,
+      stakingToken.symbol,
+    )
 
   const handleApprove = handleVerticalGardenApprove
   const requestedApproval = requestedVerticalGardenApproval
@@ -121,8 +134,14 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ verticalGarden, u
           </Text>
         </ActionTitles>
         <ActionContent>
-          <Button width="100%" disabled={requestedApproval} onClick={handleApprove} variant="secondary">
-            {t('Enable')}
+          <Button
+            width="100%"
+            isLoading={requestedApproval}
+            disabled={requestedApproval}
+            onClick={handleApprove}
+            variant="secondary"
+          >
+            {t('Approve %symbol%', { symbol: stakingToken.symbol })}
           </Button>
         </ActionContent>
       </ActionContainer>

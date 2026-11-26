@@ -12,10 +12,15 @@ interface ApprovalActionProps {
 }
 
 const ApprovalAction: React.FC<ApprovalActionProps> = ({ verticalGarden, isLoading = false }) => {
-  const { vgId, stakingToken } = verticalGarden
+  const { vgId, stakingToken, verticalGardenContractAddress } = verticalGarden
   const { t } = useTranslation()
   const stakingTokenContract = useERC20(stakingToken.address ? getAddress(stakingToken.address) : '')
-  const { handleApprove, requestedApproval } = useApproveVerticalGarden(stakingTokenContract, vgId)
+  const { handleApprove, requestedApproval } = useApproveVerticalGarden(
+    stakingTokenContract,
+    getAddress(verticalGardenContractAddress),
+    vgId,
+    stakingToken.symbol,
+  )
 
   return (
     <>
@@ -29,7 +34,7 @@ const ApprovalAction: React.FC<ApprovalActionProps> = ({ verticalGarden, isLoadi
           onClick={handleApprove}
           width="100%"
         >
-          {t('Enable')}
+          {t('Approve %symbol%', { symbol: stakingToken.symbol })}
         </Button>
       )}
     </>

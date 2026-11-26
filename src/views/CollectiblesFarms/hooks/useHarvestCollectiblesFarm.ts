@@ -3,14 +3,15 @@ import { useAppDispatch } from 'state'
 import { updateUserBalance, updateUserPendingReward } from 'state/actions'
 import { useCollectiblesFarmingPool } from 'hooks/useContract'
 import { VERTICALGARDEN_GAS_LIMIT } from 'config'
+import { callWithEstimateGas } from 'utils/calls'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
-  gasLimit: VERTICALGARDEN_GAS_LIMIT,
+  fallbackGasLimit: VERTICALGARDEN_GAS_LIMIT,
 }
 
 const harvestCollectiblesFarm = async (collectiblesFarmContract) => {
-  const tx = await collectiblesFarmContract.harvestGarden(options)
+  const tx = await callWithEstimateGas(collectiblesFarmContract, 'harvestGarden', [], options)
   const receipt = await tx.wait()
   return receipt.status
 }

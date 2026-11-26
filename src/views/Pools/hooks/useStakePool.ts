@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state'
 import { updateUserStakedBalance, updateUserBalance } from 'state/actions'
-import { stakeFarm } from 'utils/calls'
+import { callWithEstimateGas, stakeFarm } from 'utils/calls'
 import BigNumber from 'bignumber.js'
 import { DEFAULT_TOKEN_DECIMAL, DEFAULT_GAS_LIMIT } from 'config'
 import { BIG_TEN } from 'utils/bigNumber'
@@ -9,17 +9,27 @@ import { useMasterchef, useSousChef } from 'hooks/useContract'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
-  gasLimit: DEFAULT_GAS_LIMIT,
+  fallbackGasLimit: DEFAULT_GAS_LIMIT,
 }
 
 const sousStake = async (sousChefContract, amount, decimals = 18) => {
-  const tx = await sousChefContract.deposit(new BigNumber(amount).times(BIG_TEN.pow(decimals)).toString(), options)
+  const tx = await callWithEstimateGas(
+    sousChefContract,
+    'deposit',
+    [new BigNumber(amount).times(BIG_TEN.pow(decimals)).toString()],
+    options,
+  )
   const receipt = await tx.wait()
   return receipt.status
 }
 
 const sousStakeBnb = async (sousChefContract, amount) => {
-  const tx = await sousChefContract.deposit(new BigNumber(amount).times(DEFAULT_TOKEN_DECIMAL).toString(), options)
+  const tx = await callWithEstimateGas(
+    sousChefContract,
+    'deposit',
+    [new BigNumber(amount).times(DEFAULT_TOKEN_DECIMAL).toString()],
+    options,
+  )
   const receipt = await tx.wait()
   return receipt.status
 }

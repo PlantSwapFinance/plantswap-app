@@ -33,6 +33,7 @@ import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hook
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { isUserRejected } from '../../utils/txError'
+import { getErrorReason, trackEvent } from '../../utils/analytics'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import Dots from '../../components/Loader/Dots'
 import ConfirmAddModalBottom from './ConfirmAddModalBottom'
@@ -165,6 +166,8 @@ export default function AddLiquidity() {
       value = null
     }
 
+    const pair = `${currencies[Field.CURRENCY_A]?.symbol}/${currencies[Field.CURRENCY_B]?.symbol}`
+    trackEvent('add_liquidity_start', { pair, new_pool: Boolean(noLiquidity) })
     setAttemptingTxn(true)
     await estimate(...args, value !== null ? { value } : {})
       .then((estimatedGasLimit) =>
@@ -181,10 +184,12 @@ export default function AddLiquidity() {
           })
 
           setTxHash(response.hash)
+          trackEvent('add_liquidity_submitted', { pair, new_pool: Boolean(noLiquidity) })
         }),
       )
       .catch((err) => {
         setAttemptingTxn(false)
+        trackEvent('add_liquidity_error', { pair, reason: getErrorReason(err) })
         // we only care if the error is something _other_ than the user rejected the tx
         if (!isUserRejected(err)) {
           console.error(err)

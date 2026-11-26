@@ -17,6 +17,7 @@ import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'utils
 import { PoolDepositModal as DepositModal, PoolWithdrawModal as WithdrawModal } from 'components/PoolModals'
 import useStakePool from 'hooks/useStakePool'
 import useUnstakePool from 'hooks/useUnstakePool'
+import { getErrorReason, trackEvent } from 'utils/analytics'
 import useFarmApprove from '../../../hooks/useFarmApprove'
 import getFarmTokenPath from '../../../getFarmTokenPath'
 import { ActionContainer, ActionTitles, ActionContent } from './styles'
@@ -66,7 +67,15 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   const addLiquidityUrl = `${BASE_ADD_LIQUIDITY_URL}/${liquidityUrlPathParts}`
 
   const handleStake = async (amount: string) => {
-    await onStake(amount)
+    const params = { funnel: 'farm', farm_pid: pid, token_symbol: lpSymbol }
+    trackEvent('stake_start', params)
+    try {
+      await onStake(amount)
+    } catch (e) {
+      trackEvent('stake_error', { ...params, reason: getErrorReason(e) })
+      throw e
+    }
+    trackEvent('stake_success', params)
     dispatch(fetchFarmUserDataAsync({ account, pids: [pid] }))
   }
 
@@ -208,7 +217,12 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
           </Text>
         </ActionTitles>
         <ActionContent>
-          <Button width="100%" as={Link} to={getFarmTokenPath({ isTokenOnly, token, quoteToken })}>
+          <Button
+            width="100%"
+            as={Link}
+            to={getFarmTokenPath({ isTokenOnly, token, quoteToken })}
+            onClick={() => trackEvent('get_lp_click', { funnel: 'farm', farm_pid: pid, token_symbol: lpSymbol })}
+          >
             {t('Get %symbol%', { symbol: lpSymbol })}
           </Button>
         </ActionContent>

@@ -5,6 +5,7 @@ import { useTranslation } from 'contexts/Localization'
 import { useERC20 } from 'hooks/useContract'
 import useApprovePool from 'hooks/useApprovePool'
 import useToast from 'hooks/useToast'
+import { trackEvent } from 'utils/analytics'
 
 /**
  * Approve flow for a farm's staking token: tracks the pending state, announces
@@ -21,8 +22,11 @@ const useFarmApprove = (lpAddress: string, pid: number, lpSymbol: string, accoun
 
   const handleApprove = useCallback(async () => {
     setRequestedApproval(true)
+    const params = { funnel: 'farm', farm_pid: pid, token_symbol: lpSymbol }
+    trackEvent('approve_start', params)
     try {
       const approved = await onApprove()
+      trackEvent(approved ? 'approve_success' : 'approve_error', params)
       if (approved) {
         toastSuccess(t('%symbol% approved', { symbol: lpSymbol }), t('You can now stake in this farm.'))
         dispatch(fetchFarmUserDataAsync({ account, pids: [pid] }))

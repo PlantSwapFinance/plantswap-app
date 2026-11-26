@@ -12,6 +12,7 @@ import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'utils
 import { PoolDepositModal as DepositModal, PoolWithdrawModal as WithdrawModal } from 'components/PoolModals'
 import useStakePool from 'hooks/useStakePool'
 import useUnstakePool from 'hooks/useUnstakePool'
+import { getErrorReason, trackEvent } from 'utils/analytics'
 import useActiveWeb3React from '../../../../hooks/useActiveWeb3React'
 
 interface FarmCardActionsProps {
@@ -47,7 +48,15 @@ const StakeAction: React.FC<FarmCardActionsProps> = ({
   const lpPrice = useLpTokenPrice(tokenName)
 
   const handleStake = async (amount: string) => {
-    await onStake(amount)
+    const params = { funnel: 'farm', farm_pid: pid, token_symbol: tokenName }
+    trackEvent('stake_start', params)
+    try {
+      await onStake(amount)
+    } catch (e) {
+      trackEvent('stake_error', { ...params, reason: getErrorReason(e) })
+      throw e
+    }
+    trackEvent('stake_success', params)
     dispatch(fetchFarmUserDataAsync({ account, pids: [pid] }))
   }
 

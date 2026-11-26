@@ -164,6 +164,11 @@ const ActionPanel: React.FunctionComponent<ActionPanelProps> = ({
         )}
         <StyledLinkExternal href={bsc}>{t('View Contract')}</StyledLinkExternal>
         <StyledLinkExternal href={info}>{t('See Pair Info')}</StyledLinkExternal>
+        {farm.depositFee > 0 && (
+          <Text fontSize="14px" color="textSubtle" mt="4px">
+            {t('Deposit Fee')}: {farm.depositFee / 100}%
+          </Text>
+        )}
         <TagsContainer>
           {farm.isCommunity ? <CommunityTag /> : <CoreTag />}
           {dual ? <DualTag /> : null}

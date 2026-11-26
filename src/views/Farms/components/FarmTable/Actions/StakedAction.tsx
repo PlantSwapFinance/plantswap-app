@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { Button, useModal, IconButton, AddIcon, MinusIcon, Skeleton, Text, Heading } from '@plantswap/uikit'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { BigNumber } from 'bignumber.js'
 import ConnectWalletButton from 'components/ConnectWalletButton'
 import Balance from 'components/Balance'
@@ -9,21 +9,28 @@ import { useFarmUser, useLpTokenPrice } from 'state/farms/hooks'
 import { fetchFarmUserDataAsync } from 'state/farms'
 import { FarmWithStakedValue } from 'views/Farms/components/FarmCard/FarmCard'
 import { useTranslation } from 'contexts/Localization'
-import { useERC20 } from 'hooks/useContract'
 import { BASE_ADD_LIQUIDITY_URL } from 'config'
 import { useAppDispatch } from 'state'
 import { getAddress } from 'utils/addressHelpers'
 import getLiquidityUrlPathParts from 'utils/getLiquidityUrlPathParts'
 import { getBalanceAmount, getBalanceNumber, getFullDisplayBalance } from 'utils/formatBalance'
 import { PoolDepositModal as DepositModal, PoolWithdrawModal as WithdrawModal } from 'components/PoolModals'
-import useApprovePool from 'hooks/useApprovePool'
 import useStakePool from 'hooks/useStakePool'
 import useUnstakePool from 'hooks/useUnstakePool'
+import useFarmApprove from '../../../hooks/useFarmApprove'
+import getFarmTokenPath from '../../../getFarmTokenPath'
 import { ActionContainer, ActionTitles, ActionContent } from './styles'
 import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React'
 
 const IconButtonWrapper = styled.div`
   display: flex;
+`
+
+// Approve / get-LP states carry a helper line under the button, so let them grow past the fixed row height.
+const ApprovalActionContainer = styled(ActionContainer)`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    max-height: none;
+  }
 `
 
 interface StackedActionProps extends FarmWithStakedValue {
@@ -37,11 +44,12 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   quoteToken,
   token,
   depositFee,
+  isTokenOnly,
+  multiplier,
   userDataReady,
 }) => {
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
-  const [requestedApproval, setRequestedApproval] = useState(false)
   const { allowance, tokenBalance, stakedBalance } = useFarmUser(pid)
   const { onStake } = useStakePool(pid)
   const { onUnstake } = useUnstakePool(pid)
@@ -90,21 +98,8 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
   const [onPresentWithdraw] = useModal(
     <WithdrawModal max={stakedBalance} onConfirm={handleUnstake} tokenName={lpSymbol} />,
   )
-  const lpContract = useERC20(lpAddress)
   const dispatch = useAppDispatch()
-  const { onApprove } = useApprovePool(lpContract)
-
-  const handleApprove = useCallback(async () => {
-    try {
-      setRequestedApproval(true)
-      await onApprove()
-      dispatch(fetchFarmUserDataAsync({ account, pids: [pid] }))
-
-      setRequestedApproval(false)
-    } catch (e) {
-      console.error(e)
-    }
-  }, [onApprove, dispatch, account, pid])
+  const { handleApprove, requestedApproval } = useFarmApprove(lpAddress, pid, lpSymbol, account)
 
   if (!account) {
     return (
@@ -203,19 +198,45 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({
     )
   }
 
+  // Finished farms (0X) should not steer users to acquire tokens they cannot farm.
+  if (multiplier !== '0X' && tokenBalance.isZero() && stakedBalance.isZero()) {
+    return (
+      <ApprovalActionContainer>
+        <ActionTitles>
+          <Text bold textTransform="uppercase" color="textSubtle" fontSize="12px">
+            {t('Start Farming')}
+          </Text>
+        </ActionTitles>
+        <ActionContent>
+          <Button width="100%" as={Link} to={getFarmTokenPath({ isTokenOnly, token, quoteToken })}>
+            {t('Get %symbol%', { symbol: lpSymbol })}
+          </Button>
+        </ActionContent>
+        <Text fontSize="12px" color="textSubtle" mt="4px">
+          {t('You have no %symbol% to stake yet. Get some, then come back to stake.', { symbol: lpSymbol })}
+        </Text>
+      </ApprovalActionContainer>
+    )
+  }
+
   return (
-    <ActionContainer>
+    <ApprovalActionContainer>
       <ActionTitles>
         <Text bold textTransform="uppercase" color="textSubtle" fontSize="12px">
-          {t('Enable Farm')}
+          {t('Start Farming')}
         </Text>
       </ActionTitles>
       <ActionContent>
         <Button width="100%" disabled={requestedApproval} onClick={handleApprove} variant="secondary">
-          {t('Enable')}
+          {t('Approve %symbol%', { symbol: lpSymbol })}
         </Button>
       </ActionContent>
-    </ActionContainer>
+      <Text fontSize="12px" color="textSubtle" mt="4px">
+        {t('Step 1 of 2: allow the PlantSwap farm contract to use your %symbol%. Small network fee, no funds move.', {
+          symbol: lpSymbol,
+        })}
+      </Text>
+    </ApprovalActionContainer>
   )
 }
 

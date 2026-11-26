@@ -1308,5 +1308,10 @@
   "This wallet option is not available. Please choose another wallet.": "This wallet option is not available. Please choose another wallet.",
   "You’re connected to an unsupported network.": "You’re connected to an unsupported network.",
   "Switch to BNB Smart Chain": "Switch to BNB Smart Chain",
-  "Switching…": "Switching…"
+  "Switching…": "Switching…",
+  "%symbol% approved": "%symbol% approved",
+  "You can now stake in this farm.": "You can now stake in this farm.",
+  "Step 1 of 2: allow the PlantSwap farm contract to use your %symbol%. Small network fee, no funds move.": "Step 1 of 2: allow the PlantSwap farm contract to use your %symbol%. Small network fee, no funds move.",
+  "You have no %symbol% to stake yet. Get some, then come back to stake.": "You have no %symbol% to stake yet. Get some, then come back to stake.",
+  "Deposit Fee": "Deposit Fee"
 }

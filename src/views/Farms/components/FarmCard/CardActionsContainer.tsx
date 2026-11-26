@@ -1,15 +1,15 @@
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
+import { Link } from 'react-router-dom'
 import { Button, Flex, Text } from '@plantswap/uikit'
 import { getAddress } from 'utils/addressHelpers'
-import { useAppDispatch } from 'state'
-import { fetchFarmUserDataAsync } from 'state/farms'
 import { Farm } from 'state/types'
+import { useFarms } from 'state/farms/hooks'
 import { useTranslation } from 'contexts/Localization'
-import { useERC20 } from 'hooks/useContract'
 import ConnectWalletButton from 'components/ConnectWalletButton'
-import useApprovePool from 'hooks/useApprovePool'
+import useFarmApprove from '../../hooks/useFarmApprove'
+import getFarmTokenPath from '../../getFarmTokenPath'
 import StakeAction from './StakeAction'
 import HarvestAction from './HarvestAction'
 
@@ -28,7 +28,6 @@ interface FarmCardActionsProps {
 
 const CardActions: React.FC<FarmCardActionsProps> = ({ farm, account, addLiquidityUrl }) => {
   const { t } = useTranslation()
-  const [requestedApproval, setRequestedApproval] = useState(false)
   const { pid, lpAddresses, depositFee } = farm
   const {
     allowance: allowanceAsString = 0,
@@ -42,22 +41,38 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, account, addLiquidi
   const earnings = new BigNumber(earningsAsString)
   const lpAddress = getAddress(lpAddresses)
   const isApproved = account && allowance && allowance.isGreaterThan(0)
-  const dispatch = useAppDispatch()
+  const { userDataLoaded } = useFarms()
+  // Only steer to "Get LP" once balances are known, so it never flashes before user data loads.
+  const hasNothingToStake = userDataLoaded && tokenBalance.isZero() && stakedBalance.isZero()
 
-  const lpContract = useERC20(lpAddress)
+  const { handleApprove, requestedApproval } = useFarmApprove(lpAddress, pid, farm.lpSymbol, account)
 
-  const { onApprove } = useApprovePool(lpContract)
-
-  const handleApprove = useCallback(async () => {
-    try {
-      setRequestedApproval(true)
-      await onApprove()
-      dispatch(fetchFarmUserDataAsync({ account, pids: [pid] }))
-      setRequestedApproval(false)
-    } catch (e) {
-      console.error(e)
+  const renderApproval = () => {
+    if (hasNothingToStake) {
+      return (
+        <>
+          <Button mt="8px" width="100%" as={Link} to={getFarmTokenPath(farm)}>
+            {t('Get %symbol%', { symbol: farm.lpSymbol })}
+          </Button>
+          <Text fontSize="12px" color="textSubtle" mt="4px">
+            {t('You have no %symbol% to stake yet. Get some, then come back to stake.', { symbol: farm.lpSymbol })}
+          </Text>
+        </>
+      )
     }
-  }, [onApprove, dispatch, account, pid])
+    return (
+      <>
+        <Button mt="8px" width="100%" disabled={requestedApproval} onClick={handleApprove}>
+          {t('Approve %symbol%', { symbol: farm.lpSymbol })}
+        </Button>
+        <Text fontSize="12px" color="textSubtle" mt="4px">
+          {t('Step 1 of 2: allow the PlantSwap farm contract to use your %symbol%. Small network fee, no funds move.', {
+            symbol: farm.lpSymbol,
+          })}
+        </Text>
+      </>
+    )
+  }
 
   const renderApprovalOrStakeButton = () => {
     return isApproved ? (
@@ -70,9 +85,7 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, account, addLiquidi
         depositFee={depositFee}
       />
     ) : (
-      <Button mt="8px" width="100%" disabled={requestedApproval} onClick={handleApprove}>
-        {t('Enable Contract')}
-      </Button>
+      renderApproval()
     )
   }
 

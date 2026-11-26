@@ -2,7 +2,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 // import { BscConnector } from '@binance-chain/bsc-connector'
 import { ConnectorNames } from '@plantswap/uikit'
-import { BrowserProvider, hexlify, toUtf8Bytes } from 'ethers'
+import { BrowserProvider } from 'ethers'
 import getNodeUrl from './getRpcUrl'
 
 const POLLING_INTERVAL = 12000
@@ -44,14 +44,10 @@ export const signMessage = async (provider: any, account: string, message: strin
   }
 
   /**
-   * Wallet Connect does not sign the message correctly unless you use their method
-   * @see https://github.com/WalletConnect/walletconnect-monorepo/issues/462
+   * ethers v6: `getSigner` is async. `JsonRpcSigner.signMessage` sends `personal_sign` with the
+   * hex-encoded UTF-8 message, which is also what WalletConnect expects
+   * (@see https://github.com/WalletConnect/walletconnect-monorepo/issues/462), so no WC-specific path is needed.
    */
-  if (provider.provider?.wc) {
-    const wcMessage = hexlify(toUtf8Bytes(message))
-    const signature = await provider.provider?.wc.signPersonalMessage([wcMessage, account])
-    return signature
-  }
-
-  return provider.getSigner(account).signMessage(message)
+  const signer = await provider.getSigner(account)
+  return signer.signMessage(message)
 }

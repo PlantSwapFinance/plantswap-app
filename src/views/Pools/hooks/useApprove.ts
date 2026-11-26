@@ -5,6 +5,8 @@ import { updateUserAllowance } from 'state/actions'
 import { useTranslation } from 'contexts/Localization'
 import { useSousChef } from 'hooks/useContract'
 import useToast from 'hooks/useToast'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { submitAndWait } from 'utils/calls'
 import { getTxErrorToast } from 'utils/txError'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
@@ -15,23 +17,22 @@ export const useApprovePool = (lpContract: Contract, sousId, earningTokenSymbol)
   const dispatch = useAppDispatch()
   const { account } = useActiveWeb3React()
   const sousChefContract = useSousChef(sousId)
+  const addTransaction = useTransactionAdder()
 
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)
-      const tx = await lpContract.approve(String(sousChefContract.target), MaxUint256)
-      const receipt = await tx.wait()
+      const spender = String(sousChefContract.target)
+      // ethers v6 tx.wait() throws if the transaction reverts, so resolving means it succeeded
+      await submitAndWait(lpContract.approve(spender, MaxUint256), (tx) =>
+        addTransaction(tx, {
+          summary: `Enable ${earningTokenSymbol} pool`,
+          approval: { tokenAddress: String(lpContract.target), spender },
+        }),
+      )
 
       dispatch(updateUserAllowance(sousId, account))
-      if (receipt.status) {
-        toastSuccess(
-          t('Contract Enabled'),
-          t('You can now stake in the %symbol% pool!', { symbol: earningTokenSymbol }),
-        )
-      } else {
-        // tx didn't go thru
-        toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
-      }
+      toastSuccess(t('Contract Enabled'), t('You can now stake in the %symbol% pool!', { symbol: earningTokenSymbol }))
     } catch (e) {
       console.error(e)
       const { title, description } = getTxErrorToast(e)
@@ -39,7 +40,18 @@ export const useApprovePool = (lpContract: Contract, sousId, earningTokenSymbol)
     } finally {
       setRequestedApproval(false)
     }
-  }, [account, dispatch, lpContract, sousChefContract, sousId, earningTokenSymbol, t, toastError, toastSuccess])
+  }, [
+    account,
+    dispatch,
+    lpContract,
+    sousChefContract,
+    sousId,
+    earningTokenSymbol,
+    t,
+    toastError,
+    toastSuccess,
+    addTransaction,
+  ])
 
   return { handleApprove, requestedApproval }
 }

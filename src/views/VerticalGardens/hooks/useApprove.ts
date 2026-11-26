@@ -3,6 +3,8 @@ import { Contract, MaxUint256 } from 'ethers'
 import { vgupdateUserAllowance } from 'state/actions'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { submitAndWait } from 'utils/calls'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const isUserRejection = (e: any): boolean =>
@@ -26,13 +28,18 @@ export const useApproveVerticalGarden = (
   const { toastSuccess, toastError, toastInfo } = useToast()
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
+  const addTransaction = useTransactionAdder()
 
   const handleApprove = useCallback(async () => {
     try {
       setRequestedApproval(true)
-      const tx = await stakingTokenContract.approve(verticalGardenContractAddress, MaxUint256)
       // ethers v6 tx.wait() throws if the transaction reverts
-      await tx.wait()
+      await submitAndWait(stakingTokenContract.approve(verticalGardenContractAddress, MaxUint256), (tx) =>
+        addTransaction(tx, {
+          summary: `Approve ${symbol} for Vertical Garden`,
+          approval: { tokenAddress: String(stakingTokenContract.target), spender: verticalGardenContractAddress },
+        }),
+      )
 
       await vgupdateUserAllowance(vgId, account)
       toastSuccess(t('Contract Enabled'), t('You can now stake in the %symbol% vertical Garden!', { symbol }))
@@ -46,7 +53,18 @@ export const useApproveVerticalGarden = (
     } finally {
       setRequestedApproval(false)
     }
-  }, [account, stakingTokenContract, verticalGardenContractAddress, vgId, symbol, t, toastError, toastInfo, toastSuccess])
+  }, [
+    account,
+    stakingTokenContract,
+    verticalGardenContractAddress,
+    vgId,
+    symbol,
+    t,
+    toastError,
+    toastInfo,
+    toastSuccess,
+    addTransaction,
+  ])
 
   return { handleApprove, requestedApproval }
 }

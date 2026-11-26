@@ -16,7 +16,7 @@ const useFarmApprove = (lpAddress: string, pid: number, lpSymbol: string, accoun
   const { toastSuccess } = useToast()
   const dispatch = useAppDispatch()
   const lpContract = useERC20(lpAddress)
-  const { onApprove } = useApprovePool(lpContract)
+  const { onApprove } = useApprovePool(lpContract, `Approve ${lpSymbol}`)
   const [requestedApproval, setRequestedApproval] = useState(false)
 
   const handleApprove = useCallback(async () => {

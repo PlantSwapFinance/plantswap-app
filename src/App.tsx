@@ -19,6 +19,7 @@ import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import { ToastListener } from './contexts/ToastsContext'
 import PageLoader from './components/Loader/PageLoader'
 import EasterEgg from './components/EasterEgg'
+import WrongNetworkBanner from './components/WrongNetworkBanner'
 // Views included in the main bundle
 import VerticalGardens from './views/VerticalGardens'
 import Swap from './views/Swap'
@@ -147,6 +148,7 @@ const App: React.FC = () => {
       <GlobalStyle />
       {account && account === MASTERGARDENERDEVADDRESS ? (
         <MenuDev>
+          <WrongNetworkBanner />
           <RouteErrorBoundary>
             <SuspenseWithChunkError fallback={<PageLoader />}>
               <Routes>
@@ -217,6 +219,7 @@ const App: React.FC = () => {
         </MenuDev>
       ) : (
         <Menu>
+          <WrongNetworkBanner />
           <RouteErrorBoundary>
             <SuspenseWithChunkError fallback={<PageLoader />}>
               <Routes>

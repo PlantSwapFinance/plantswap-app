@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { UnsupportedChainIdError } from '@web3-react/core'
 // import { NoBscProviderError } from '@binance-chain/bsc-connector'
 import {
+  InjectedConnector,
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from '@web3-react/injected-connector'
@@ -31,6 +32,16 @@ const useAuth = () => {
             const hasSetup = await setupNetwork()
             if (hasSetup) {
               activate(connector)
+            } else {
+              toastError(t('Wrong network'), t('Please switch your wallet to BNB Smart Chain to use PlantSwap.'))
+              if (connector instanceof InjectedConnector) {
+                // Activate without an error callback so web3-react keeps the connector in its
+                // UnsupportedChainIdError state: the wrong-network banner shows, and switching
+                // chain from the wallet later recovers the session automatically. Deactivating
+                // first drops the wallet listeners so re-activation does not register them twice.
+                connector.deactivate()
+                activate(connector)
+              }
             }
           } else {
             window.localStorage.removeItem(connectorLocalStorageKey)
@@ -55,7 +66,7 @@ const useAuth = () => {
           }
         })
       } else {
-        toastError(t('Unable to find connector'), t('The connector config is wrong'))
+        toastError(t('Wallet not supported'), t('This wallet option is not available. Please choose another wallet.'))
       }
     },
     [t, activate, toastError],

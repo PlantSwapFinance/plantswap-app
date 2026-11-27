@@ -3,15 +3,18 @@ import { fetchVerticalGardensUserDataAsync } from 'state/actions'
 import BigNumber from 'bignumber.js'
 import { VERTICALGARDEN_GAS_LIMIT } from 'config'
 import { useVerticalGarden } from 'hooks/useContract'
+import { callWithEstimateGas } from 'utils/calls'
 import { BIG_TEN } from 'utils/bigNumber'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
-  gasLimit: BigInt(VERTICALGARDEN_GAS_LIMIT),
+  fallbackGasLimit: VERTICALGARDEN_GAS_LIMIT,
 }
 const verticalDeposit = async (verticalGardenContract, amount: string, decimals: number) => {
-  const tx = await verticalGardenContract.deposit(
-    new BigNumber(amount).times(BIG_TEN.pow(decimals)).integerValue(BigNumber.ROUND_DOWN).toFixed(),
+  const tx = await callWithEstimateGas(
+    verticalGardenContract,
+    'deposit',
+    [new BigNumber(amount).times(BIG_TEN.pow(decimals)).integerValue(BigNumber.ROUND_DOWN).toFixed()],
     options,
   )
   // ethers v6 tx.wait() throws if the transaction reverts

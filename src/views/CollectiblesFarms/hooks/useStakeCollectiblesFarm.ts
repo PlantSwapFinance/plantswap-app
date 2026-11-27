@@ -4,13 +4,14 @@ import { updateUserStakedBalance, updateUserBalance } from 'state/actions'
 import collectiblesFarmsLogsApi from 'utils/calls/collectiblesFarmsLogs'
 import { COLLECTIBLESFARM_GAS_LIMIT } from 'config'
 import { useCollectiblesFarmingPool } from 'hooks/useContract'
+import { callWithEstimateGas } from 'utils/calls'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
-  gasLimit: COLLECTIBLESFARM_GAS_LIMIT,
+  fallbackGasLimit: COLLECTIBLESFARM_GAS_LIMIT,
 }
 const nftDeposit = async (collectiblesFarmContract, tokenId) => {
-  const tx = await collectiblesFarmContract.deposit(tokenId, options)
+  const tx = await callWithEstimateGas(collectiblesFarmContract, 'deposit', [tokenId], options)
   const receipt = await tx.wait()
   return receipt.status
 }

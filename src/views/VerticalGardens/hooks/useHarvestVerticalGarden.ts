@@ -2,14 +2,15 @@ import { useCallback } from 'react'
 import { fetchVerticalGardensUserDataAsync } from 'state/actions'
 import { useVerticalGarden } from 'hooks/useContract'
 import { VERTICALGARDEN_GAS_LIMIT } from 'config'
+import { callWithEstimateGas } from 'utils/calls'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
-  gasLimit: BigInt(VERTICALGARDEN_GAS_LIMIT),
+  fallbackGasLimit: VERTICALGARDEN_GAS_LIMIT,
 }
 
 const harvestVerticalGarden = async (verticalGardenContract) => {
-  const tx = await verticalGardenContract.harvestGarden(options)
+  const tx = await callWithEstimateGas(verticalGardenContract, 'harvestGarden', [], options)
   const receipt = await tx.wait()
   return receipt.status
 }

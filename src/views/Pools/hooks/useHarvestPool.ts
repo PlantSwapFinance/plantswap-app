@@ -1,24 +1,23 @@
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state'
 import { updateUserBalance, updateUserPendingReward } from 'state/actions'
-import { harvestFarm } from 'utils/calls'
-import { BIG_ZERO } from 'utils/bigNumber'
+import { callWithEstimateGas, harvestFarm } from 'utils/calls'
 import { useMasterchef, useSousChef } from 'hooks/useContract'
 import { DEFAULT_GAS_LIMIT } from 'config'
 import useActiveWeb3React from '../../../hooks/useActiveWeb3React'
 
 const options = {
-  gasLimit: DEFAULT_GAS_LIMIT,
+  fallbackGasLimit: DEFAULT_GAS_LIMIT,
 }
 
 const harvestPool = async (sousChefContract) => {
-  const tx = await sousChefContract.deposit('0', options)
+  const tx = await callWithEstimateGas(sousChefContract, 'deposit', ['0'], options)
   const receipt = await tx.wait()
   return receipt.status
 }
 
 const harvestPoolBnb = async (sousChefContract) => {
-  const tx = await sousChefContract.deposit({ ...options, value: BIG_ZERO })
+  const tx = await callWithEstimateGas(sousChefContract, 'deposit', [], { ...options, overrides: { value: 0n } })
   const receipt = await tx.wait()
   return receipt.status
 }

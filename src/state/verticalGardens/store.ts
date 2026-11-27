@@ -59,9 +59,11 @@ export const setVerticalGardensUserData = (
   )
 }
 
+type VerticalGardenUserDataField = keyof NonNullable<VerticalGarden['userData']>
+
 export const updateVerticalGardensUserData = (payload: {
   vgId: string
-  field: string
+  field: VerticalGardenUserDataField
   value: unknown
 }): void => {
   useVerticalGardensStore.setState(
@@ -140,12 +142,12 @@ export const vgupdateUserBalance = async (vgId: string, account: string): Promis
 
 export const vgupdateUserStakedBalance = async (vgId: string, account: string): Promise<void> => {
   const stakedBalances = await fetchUserStakeBalances(account)
-  updateVerticalGardensUserData({ vgId, field: 'gardeners', value: stakedBalances[vgId] })
+  updateVerticalGardensUserData({ vgId, field: 'stakedBalance', value: stakedBalances[vgId] })
 }
 
 export const vgupdateUserPendingReward = async (vgId: string, account: string): Promise<void> => {
   const pendingRewards = await fetchUserPendingRewards(account)
-  updateVerticalGardensUserData({ vgId, field: 'pendingRewardToken', value: pendingRewards[vgId] })
+  updateVerticalGardensUserData({ vgId, field: 'pendingReward', value: pendingRewards[vgId] })
 }
 
 export const vgupdateUserPendingPlantReward = async (vgId: string, account: string): Promise<void> => {
@@ -175,5 +177,5 @@ export const vgupdateUserHarvestedPlant = async (vgId: string, account: string):
 
 export const vgupdateUserCompoundedReward = async (vgId: string, account: string): Promise<void> => {
   const compoundedRewards = await fetchUserCompoundedRewards(account)
-  updateVerticalGardensUserData({ vgId, field: 'compoudedReward', value: compoundedRewards[vgId] })
+  updateVerticalGardensUserData({ vgId, field: 'compoundedReward', value: compoundedRewards[vgId] })
 }

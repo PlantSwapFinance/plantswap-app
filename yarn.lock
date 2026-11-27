@@ -14192,12 +14192,12 @@ __metadata:
   linkType: hard
 
 "react-colorful@npm:^5.3.0":
-  version: 5.8.1
-  resolution: "react-colorful@npm:5.8.1"
+  version: 5.8.2
+  resolution: "react-colorful@npm:5.8.2"
   peerDependencies:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 10c0/cd1705cdb218f9f43d376f36306968aa304e0d8018dcff198c798c2c56bf4873ea918580a57a0cceaab62ba7621663234ffad35f3d4ebd9198e65f926f9ec8fe
+  checksum: 10c0/7ff97483b090194a3a07de239cbc13f99dfcdcdccbf71d38e5a99ff21b9112be01c4c57c85156bdf043ce8569db204b37fbcaab11215fc4239d6dce8dcd4d226
   languageName: node
   linkType: hard
 

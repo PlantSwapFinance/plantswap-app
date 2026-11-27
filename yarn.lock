@@ -14718,8 +14718,8 @@ __metadata:
   linkType: hard
 
 "resend@npm:^6.0.0":
-  version: 6.39.0
-  resolution: "resend@npm:6.39.0"
+  version: 6.40.1
+  resolution: "resend@npm:6.40.1"
   dependencies:
     postal-mime: "npm:2.7.6"
     standardwebhooks: "npm:1.1.1"
@@ -14728,7 +14728,7 @@ __metadata:
   peerDependenciesMeta:
     "@react-email/render":
       optional: true
-  checksum: 10c0/de92c6c6aad5ae128a7c27bfd9aff647cdd18721e873c60ad0dd6b044d6e107513f3e11e174a0e0de437c6e055005e0509c4fe9796f55fae5b3947c77b013426
+  checksum: 10c0/387d3c55f1a7489640cb211ee58bc807e39f8fb4746c3dee02f83ad3cc5f670876b739b329eaa8bc532046f08f6cdd69019637bb7505837c88f25f413a563207
   languageName: node
   linkType: hard
 

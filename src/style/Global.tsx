@@ -1,5 +1,4 @@
 import { createGlobalStyle } from 'styled-components'
-// eslint-disable-next-line import/no-unresolved
 import { PlantTheme } from '@plantswap/uikit/dist/theme'
 
 declare module 'styled-components' {

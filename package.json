@@ -95,7 +95,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.0.0",
     "@commitlint/config-conventional": "^21.0.0",
-    "@pancakeswap/eslint-config-pancake": "^1.1.0",
+    "@plantswap/eslint-config-local": "portal:./tools/eslint-config",
     "@types/jest": "^30.0.0",
     "@types/react-transition-group": "^4.4.1",
     "@types/simplemde": "^1.11.7",

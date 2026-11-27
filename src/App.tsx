@@ -5,6 +5,7 @@ import RouteErrorBoundary from 'components/RouteErrorBoundary'
 import BigNumber from 'bignumber.js'
 import Cookies from 'js-cookie'
 import useEagerConnect from 'hooks/useEagerConnect'
+import useTrackWalletConnect from 'hooks/useTrackWalletConnect'
 import visitorsApi from 'utils/calls/visitors'
 import { usePollBlockNumber } from 'state/block/hooks'
 import { usePollCoreFarmData } from 'state/farms/hooks'
@@ -138,6 +139,7 @@ const App: React.FC = () => {
 
   usePollBlockNumber()
   useEagerConnect()
+  useTrackWalletConnect()
   useFetchProfile()
   usePollCoreFarmData()
 

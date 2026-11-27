@@ -8,6 +8,7 @@ import { Farm } from 'state/types'
 import { useFarms } from 'state/farms/hooks'
 import { useTranslation } from 'contexts/Localization'
 import ConnectWalletButton from 'components/ConnectWalletButton'
+import { trackEvent } from 'utils/analytics'
 import useFarmApprove from '../../hooks/useFarmApprove'
 import getFarmTokenPath from '../../getFarmTokenPath'
 import StakeAction from './StakeAction'
@@ -52,7 +53,13 @@ const CardActions: React.FC<FarmCardActionsProps> = ({ farm, account, addLiquidi
     if (hasNothingToStake) {
       return (
         <>
-          <Button mt="8px" width="100%" as={Link} to={getFarmTokenPath(farm)}>
+          <Button
+            mt="8px"
+            width="100%"
+            as={Link}
+            to={getFarmTokenPath(farm)}
+            onClick={() => trackEvent('get_lp_click', { funnel: 'farm', farm_pid: pid, token_symbol: farm.lpSymbol })}
+          >
             {t('Get %symbol%', { symbol: farm.lpSymbol })}
           </Button>
           <Text fontSize="12px" color="textSubtle" mt="4px">

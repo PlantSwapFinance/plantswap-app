@@ -19,6 +19,7 @@ import { AppHeader, AppBody } from '../../components/App'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween } from '../../components/Layout/Row'
 import ConnectWalletButton from '../../components/ConnectWalletButton'
+import LowBnbBalanceNotice from '../../components/LowBnbBalanceNotice'
 
 import { ROUTER_ADDRESS } from '../../config/constants'
 import { PairState } from '../../hooks/usePairs'
@@ -51,8 +52,8 @@ export default function AddLiquidity() {
 
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-      ((currencyA && currencyEquals(currencyA, WETH9[chainId])) ||
-        (currencyB && currencyEquals(currencyB, WETH9[chainId]))),
+    ((currencyA && currencyEquals(currencyA, WETH9[chainId])) ||
+      (currencyB && currencyEquals(currencyB, WETH9[chainId]))),
   )
 
   const expertMode = useIsExpertMode()
@@ -88,7 +89,7 @@ export default function AddLiquidity() {
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+    [dependentField]: noLiquidity ? otherTypedValue : (parsedAmounts[dependentField]?.toSignificant(6) ?? ''),
   }
 
   // get the max amounts user can add
@@ -383,6 +384,7 @@ export default function AddLiquidity() {
               <ConnectWalletButton />
             ) : (
               <AutoColumn gap="md">
+                <LowBnbBalanceNotice />
                 {(approvalA === ApprovalState.NOT_APPROVED ||
                   approvalA === ApprovalState.PENDING ||
                   approvalB === ApprovalState.NOT_APPROVED ||

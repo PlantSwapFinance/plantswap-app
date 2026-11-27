@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
 import { Button, useModal, IconButton, AddIcon, MinusIcon, Skeleton, useTooltip, Flex, Text } from '@plantswap/uikit'
 import ConnectWalletButton from 'components/ConnectWalletButton'
+import LowBnbBalanceNotice from 'components/LowBnbBalanceNotice'
 import { Pool } from 'state/types'
 import Balance from 'components/Balance'
 import { useTranslation } from 'contexts/Localization'
@@ -16,6 +17,14 @@ import NotEnoughTokensModal from '../../PoolCard/Modals/NotEnoughTokensModal'
 import StakeModal from '../../PoolCard/Modals/StakeModal'
 import { useApprovePool } from '../../../hooks/useApprove'
 import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React'
+
+// The approve state can carry a low-BNB line under the button, so let it grow past the fixed row height.
+const ApprovalActionContainer = styled(ActionContainer)`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    height: auto;
+    max-height: none;
+  }
+`
 
 const IconButtonWrapper = styled.div`
   display: flex;
@@ -134,7 +143,7 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ pool, userDataLoa
 
   if (needsApproval) {
     return (
-      <ActionContainer>
+      <ApprovalActionContainer>
         <ActionTitles>
           <Text fontSize="12px" bold color="textSubtle" as="span" textTransform="uppercase">
             {t('Enable pool')}
@@ -145,7 +154,8 @@ const Staked: React.FunctionComponent<StackedActionProps> = ({ pool, userDataLoa
             {t('Enable')}
           </Button>
         </ActionContent>
-      </ActionContainer>
+        <LowBnbBalanceNotice compact mt="4px" />
+      </ApprovalActionContainer>
     )
   }
 

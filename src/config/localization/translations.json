@@ -1313,5 +1313,11 @@
   "You can now stake in this farm.": "You can now stake in this farm.",
   "Step 1 of 2: allow the PlantSwap farm contract to use your %symbol%. Small network fee, no funds move.": "Step 1 of 2: allow the PlantSwap farm contract to use your %symbol%. Small network fee, no funds move.",
   "You have no %symbol% to stake yet. Get some, then come back to stake.": "You have no %symbol% to stake yet. Get some, then come back to stake.",
-  "Deposit Fee": "Deposit Fee"
+  "Deposit Fee": "Deposit Fee",
+  "You need a little BNB for network fees.": "You need a little BNB for network fees.",
+  "Get BNB": "Get BNB",
+  "You need a little BNB for network fees": "You need a little BNB for network fees",
+  "Every approve, stake or swap on BNB Smart Chain costs a small fee paid in BNB, usually a few cents. Add some BNB to this wallet before you continue.": "Every approve, stake or swap on BNB Smart Chain costs a small fee paid in BNB, usually a few cents. Add some BNB to this wallet before you continue.",
+  "Buy BNB": "Buy BNB",
+  "Bridge BNB from another chain": "Bridge BNB from another chain"
 }

@@ -8,6 +8,7 @@ import { useThemeManager } from 'state/user/hooks'
 import { getLibrary } from 'utils/web3React'
 import { LanguageProvider } from 'contexts/Localization'
 import { RefreshContextProvider } from 'contexts/RefreshContext'
+import { BnbBalanceProvider } from 'contexts/BnbBalanceContext'
 import { ToastsProvider } from 'contexts/ToastsContext'
 import { migrateLegacyLocalStorage } from 'state/persistence/migrateLegacyStorage'
 
@@ -30,18 +31,20 @@ const Providers: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
             <ThemeProviderWrapper>
               <LanguageProvider>
                 <RefreshContextProvider>
-                  {/*
+                  <BnbBalanceProvider>
+                    {/*
                     Wrap ModalProvider so portal-rendered modals are covered.
                     RouteErrorBoundary only wraps route children, so stake/deposit
                     modal crashes otherwise white-screen the whole app.
                   */}
-                  <ErrorBoundary
-                    onError={(error, errorInfo) => {
-                      console.error('App render error', error, errorInfo)
-                    }}
-                  >
-                    <ModalProvider>{children}</ModalProvider>
-                  </ErrorBoundary>
+                    <ErrorBoundary
+                      onError={(error, errorInfo) => {
+                        console.error('App render error', error, errorInfo)
+                      }}
+                    >
+                      <ModalProvider>{children}</ModalProvider>
+                    </ErrorBoundary>
+                  </BnbBalanceProvider>
                 </RefreshContextProvider>
               </LanguageProvider>
             </ThemeProviderWrapper>
